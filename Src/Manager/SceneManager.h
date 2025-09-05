@@ -13,7 +13,10 @@ public:
 	{
 		NONE,
 		TITLE,
-		GAME
+		GAME,
+		SEARCH,
+		BATTLE,
+		END,
 	};
 	
 	// インスタンスの生成
