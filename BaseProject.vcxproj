@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Object\Player.cpp" />
     <ClCompile Include="Src\Scene\SearchScene.cpp" />
     <ClCompile Include="Src\Scene\BattleScene.cpp" />
     <ClCompile Include="Src\Scene\GameScene.cpp" />
@@ -34,6 +35,7 @@
     <ClCompile Include="Src\Utility\AsoUtility.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Object\Player.h" />
     <ClInclude Include="Src\Scene\SearchScene.h" />
     <ClInclude Include="Src\Scene\BattleScene.h" />
     <ClInclude Include="Src\Scene\GameScene.h" />

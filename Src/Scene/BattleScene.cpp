@@ -29,6 +29,9 @@ void BattleScene::Update(void)
 		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::GAME);
 	}
 
+
+
+
 }
 
 void BattleScene::Draw(void)
@@ -38,4 +41,22 @@ void BattleScene::Draw(void)
 
 void BattleScene::Release(void)
 {
+}
+
+void BattleScene::ChangeCommand(COMMAND command)
+{
+	command_ = command;
+
+	switch (command_)
+	{
+	case BattleScene::COMMAND::BATTLE:
+		break;
+	case BattleScene::COMMAND::TOOl:
+		break;
+	case BattleScene::COMMAND::ESCAPE:
+		break;
+	default:
+		break;
+	}
+
 }
