@@ -2,6 +2,7 @@
 #include <chrono>
 class SceneBase;
 class Fader;
+class Camera;
 
 class SceneManager
 {
@@ -43,6 +44,9 @@ public:
 	// シーンIDの取得
 	SCENE_ID GetSceneID(void);
 
+	//カメラの取得
+	Camera* GetCamera(void) const;
+
 	// デルタタイムの取得
 	float GetDeltaTime(void) const;
 
@@ -56,6 +60,9 @@ private:
 
 	// フェード
 	Fader* fader_;
+
+	//カメラ
+	Camera* camera_;
 
 	// 各種シーン
 	SceneBase* scene_;

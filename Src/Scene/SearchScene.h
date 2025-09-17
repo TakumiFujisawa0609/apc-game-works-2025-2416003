@@ -1,5 +1,7 @@
 #include "SceneBase.h"
 class SceneManager;
+class Grid;
+class Camera;
 
 class SearchScene : public SceneBase
 {
@@ -19,4 +21,6 @@ public:
 
 private:
 
+	Grid* grid_;
+	Camera* camera_;
 };

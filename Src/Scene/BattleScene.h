@@ -14,6 +14,7 @@ public:
 		BATTLE, //たたかう
 		TOOl, //道具
 		ESCAPE, //逃げる
+		MAX
 	};
 
 	// コンストラクタ
@@ -34,4 +35,9 @@ private:
 
 
 	COMMAND command_;
+
+	int cursorIndx_; //選択しているコマンド
+
+
+
 };

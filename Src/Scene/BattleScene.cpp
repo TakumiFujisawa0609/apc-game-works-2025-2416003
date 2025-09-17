@@ -17,6 +17,10 @@ BattleScene::~BattleScene(void)
 
 void BattleScene::Init(void)
 {
+
+	cursorIndx_ = 0;
+	command_ = COMMAND::BATTLE;
+
 }
 
 void BattleScene::Update(void)
@@ -26,11 +30,28 @@ void BattleScene::Update(void)
 	InputManager& ins = InputManager::GetInstance();
 	if (ins.IsTrgDown(KEY_INPUT_N))
 	{
-		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::GAME);
+		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::SEARCH);
 	}
 
+	if (ins.IsTrgDown(KEY_INPUT_UP))
+	{
+		cursorIndx_--;
+		
+		if (cursorIndx_ < 0)
+		{
+			cursorIndx_ = static_cast<int>(COMMAND::MAX) - 1;
+		}
+	}
 
+	if (ins.IsTrgDown(KEY_INPUT_DOWN))
+	{
+		cursorIndx_++;
 
+		if (cursorIndx_  > (int) COMMAND::MAX)
+		{
+			cursorIndx_ = 0;
+		}
+	}
 
 }
 
@@ -49,12 +70,21 @@ void BattleScene::ChangeCommand(COMMAND command)
 
 	switch (command_)
 	{
-	case BattleScene::COMMAND::BATTLE:
+		//コマンド選択						
+	case BattleScene::COMMAND::BATTLE: //戦う
 		break;
-	case BattleScene::COMMAND::TOOl:
+
+
+	case BattleScene::COMMAND::TOOl: //道具
 		break;
-	case BattleScene::COMMAND::ESCAPE:
+
+
+	case BattleScene::COMMAND::ESCAPE:  //逃げる
+
+
 		break;
+
+
 	default:
 		break;
 	}

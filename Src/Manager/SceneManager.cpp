@@ -5,6 +5,7 @@
 #include "../Scene/GameScene.h"
 #include "../Scene/BattleScene.h"
 #include "../Scene/SearchScene.h"
+#include "../Manager/Camera.h"
 #include "SceneManager.h"
 
 SceneManager* SceneManager::instance_ = nullptr;
@@ -28,6 +29,10 @@ void SceneManager::Init(void)
 
 	sceneId_ = SCENE_ID::TITLE;
 	waitSceneId_ = SCENE_ID::NONE;
+
+	// カメラ
+	camera_ = new Camera();
+	camera_->Init();
 
 	// フェード機能の初期化
 	fader_ = new Fader();
@@ -70,6 +75,7 @@ void SceneManager::Update(void)
 		scene_->Update();
 	}
 
+	camera_->Update();
 }
 
 void SceneManager::Draw(void)
@@ -81,9 +87,15 @@ void SceneManager::Draw(void)
 
 	// 画面を初期化
 	ClearDrawScreen();
+	//カメラ設定
+	camera_->SetBeforeDraw();
 
 	// 各シーンの描画処理
 	scene_->Draw();
+	
+
+	//カメラ描画
+	camera_->DrawDebug();
 
 	// 暗転・明転
 	fader_->Draw();
@@ -96,6 +108,10 @@ void SceneManager::Destroy(void)
 	// シーンの解放
 	scene_->Release();
 	delete scene_;
+
+	//カメラの開放
+	camera_->Release();
+	delete camera_;
 
 	// フェード機能の解放
 	delete fader_;
@@ -121,6 +137,11 @@ void SceneManager::ChangeScene(SCENE_ID nextId)
 SceneManager::SCENE_ID SceneManager::GetSceneID(void)
 {
 	return sceneId_;
+}
+
+Camera* SceneManager::GetCamera(void) const
+{
+	return camera_;
 }
 
 float SceneManager::GetDeltaTime(void) const
