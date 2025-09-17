@@ -58,6 +58,19 @@ void BattleScene::Update(void)
 void BattleScene::Draw(void)
 {
 	DrawString(0, 0, "BattleScene", 0xffffff);
+
+	const char* commands[] =
+	{
+		"たたかう",
+		"アイテム",
+		"にげる"
+	};
+
+	for (int i = 0; i < (int)COMMAND::MAX; i++)
+	{
+		int color = 0xffffff;
+		DrawString(100, 100 + i * 30, commands[i], color);
+	}
 }
 
 void BattleScene::Release(void)
@@ -72,15 +85,17 @@ void BattleScene::ChangeCommand(COMMAND command)
 	{
 		//コマンド選択						
 	case BattleScene::COMMAND::BATTLE: //戦う
+		printfDx("たたかった\n");
 		break;
 
 
 	case BattleScene::COMMAND::TOOl: //道具
+		printfDx("アイテム\n");
 		break;
 
 
 	case BattleScene::COMMAND::ESCAPE:  //逃げる
-
+		printfDx("逃げる\n");
 
 		break;
 
