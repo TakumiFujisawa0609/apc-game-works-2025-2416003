@@ -18,16 +18,16 @@ Camera::~Camera(void)
 void Camera::Init(void)
 {
 
-	// カメラの初期位置
-	pos_ = VGet(0.0f, 10.0f, -50.0f);//DERFAULT_POS;
-
-	// カメラの初期角度
-	angles_ = VGet(0.0f, 0.0f, 0.0f); //DERFAULT_ANGLES;
 	//// カメラの初期位置
-	//pos_ = DERFAULT_POS;
+	//pos_ = VGet(0.0f, 10.0f, -50.0f);//DERFAULT_POS;
 
 	//// カメラの初期角度
-	//angles_ = DERFAULT_ANGLES;
+	//angles_ = VGet(0.0f, 0.0f, 0.0f); //DERFAULT_ANGLES;
+	// カメラの初期位置
+	pos_ = DERFAULT_POS;
+
+	// カメラの初期角度
+	angles_ = DERFAULT_ANGLES;
 }
 
 void Camera::Update(void)

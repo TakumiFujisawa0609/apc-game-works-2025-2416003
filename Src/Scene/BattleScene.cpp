@@ -20,6 +20,9 @@ void BattleScene::Init(void)
 
 	cursorIndx_ = 0;
 	command_ = COMMAND::BATTLE;
+	state_ = STATE::SELECT;
+
+	actionTime_ = 0;
 
 }
 
@@ -28,35 +31,58 @@ void BattleScene::Update(void)
 
 	// シーン遷移
 	InputManager& ins = InputManager::GetInstance();
+
+	switch (state_)
+	{
+	case BattleScene::STATE::SELECT://コマンド選択
+		
+		
+		if (ins.IsTrgDown(KEY_INPUT_UP))
+		{
+			cursorIndx_--;
+
+			if (cursorIndx_ < 0)
+			{
+				cursorIndx_ = static_cast<int>(COMMAND::MAX) - 1;
+			}
+		}
+
+		if (ins.IsTrgDown(KEY_INPUT_DOWN))
+		{
+			cursorIndx_++;
+
+			if (cursorIndx_ > (int)COMMAND::MAX)
+			{
+				cursorIndx_ = 0;
+			}
+		}
+
+		if (ins.IsTrgDown(KEY_INPUT_RETURN))
+		{
+			ChangeCommand((COMMAND)cursorIndx_);
+			state_ = STATE::ACTION;
+		}
+		break;
+
+		//コマンド選択状態
+	case BattleScene::STATE::ACTION:
+		if (--actionTime_ <= 0)
+		{
+			state_ = STATE::SELECT;
+		}
+		break;
+	}
+	
+	//強制戦闘終了
 	if (ins.IsTrgDown(KEY_INPUT_N))
 	{
 		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::SEARCH);
 	}
-
-	if (ins.IsTrgDown(KEY_INPUT_UP))
-	{
-		cursorIndx_--;
-		
-		if (cursorIndx_ < 0)
-		{
-			cursorIndx_ = static_cast<int>(COMMAND::MAX) - 1;
-		}
-	}
-
-	if (ins.IsTrgDown(KEY_INPUT_DOWN))
-	{
-		cursorIndx_++;
-
-		if (cursorIndx_  > (int) COMMAND::MAX)
-		{
-			cursorIndx_ = 0;
-		}
-	}
-
 }
 
 void BattleScene::Draw(void)
 {
+
 	DrawString(0, 0, "BattleScene", 0xffffff);
 
 	const char* commands[] =
@@ -66,11 +92,15 @@ void BattleScene::Draw(void)
 		"にげる"
 	};
 
+	CreateBox(80,450, 200, 150, GetColor(0, 0, 255));
+
 	for (int i = 0; i < (int)COMMAND::MAX; i++)
 	{
-		int color = 0xffffff;
-		DrawString(100, 100 + i * 30, commands[i], color);
+		int color = (i == cursorIndx_) ? GetColor(255, 255, 0) : GetColor(255, 255, 255);
+		DrawString(100, 470 + i * 30, commands[i], color);
+			
 	}
+
 }
 
 void BattleScene::Release(void)
@@ -96,6 +126,7 @@ void BattleScene::ChangeCommand(COMMAND command)
 
 	case BattleScene::COMMAND::ESCAPE:  //逃げる
 		printfDx("逃げる\n");
+		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::SEARCH);
 
 		break;
 
@@ -104,4 +135,27 @@ void BattleScene::ChangeCommand(COMMAND command)
 		break;
 	}
 
+}
+
+void BattleScene::ChagneState(STATE next)
+{
+	state_ = next;
+
+	switch (state_)
+	{
+	case BattleScene::STATE::SELECT:
+		textFlag_ = true;
+		break;
+	case BattleScene::STATE::ACTION:
+		break;
+	case BattleScene::STATE::END:
+		textFlag_ = false;
+		break;
+
+	}
+}
+
+void BattleScene::CreateBox(int x, int y, int width, int height, int color)
+{
+	DrawBox(x, y, x + width, y + height, color, true);
 }
