@@ -1,6 +1,7 @@
 
 #include "SceneBase.h"
 class SceneManager;
+class EnemyBase;
 
 class BattleScene : public SceneBase
 {
@@ -52,6 +53,9 @@ public:
 
 private:
 
+	EnemyBase* enemy_;
+
+
 	//コマンド選択
 	COMMAND command_;
 
@@ -64,7 +68,7 @@ private:
 	int cursorIndx_; //選択しているコマンド
 	int actionTime_; //処理待機時間
 
-	bool textFlag_ = true;
+	bool firstcommand_ = true;
 
 
 };

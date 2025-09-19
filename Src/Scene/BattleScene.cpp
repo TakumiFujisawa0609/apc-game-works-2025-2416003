@@ -5,6 +5,7 @@
 #include "../Manager/SceneManager.h"
 #include "../Manager/InputManager.h"
 #include "GameScene.h"
+#include "../Object/Enemy/EnemyBase.h"
 #include "BattleScene.h"
 
 BattleScene::BattleScene(void)
@@ -24,6 +25,9 @@ void BattleScene::Init(void)
 
 	actionTime_ = 0;
 
+	enemy_ = new EnemyBase();
+	enemy_->Init();
+
 }
 
 void BattleScene::Update(void)
@@ -36,6 +40,7 @@ void BattleScene::Update(void)
 	{
 	case BattleScene::STATE::SELECT://コマンド選択
 		
+		firstcommand_ = true;
 		
 		if (ins.IsTrgDown(KEY_INPUT_UP))
 		{
@@ -61,6 +66,7 @@ void BattleScene::Update(void)
 		{
 			ChangeCommand((COMMAND)cursorIndx_);
 			state_ = STATE::ACTION;
+			firstcommand_ = false;
 		}
 		break;
 
@@ -68,6 +74,7 @@ void BattleScene::Update(void)
 	case BattleScene::STATE::ACTION:
 		if (--actionTime_ <= 0)
 		{
+			firstcommand_ = false;
 			state_ = STATE::SELECT;
 		}
 		break;
@@ -77,6 +84,7 @@ void BattleScene::Update(void)
 	if (ins.IsTrgDown(KEY_INPUT_N))
 	{
 		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::SEARCH);
+		firstcommand_ = false;
 	}
 }
 
@@ -84,23 +92,26 @@ void BattleScene::Draw(void)
 {
 
 	DrawString(0, 0, "BattleScene", 0xffffff);
-
-	const char* commands[] =
+	if (firstcommand_ == true)
 	{
-		"たたかう",
-		"アイテム",
-		"にげる"
-	};
+		const char* commands[] =
+		{
+			"たたかう",
+			"アイテム",
+			"にげる"
+		};
 
-	CreateBox(80,450, 200, 150, GetColor(0, 0, 255));
+		CreateBox(80, 450, 200, 150, GetColor(0, 0, 255));
 
-	for (int i = 0; i < (int)COMMAND::MAX; i++)
-	{
-		int color = (i == cursorIndx_) ? GetColor(255, 255, 0) : GetColor(255, 255, 255);
-		DrawString(100, 470 + i * 30, commands[i], color);
-			
+		for (int i = 0; i < (int)COMMAND::MAX; i++)
+		{
+			int color = (i == cursorIndx_) ? GetColor(255, 255, 0) : GetColor(255, 255, 255);
+			DrawString(100, 470 + i * 30, commands[i], color);
+
+		}
 	}
 
+	enemy_->Draw();
 }
 
 void BattleScene::Release(void)
@@ -144,12 +155,12 @@ void BattleScene::ChagneState(STATE next)
 	switch (state_)
 	{
 	case BattleScene::STATE::SELECT:
-		textFlag_ = true;
+		
 		break;
 	case BattleScene::STATE::ACTION:
 		break;
 	case BattleScene::STATE::END:
-		textFlag_ = false;
+		
 		break;
 
 	}

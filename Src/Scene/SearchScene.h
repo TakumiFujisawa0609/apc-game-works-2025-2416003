@@ -8,6 +8,8 @@ class SearchScene : public SceneBase
 
 public:
 
+
+
 	// コンストラクタ
 	SearchScene(void);
 

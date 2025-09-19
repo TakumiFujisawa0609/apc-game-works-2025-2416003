@@ -7,6 +7,12 @@ class TitleScene : public SceneBase
 
 public:
 
+	enum class TITLE
+	{
+		GAME,
+		EXIT,
+	};
+
 	// コンストラクタ
 	TitleScene(void);
 
@@ -18,7 +24,11 @@ public:
 	void Draw(void) override;
 	void Release(void) override;
 
+
+
 private:
+
+	TITLE title_;
 
 	// 画像
 	int imgTitle_;
