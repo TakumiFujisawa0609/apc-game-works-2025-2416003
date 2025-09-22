@@ -14,7 +14,7 @@ void EnemyBase::Update()
 
 void EnemyBase::Draw()
 {
-	DrawSphere3D(pos_, 1.0f, 16, GetColor(255, 0, 0), GetColor(255, 0, 0),true;
+	DrawSphere3D(pos_, 1.0f, 16, GetColor(255, 0, 0), GetColor(255, 0, 0), true);
 	
 }
 
