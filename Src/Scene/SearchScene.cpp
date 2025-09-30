@@ -49,10 +49,11 @@ void SearchScene::Update(void)
 
 void SearchScene::Draw(void)
 {
-	
+	MV1DrawModel(stageId_);
 	//grid_->Draw();
 	DrawString(0, 0, "SearchScene", 0xffffff);
-	MV1DrawModel(stageId_);
+	DrawString(0, 80, "スペースでゲームシーンへ：Nキーでバトルシーン", 0xffffff);
+
 
 }
 

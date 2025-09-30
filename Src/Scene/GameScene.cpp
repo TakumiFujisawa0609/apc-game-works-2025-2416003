@@ -63,6 +63,7 @@ void GameScene::Draw(void)
 	grid_->Draw();
 
 	DrawString(0, 0, "GameScene", 0xffffff);
+	DrawString(0, 80, "スペースでタイトルへ：Nキーでサーチシーン", 0xffffff);
 
 	//モデルテスト
 	DrawSphere3D(testPos, 10, 32, 0xffffff, 0xffffff, true);

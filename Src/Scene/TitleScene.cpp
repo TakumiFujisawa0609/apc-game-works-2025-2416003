@@ -67,6 +67,10 @@ void TitleScene::Draw(void)
 		1.0f, 0.0, imgTitle_, true);
 
 	DrawString(0, 0, "TitleScene", 0xffffff);
+	DrawString(0, 80, "シーン移動はスペース：シーン選択は→キーで", 0xffffff);
+
+
+
 
 	DrawCommand((STATE)cursorIndx_);
 

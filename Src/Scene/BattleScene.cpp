@@ -102,7 +102,7 @@ void BattleScene::Draw(void)
 
 	DrawFormatString(400, 100, 0xffffff, "EnemyHp:%d", enemyHp_);
 	enemy_->Draw();
-
+	DrawString(0, 80, "Nキーまたは逃げるコマンドでサーチシーン　コマンドは→キーで決定はエンターキー", 0xffffff);
 
 	DrawString(0, 0, "BattleScene", 0xffffff);
 	if (firstcommand_ == true)
