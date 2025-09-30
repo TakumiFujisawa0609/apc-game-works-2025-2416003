@@ -12,5 +12,13 @@ public:
 	void Release(void);
 	
 private:
+
+	int hp_;
+	int exp_;
+	int level_;
+	int attack_;
+	int defense_;
+	int speed_;
+
 };
 

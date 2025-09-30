@@ -23,6 +23,8 @@ public:
 
 private:
 
+	int stageId_;
+
 	Grid* grid_;
 	Camera* camera_;
 };

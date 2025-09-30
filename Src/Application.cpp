@@ -28,7 +28,7 @@ void Application::Init(void)
 {
 
 	// アプリケーションの初期設定
-	SetWindowText("アソリアの大迷宮");
+	SetWindowText("??????????");
 
 	// ウィンドウサイズ
 	SetGraphMode(SCREEN_SIZE_X, SCREEN_SIZE_Y, 32);
@@ -69,7 +69,7 @@ void Application::Run(void)
 	SceneManager& sceneManager = SceneManager::GetInstance();
 
 	// ゲームループ
-	while (ProcessMessage() == 0 && CheckHitKey(KEY_INPUT_ESCAPE) == 0)
+	while (ProcessMessage() == 0 && CheckHitKey(KEY_INPUT_ESCAPE) == 0 && !isEnd_)
 	{
 
 		inputManager.Update();

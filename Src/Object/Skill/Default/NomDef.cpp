@@ -22,4 +22,5 @@ void NomDef::Load(void)
 
 void NomDef::SetParam(void)
 {
+	skill_Def_Power_ = 1;
 }

@@ -26,7 +26,8 @@ void SearchScene::Init(void)
 	grid_ = new Grid();
 	grid_->Init();
 
-
+	stageId_ = MV1LoadModel("Data/Model/Stage/Stage.mv1");
+	MV1SetPosition(stageId_, VGet(0.0f, 180.0f, 0.0f));
 
 }
 
@@ -48,9 +49,11 @@ void SearchScene::Update(void)
 
 void SearchScene::Draw(void)
 {
-
-	grid_->Draw();
+	
+	//grid_->Draw();
 	DrawString(0, 0, "SearchScene", 0xffffff);
+	MV1DrawModel(stageId_);
+
 }
 
 void SearchScene::Release(void)

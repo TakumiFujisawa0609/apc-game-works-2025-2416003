@@ -50,6 +50,9 @@ public:
 	// デルタタイムの取得
 	float GetDeltaTime(void) const;
 
+	void SetGameEnd(){isGameEnd = true; }
+	bool IsGameEnd() { return isGameEnd; }
+
 private:
 
 	// 静的インスタンス
@@ -69,6 +72,8 @@ private:
 
 	// シーン遷移中判定
 	bool isSceneChanging_;
+
+	bool isGameEnd;
 
 	// デルタタイム
 	std::chrono::system_clock::time_point preTime_;

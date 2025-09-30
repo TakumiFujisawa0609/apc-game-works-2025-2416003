@@ -28,6 +28,7 @@ void BattleScene::Init(void)
 	enemy_ = new EnemyBase();
 	enemy_->Init();
 
+
 }
 
 void BattleScene::Update(void)
@@ -80,8 +81,16 @@ void BattleScene::Update(void)
 		break;
 	}
 	
+	
 	//強制戦闘終了
 	if (ins.IsTrgDown(KEY_INPUT_N))
+	{
+		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::SEARCH);
+		firstcommand_ = false;
+	}
+
+	//強制戦闘終了
+	if (isDamege_ == true)
 	{
 		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::SEARCH);
 		firstcommand_ = false;
@@ -90,6 +99,10 @@ void BattleScene::Update(void)
 
 void BattleScene::Draw(void)
 {
+
+	DrawFormatString(400, 100, 0xffffff, "EnemyHp:%d", enemyHp_);
+	enemy_->Draw();
+
 
 	DrawString(0, 0, "BattleScene", 0xffffff);
 	if (firstcommand_ == true)
@@ -111,8 +124,10 @@ void BattleScene::Draw(void)
 		}
 	}
 
-	enemy_->Draw();
+	
+	
 }
+	
 
 void BattleScene::Release(void)
 {
@@ -126,17 +141,18 @@ void BattleScene::ChangeCommand(COMMAND command)
 	{
 		//コマンド選択						
 	case BattleScene::COMMAND::BATTLE: //戦う
-		printfDx("たたかった\n");
+		Damage();
+		//printfDx("たたかった\n");
 		break;
 
 
 	case BattleScene::COMMAND::TOOl: //道具
-		printfDx("アイテム\n");
+		//printfDx("アイテム\n");
 		break;
 
 
 	case BattleScene::COMMAND::ESCAPE:  //逃げる
-		printfDx("逃げる\n");
+		//printfDx("逃げる\n");
 		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::SEARCH);
 
 		break;
@@ -170,3 +186,22 @@ void BattleScene::CreateBox(int x, int y, int width, int height, int color)
 {
 	DrawBox(x, y, x + width, y + height, color, true);
 }
+
+void BattleScene::Damage(void)
+{
+
+	if (enemyHp_ > 0)
+	{
+
+		enemyHp_ = enemyHp_ - damege_;
+	}
+
+	if (enemyHp_ <= 0)
+	{
+		isDamege_ = true;
+	}
+	
+}
+
+
+

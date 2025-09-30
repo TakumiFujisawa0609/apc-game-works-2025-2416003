@@ -39,8 +39,7 @@ public:
 	// 解放成功／失敗の判定
 	bool IsReleaseFail(void) const;
 
-private:
-
+	void End(void) { isEnd_ = true; };
 	// 静的インスタンス
 	static Application* instance_;
 
@@ -59,5 +58,8 @@ private:
 
 	// デストラクタも同様
 	~Application(void) = default;
+private:
+
+	bool isEnd_ = false;
 
 };

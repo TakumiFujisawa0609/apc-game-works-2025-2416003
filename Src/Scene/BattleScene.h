@@ -71,4 +71,17 @@ private:
 	bool firstcommand_ = true;
 
 
+	//ƒ¿‚Ì‰¼UŒ‚
+	int enemyHp_ = 100;
+	int damege_ = 10;
+
+	bool isDamege_ = false;
+
+	void Damage(void);
+
+
+
+	
+
+
 };
