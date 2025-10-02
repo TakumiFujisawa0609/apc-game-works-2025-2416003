@@ -67,6 +67,11 @@ void GameScene::Draw(void)
 
 	//モデルテスト
 	DrawSphere3D(testPos, 10, 32, 0xffffff, 0xffffff, true);
+
+
+	//DrawBox(10,100)
+
+
 }
 
 void GameScene::Release(void)
