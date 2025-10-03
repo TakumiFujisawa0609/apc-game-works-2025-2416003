@@ -85,7 +85,7 @@ void BattleScene::Update(void)
 				}
 			}
 
-			//各コマンド選択
+			//各コマンド選択(後でchangecommandにまとめる)
 			//選択コマンド決定（仮）（攻撃）
 			if (int(COMMAND::BATTLE) == cursorIndx_)
 			{
@@ -198,8 +198,11 @@ void BattleScene::ChangeCommand(COMMAND command)
 		//コマンド選択						
 	case BattleScene::COMMAND::BATTLE: //戦う
 		Damage();
-		
+
 		break;
+	//case BattleScene::COMMAND::SKILL: //道具
+
+	//	break;
 	case BattleScene::COMMAND::TOOl: //道具
 	
 		break;

@@ -41,6 +41,7 @@ public:
 	enum class COMMAND
 	{
 		BATTLE, //たたかう
+		//SKILL,//スキル
 		TOOl, //道具
 		ESCAPE, //逃げる
 		MAX
@@ -89,6 +90,8 @@ private:
 
 	bool firstcommand_ = true;
 	bool isEnd_ = false; //戦闘終了フラグ
+	bool serect_Skill_ = false;
+
 
 	//αの仮攻撃
 	int enemyHp_ = 10;
