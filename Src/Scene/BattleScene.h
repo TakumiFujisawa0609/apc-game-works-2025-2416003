@@ -1,4 +1,4 @@
-
+#include <vector>
 #include "SceneBase.h"
 class SceneManager;
 class EnemyBase;
@@ -7,19 +7,15 @@ class BattleScene : public SceneBase
 {
 
 public:
+	//分割画像数
+	static constexpr int NUM_COMMAND_CHOPS_X = 5;
+	static constexpr int NUM_COMMAND_CHOPS_Y = 5;
+	static constexpr int NUM_COMMAND_CHOPS = NUM_COMMAND_CHOPS_X * NUM_COMMAND_CHOPS_Y;
 
-	//ターン状態
-	enum class TURN
-	{
-		TURN_START,//ターン開始
-		SELECT,//コマンドの選択
-		PLAYER,//プレイヤーのターン
-		PLAYER_ACTION,//コマンドの実行
-		ENEMY,//敵のターン
-		ENEMY_ACTION,//コマンドの実行
-		TURN_END,//ターン終了
-		MAX
-	};
+	//マップチップのサイズ
+	static constexpr int CHOPS_SIZE_X = 20;
+	static constexpr int CHOPS_SIZE_Y = 20;
+
 
 	//戦闘終了状態
 	enum class END
@@ -35,6 +31,7 @@ public:
 		EXP,//経験値
 		ITEM,//アイテム
 		MONEY,//お金
+		MAX
 	};
 
 	//コマンド選択
@@ -47,9 +44,35 @@ public:
 		MAX
 	};
 
+	enum class SKILL //プレイヤーから持ってこないといけないんだけど一旦仮で
+	{
+		SLASH,//斬撃
+		PROTECT,//防御
+		HEAL,//回復
+		LIMIT_BREAK,//リミットブレイク
 
+	};
 
-	
+	enum class STATE
+	{
+		// 戦闘開始/ターン開始時の準備
+		TURN_START,
+		// プレイヤーが「たたかう」「アイテム」「にげる」を選ぶ
+		COMMAND_SELECT,
+		// プレイヤーが「たたかう」を選んだ後にスキルを選んでいる状態
+		SKILL_SELECT,
+		// プレイヤーの行動処理（スキル実行、アイテム使用など）
+		PLAYER_ACTION,
+		// 敵の行動処理
+		ENEMY_ACTION,
+		// ターン終了後の処理や待機
+		TURN_END,
+		// 戦闘終了（勝利または敗北）
+		BATTLE_END,
+		// リザルト表示中
+		REWARD_VIEW,
+	};
+
 	// コンストラクタ
 	BattleScene(void);
 
@@ -65,7 +88,6 @@ public:
 	
 	//コマンド選択
 	void ChangeCommand(COMMAND command);
-	void ChangeTurn(TURN turn);
 
 	void CreateBox(int x, int y, int width, int height, int color);
 
@@ -77,32 +99,46 @@ private:
 	//コマンド選択
 	COMMAND command_;
 
+	//スキル選択
+	SKILL skill_;
+	
+	STATE state_;
 
-	//ターン状態
-	TURN turn_;
+	std::vector<SKILL> selectedSkills_;
 
 	int cursorIndx_; //選択しているコマンド
 	int actionTime_; //処理待機時間
 	int endIndx_; // 戦闘終了状態
 	int rewordIndx = 0; //戦闘報酬状態
-	 
 	int turnIndx_; //ターン状態カウント
+	int skillIndx_ = 0; //選択しているスキル
 
 	bool firstcommand_ = true;
 	bool isEnd_ = false; //戦闘終了フラグ
-	bool serect_Skill_ = false;
-
+	bool isSelectingSkill_ = false;
+	bool skipSkillInput_ = false; //
 
 	//αの仮攻撃
-	int enemyHp_ = 10;
-	int damege_ = 10;
+	int enemyHp_ = 100;
+	// ダメージ量を格納する変数
+	int damageAmount = 0;
 
 	bool isDamege_ = false;
 
+	//スキル選択関連
+	void SelectSkill(SKILL skill);
+	void UseSkill(void);
+	void ProcessSkill(SKILL skill);
+
 	void Damage(void);
-	void DrawTurn(TURN turn);
+
 	void DrawCommand(COMMAND command);
 	void DrawEnd(END end);
 	void DrawReword(END_REWARD endreward);
 
+	void DrawSkill(void);
+
+	void HandleCommandSelectInput(void);
+	void ExecuteCommand(COMMAND command);
+	void HandleSkillSelectInput(void);
 };

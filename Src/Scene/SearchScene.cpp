@@ -8,6 +8,7 @@
 #include "../Manager/Camera.h"
 #include "../Object/Grid.h"
 #include "SearchScene.h"
+#include "../Manager/Camera.h"
 
 SearchScene::SearchScene(void)
 {
@@ -19,9 +20,7 @@ SearchScene::~SearchScene(void)
 
 void SearchScene::Init(void)
 {
-	//カメラモード変更
-	Camera* camera = SceneManager::GetInstance().GetCamera();
-	camera->ChangeMode(Camera::MODE::FREE);
+
 
 	grid_ = new Grid();
 	grid_->Init();
@@ -49,11 +48,11 @@ void SearchScene::Update(void)
 
 void SearchScene::Draw(void)
 {
+
 	MV1DrawModel(stageId_);
 	//grid_->Draw();
 	DrawString(0, 0, "SearchScene", 0xffffff);
 	DrawString(0, 80, "スペースでゲームシーンへ：Nキーでバトルシーン", 0xffffff);
-
 
 }
 
