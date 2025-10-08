@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Common\AnimationController.cpp" />
     <ClCompile Include="Src\Object\Skill\Default\NomDef.cpp" />
     <ClCompile Include="Src\Object\Skill\Default\NomAtk.cpp" />
     <ClCompile Include="Src\Object\Skill\SkillBase.cpp" />
@@ -42,8 +43,10 @@
     <ClCompile Include="Src\Scene\SceneBase.cpp" />
     <ClCompile Include="Src\Scene\TitleScene.cpp" />
     <ClCompile Include="Src\Utility\AsoUtility.cpp" />
+    <ClCompile Include="Src\Utility\MatrixUtility.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Common\AnimationController.h" />
     <ClInclude Include="Src\Object\Skill\Default\NomDef.h" />
     <ClInclude Include="Src\Object\Skill\Default\NomAtk.h" />
     <ClInclude Include="Src\Object\Skill\SkillBase.h" />
@@ -67,6 +70,7 @@
     <ClInclude Include="Src\Scene\SceneBase.h" />
     <ClInclude Include="Src\Scene\TitleScene.h" />
     <ClInclude Include="Src\Utility\AsoUtility.h" />
+    <ClInclude Include="Src\Utility\MatrixUtility.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

@@ -22,14 +22,14 @@ void BattleScene::Init(void)
 	cursorIndx_ = 0;//選択コマンド初期状態
 	turnIndx_ = 0;//ターン最初の状態
 	endIndx_ = 0;//戦闘終了状態
+	rewordIndx = 0;//戦闘報酬状態
 
 	command_ = COMMAND::BATTLE;
 	//state_ = STATE::SELECT;
 
 	actionTime_ = 0;
 
-	enemy_ = new EnemyBase();
-	enemy_->Init();
+	
 }
 
 void BattleScene::Update(void)
@@ -74,13 +74,16 @@ void BattleScene::Update(void)
 		// プレイヤーの行動（アニメーション、ダメージ計算など）
 		// プレイヤーの行動アニメーションやダメージ表示の待機
 		actionTime_++;
-		if (actionTime_ > 60) // 1秒(60フレーム)待機
+		if (actionTime_ > ONE_SECOND) // 1秒(60フレーム)待機
 		{
 			actionTime_ = 0;
 
-			if (endIndx_ == (int)END::WIN)
+			
+			if (isDamege_)
 			{
+				//endIndx_ = (int)END::WIN
 				// 敵を倒した場合は、この後 BATTLE_END に移行（共通ロジックで処理）
+				state_ = STATE::BATTLE_END;
 			}
 			else
 			{
@@ -92,9 +95,9 @@ void BattleScene::Update(void)
 	case BattleScene::STATE::ENEMY_ACTION:
 
 		// 敵の行動処理（AI、アニメーション、ダメージ計算など）
-  
+
 		actionTime_++;
-		if (actionTime_ > 60) // 敵の行動時間待機
+		if (actionTime_ > ONE_SECOND) // 敵の行動時間待機
 		{
 			actionTime_ = 0;
 			state_ = STATE::TURN_END;
@@ -108,31 +111,37 @@ void BattleScene::Update(void)
 		// 戦闘終了後の待機時間処理
 			// endIndx_ == (int)END::WIN の判定でここに到達している
 		actionTime_++;
-		if (actionTime_ > 120) // 2秒待機
+		if (actionTime_ > ONE_SECOND) // 1秒待機
 		{
 			// 報酬表示フェーズへ移行（現在のコードの DrawReword へ繋ぐ）
 			state_ = STATE::REWARD_VIEW;
 			actionTime_ = 0; // actionTime_を再利用するためにリセット
 		}
 
+		/*state_ = STATE::REWARD_VIEW;*/
+
 		break;
 	case BattleScene::STATE::REWARD_VIEW:
-		// 報酬の段階的表示
-		if (ins.IsTrgDown(KEY_INPUT_RETURN) || actionTime_ == 0) // 最初の1回またはエンターキー
+		
+		rewordIndx++;
+
+		if (rewordIndx >= (int)END_REWARD::MAX)
 		{
-			rewordIndx++;
-			if (rewordIndx >= (int)END_REWARD::MAX)
-			{
-				// 報酬表示が完了したらシーン遷移
-				SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::SEARCH);
-				firstcommand_ = false;
-				return;
-			}
+			SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::SEARCH);
+			firstcommand_ = false;
+			return;
 		}
-		actionTime_++; // 報酬表示中の待機
-		break;
+
+	/*	if ( ins.IsTrgDown(KEY_INPUT_SPACE))
+		{
+			*/
+			//rewordIndx++;
+
+			
+		//}
 
 	}
+	
 	
 
 }
@@ -142,17 +151,17 @@ void BattleScene::Draw(void)
 {
 
 	DrawFormatString(400, 100, 0xffffff, "EnemyHp:%d", enemyHp_);
-	enemy_->Draw();
 	DrawString(0, 80, "Nキーまたは逃げるコマンドでサーチシーン　コマンドは→キーで決定はエンターキー", 0xffffff);
 
 	DrawString(0, 0, "BattleScene", 0xffffff);
 
 
 	DrawCommand((COMMAND)cursorIndx_);
-	
+	DrawState((STATE)state_);
 
 	DrawEnd((END)endIndx_);
-	if (isDamege_ == true)
+
+	if (state_ == STATE::REWARD_VIEW)
 	{
 		DrawReword((END_REWARD)rewordIndx);
 	}
@@ -237,9 +246,12 @@ void BattleScene::UseSkill(void)
 
 void BattleScene::ProcessSkill(SKILL skill)
 {
+	
+	damageAmount = 0;
+
 
 	//各スキルの処理をここで入力
-	switch (skill_)
+	switch (skill)
 	{
 	case BattleScene::SKILL::SLASH:
 		damageAmount = 10;
@@ -262,19 +274,19 @@ void BattleScene::ProcessSkill(SKILL skill)
 	{
 		enemyHp_ = 0; // HPがマイナスにならないように
 		isDamege_ = true; // 敵撃破フラグを立てる
-		endIndx_ = (int)END::WIN; // 勝利状態も同時に設定
+		//enemyHp_ = 0; // HPがマイナスにならないように 
+		//isDamege_ = true; // 敵撃破フラグを立てる 
+		state_ = STATE::BATTLE_END; 
+		//endIndx_ = (int)END::WIN; // 勝利状態も同時に設定
 	}
 }
 
 void BattleScene::Damage(void)
 {
-
-	
 	if (enemyHp_ <= 0)
 	{
 		isDamege_ = true;
 	}
-	
 }
 
 
@@ -284,7 +296,7 @@ void BattleScene::DrawCommand(COMMAND command)
 	const char* name = "";
 
 	if (command == COMMAND::BATTLE) name = "たたかう";
-	else if (command == COMMAND::TOOl) name = "道具";
+	else if (command == COMMAND::TOOl) name = "アイテム";
 	else if (command == COMMAND::ESCAPE) name = "にげる";
 
 
@@ -337,6 +349,20 @@ void BattleScene::DrawSkill(void)
 	}
 
 	DrawFormatString(380, 570, GetColor(200, 200, 200), "選択中：%d / 2", (int)selectedSkills_.size());
+}
+
+void BattleScene::DrawState(STATE state)
+{
+	const char* name = "";
+	if (state == STATE::TURN_START) name = "TURN_START";
+	else if (state == STATE::COMMAND_SELECT) name = "COMMAND_SELECT";
+	else if (state == STATE::SKILL_SELECT) name = "SKILL_SELECT";
+	else if (state == STATE::PLAYER_ACTION) name = "PLAYER_ACTION";
+	else if (state == STATE::ENEMY_ACTION) name = "ENEMY_ACTION";
+	else if (state == STATE::TURN_END) name = "TURN_END";
+	else if (state == STATE::BATTLE_END) name = "BATTLE_END";
+	else if (state == STATE::REWARD_VIEW) name = "REWARD_VIEW";
+	DrawFormatString(100, 230, GetColor(255, 255, 255), ": %s", name);
 }
 
 void BattleScene::HandleCommandSelectInput()
@@ -419,6 +445,7 @@ void BattleScene::HandleSkillSelectInput()
 	{
 		SelectSkill(static_cast<SKILL>(skillIndx_));
 
+		//行動回数処理
 		if (selectedSkills_.size() >= 2)
 		{
 			UseSkill();

@@ -101,18 +101,6 @@ void GameScene::ChangeScene(PLAYSCENE playscene)
 	}
 }
 
-void GameScene::ChangePretaration(void)
-{
-}
-
-void GameScene::ChangeSearch(void)
-{
-}
-
-void GameScene::ChangeBattle(void)
-{
-}
-
 
 
 

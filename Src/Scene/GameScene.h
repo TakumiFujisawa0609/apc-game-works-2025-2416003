@@ -32,9 +32,7 @@ public:
 
 	void ChangeScene(PLAYSCENE playscene);
 
-	void ChangePretaration(void);
-	void ChangeSearch(void);
-	void ChangeBattle(void);
+	
 
 
 

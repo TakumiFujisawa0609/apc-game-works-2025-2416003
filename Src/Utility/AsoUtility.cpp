@@ -270,6 +270,26 @@ double AsoUtility::LerpDeg(double start, double end, double t)
 
 }
 
+float AsoUtility::NormalizeAngle(float rad)
+{
+    while (rad > DX_PI)
+    {
+        rad -= DX_TWO_PI;
+    }
+
+    while (rad < -DX_PI)
+    {
+        rad += DX_TWO_PI;
+    }
+    return rad;
+}
+
+float AsoUtility::LerpAngle(float from, float to, float t)
+{
+    float diff = NormalizeAngle(to - from); // Å’ZŒo˜H‚ÌŠp“x·‚ðŒvŽZ
+    return from + diff * t; // ·•ª‚¾‚¯•âŠÔ‚µ‚Ä‘«‚·
+}
+
 COLOR_F AsoUtility::Lerp(const COLOR_F& start, const COLOR_F& end, float t)
 {
     // üŒ`•âŠÔ
@@ -533,5 +553,6 @@ void AsoUtility::DrawLineXYZ(const VECTOR& pos, const Quaternion& rot, float len
     DrawLineDir(pos, dir, 0x0000ff, len);
 
 }
+
 
 

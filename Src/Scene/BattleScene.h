@@ -16,6 +16,7 @@ public:
 	static constexpr int CHOPS_SIZE_X = 20;
 	static constexpr int CHOPS_SIZE_Y = 20;
 
+	static constexpr int ONE_SECOND = 60;
 
 	//戦闘終了状態
 	enum class END
@@ -49,6 +50,7 @@ public:
 		SLASH,//斬撃
 		PROTECT,//防御
 		HEAL,//回復
+		POISON,//毒
 		LIMIT_BREAK,//リミットブレイク
 
 	};
@@ -137,6 +139,7 @@ private:
 	void DrawReword(END_REWARD endreward);
 
 	void DrawSkill(void);
+	void DrawState(STATE state);
 
 	void HandleCommandSelectInput(void);
 	void ExecuteCommand(COMMAND command);
