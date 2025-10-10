@@ -198,6 +198,8 @@ void SceneManager::DoChangeScene(SCENE_ID sceneId)
 		break;
 	case SCENE_ID::SEARCH:
 		scene_ = new SearchScene();
+	case SCENE_ID::END:
+	
 		break;
 	}
 

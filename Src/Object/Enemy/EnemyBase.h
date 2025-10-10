@@ -31,20 +31,27 @@ public:
 	{
 		NONE,
 		STANBY,
-		ATTACK,
-		HIT,
 		DEAD,
 		END,
 	};
 
-	void Init();
+	void Init(TYPE type);
 	virtual void Update();
 	virtual void Draw();
 	virtual void Release();
+	//状態遷移
+	void ChangeState(STATE state);
+	// 座標取得
+	VECTOR GetPos(void);
+	int GetHp(void) ;
 
+	void HitDamage(int damage);
+	
 	
 
 protected:
+
+	static constexpr VECTOR DEFAULT_ENEMY_POS = { 0.0f, 45.0f, 0.0f };
 
 	// アニメーション制御
 	AnimationController* animationController_;
@@ -53,6 +60,15 @@ protected:
 	int animType_;
 	// モデル情報
 	int modelId_;
+
+	///param エネミーステータス
+
+	 int hp_;  ///@param体力
+	 int maxhp_; ///@param最大体力 
+	 int atk_; ///@param 攻撃力
+	 int def_; ///@param 防御力
+	 int spd_; ///@param すばやさ
+
 
 
 	VECTOR pos_;
@@ -65,33 +81,48 @@ protected:
 	VECTOR preInputDir_;
 
 	//エネミーステータス
-	virtual void  SetParam() = 0;
-
+	virtual void SetParam() = 0;
 	// リソースロード
 	virtual void InitLoad(void) = 0;
-
 	// 大きさ、回転、座標の初期化
 	virtual void InitTransform(void) = 0;
-
 	// 大きさ、回転、座標のモデル設定
 	virtual void InitTransformPost(void);
-
 	// アニメーションの初期化
 	virtual void InitAnimation(void) = 0;
-
 	// 初期化後の個別処理
 	virtual void InitPost(void) = 0;
 
+	//エネミーの戦闘行動処理
+	virtual void ProcessAction(void) = 0;
+
 	// 移動処理
 	//virtual void Move(void);
-
 	// 遅延回転処理
 	void DelayRotate(void);
 
 private:
 
+	//敵の行動状態
+	STATE state_;
+	//エネミー種別
+	TYPE type_;
+	///エネミーのアニメーション
+	ANIM_TYPE animationType_;
+
 	
-	
+	// 状態遷移
+	void ChangeStandby(void);
+	 void ChangeDeadReact(void);
+	 void ChangeEnd(void);
+	// 状態別更新
+	 void UpdateStandby(void);
+	 void UpdateDeadReact(void);
+	 void UpdateEnd(void);
+	// 状態別描画
+	 void DrawStandby(void);
+	 void DrawDeadReact(void);
+	 void DrawEnd(void);
 	
 };
 

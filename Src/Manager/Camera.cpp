@@ -132,10 +132,10 @@ void Camera::MoveXYZDirection(void)
 	if (GetJoypadNum() == 0)
 	{
 
-		if (ins.IsNew(KEY_INPUT_DOWN)) { angles_.x += rotPow; }
+		/*if (ins.IsNew(KEY_INPUT_DOWN)) { angles_.x += rotPow; }
 		if (ins.IsNew(KEY_INPUT_UP)) { angles_.x -= rotPow; }
 		if (ins.IsNew(KEY_INPUT_RIGHT)) { angles_.y += rotPow; }
-		if (ins.IsNew(KEY_INPUT_LEFT)) { angles_.y -= rotPow; }
+		if (ins.IsNew(KEY_INPUT_LEFT)) { angles_.y -= rotPow; }*/
 	}
 	else
 	{
@@ -164,7 +164,7 @@ void Camera::MoveXYZDirection(void)
 		if (ins.IsNew(KEY_INPUT_S)) { dir = { 0.0f, 0.0f, -1.0f }; }
 		if (ins.IsNew(KEY_INPUT_D)) { dir = { 1.0f, 0.0f, 0.0f }; }
 
-
+		 
 		if (!AsoUtility::EqualsVZero(dir))
 		{
 			// XYZÇÃâÒì]çsóÒ

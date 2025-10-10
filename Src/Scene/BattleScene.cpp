@@ -7,7 +7,7 @@
 #include "GameScene.h"
 #include "../Object/Enemy/EnemyBase.h"
 #include "BattleScene.h"
-
+#include "../Manager/EnemyManager.h"
 BattleScene::BattleScene(void)
 {
 }
@@ -18,22 +18,22 @@ BattleScene::~BattleScene(void)
 
 void BattleScene::Init(void)
 {
-
-	cursorIndx_ = 0;//選択コマンド初期状態
-	turnIndx_ = 0;//ターン最初の状態
-	endIndx_ = 0;//戦闘終了状態
-	rewordIndx = 0;//戦闘報酬状態
-
-	command_ = COMMAND::BATTLE;
+	
+	
 	//state_ = STATE::SELECT;
 
-	actionTime_ = 0;
+	enemyManager_ = new EnemyManager();
+	enemyManager_->Init();
 
 	
+	
+	BattleInit();
 }
 
 void BattleScene::Update(void)
 {
+	enemyManager_->Update();
+
 	// シーン遷移
 	InputManager& ins = InputManager::GetInstance();
 
@@ -150,11 +150,12 @@ void BattleScene::Update(void)
 void BattleScene::Draw(void)
 {
 
-	DrawFormatString(400, 100, 0xffffff, "EnemyHp:%d", enemyHp_);
+	DrawFormatString(600, 100, 0xffffff, "EnemyHp:%d", enemyHp_);
 	DrawString(0, 80, "Nキーまたは逃げるコマンドでサーチシーン　コマンドは→キーで決定はエンターキー", 0xffffff);
 
 	DrawString(0, 0, "BattleScene", 0xffffff);
 
+	enemyManager_->Draw();
 
 	DrawCommand((COMMAND)cursorIndx_);
 	DrawState((STATE)state_);
@@ -192,6 +193,8 @@ void BattleScene::Draw(void)
 
 void BattleScene::Release(void)
 {
+	enemyManager_->Release();
+	delete enemyManager_;
 }
 
 
@@ -223,6 +226,22 @@ void BattleScene::ChangeCommand(COMMAND command)
 void BattleScene::CreateBox(int x, int y, int width, int height, int color)
 {
 	DrawBox(x, y, x + width, y + height, color, true);
+}
+
+void BattleScene::BattleInit(void)
+{
+	cursorIndx_ = 0;//選択コマンド初期状態
+	turnIndx_ = 0;//ターン最初の状態
+	endIndx_ = 0;//戦闘終了状態
+	rewordIndx = 0;//戦闘報酬状態
+
+	actionTime_ = 0;
+
+	command_ = COMMAND::BATTLE;
+
+	
+
+	enemyHp_ = enemyBase_->GetHp();
 }
 
 void BattleScene::SelectSkill(SKILL skill)

@@ -6,9 +6,9 @@
 Application* Application::instance_ = nullptr;
 
 const std::string Application::PATH_DATA = "Data/";
-const std::string Application::PATH_IMAGE = PATH_DATA + "Image/";
-const std::string Application::PATH_MODEL = PATH_DATA + "Model/";
-const std::string Application::PATH_EFFECT = PATH_DATA + "Effect/";
+const std::string Application::PATH_IMAGE =  "Data/Image/";
+const std::string Application::PATH_MODEL = "Data/Model/";
+const std::string Application::PATH_EFFECT =  "Data/Effect/";
 
 void Application::CreateInstance(void)
 {

@@ -2,6 +2,7 @@
 #include "SceneBase.h"
 class SceneManager;
 class EnemyBase;
+class EnemyManager;
 
 class BattleScene : public SceneBase
 {
@@ -96,7 +97,8 @@ public:
 
 private:
 
-	EnemyBase* enemy_;
+	EnemyBase* enemyBase_;
+	EnemyManager* enemyManager_;
 
 	//コマンド選択
 	COMMAND command_;
@@ -121,11 +123,13 @@ private:
 	bool skipSkillInput_ = false; //
 
 	//αの仮攻撃
-	int enemyHp_ = 100;
+	int enemyHp_;
 	// ダメージ量を格納する変数
 	int damageAmount = 0;
 
 	bool isDamege_ = false;
+
+	void BattleInit(void);
 
 	//スキル選択関連
 	void SelectSkill(SKILL skill);

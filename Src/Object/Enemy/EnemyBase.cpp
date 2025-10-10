@@ -4,8 +4,11 @@
 #include "../../Utility/AsoUtility.h"
 
 
-void EnemyBase::Init()
+
+
+void EnemyBase::Init(TYPE type)
 {
+	
 	//モデル等の読み込み
 	InitLoad();
 	// Transform初期化
@@ -16,11 +19,32 @@ void EnemyBase::Init()
 	InitAnimation();
 	// 初期化後の個別処理
 	InitPost();
+
+	SetParam();
+	/// @Init エネミー種別
+	type_ = type;
+
+	ChangeState(STATE::STANBY);
+
+	
 }
 
 void EnemyBase::Update()
 {
 	MV1SetPosition(modelId_, pos_);
+	switch (state_)
+	{
+	case EnemyBase::STATE::STANBY:
+		UpdateStandby();
+		break;
+	case EnemyBase::STATE::DEAD:
+		UpdateDeadReact();
+		break;
+	case EnemyBase::STATE::END:
+		UpdateEnd();
+		break;
+	}
+
 	// アニメーションの更新
 	animationController_->Update();
 	
@@ -28,14 +52,64 @@ void EnemyBase::Update()
 
 void EnemyBase::Draw()
 {
-
-	MV1DrawModel(modelId_);
+	switch (state_)
+	{
+	case EnemyBase::STATE::STANBY:
+		DrawStandby();
+		break;
+	case EnemyBase::STATE::DEAD:
+		DrawDeadReact();
+		break;
+	case EnemyBase::STATE::END:
+		DrawEnd();
+		break;
+	}
+	
 }
 
 void EnemyBase::Release()
 {
 	MV1DeleteModel(modelId_);
 	delete animationController_;
+}
+
+void EnemyBase::ChangeState(STATE state)
+{
+	state_ = state;
+	switch (state_)
+	{
+	case EnemyBase::STATE::STANBY:
+		ChangeStandby();
+		break;
+	case EnemyBase::STATE::DEAD:
+		ChangeDeadReact();
+		break;
+	case EnemyBase::STATE::END:
+		ChangeEnd();
+		break;
+	}
+}
+
+VECTOR EnemyBase::GetPos(void)
+{
+	return pos_;
+}
+
+int EnemyBase::GetHp(void)
+{
+	return hp_;
+  
+
+}
+
+void EnemyBase::HitDamage(int damage)
+{
+	hp_ -= damage - def_;
+	if (hp_ <= 0)
+	{
+		hp_ = 0;
+		ChangeState(STATE::DEAD);
+	}
 }
 
 void EnemyBase::InitTransformPost(void)
@@ -65,3 +139,42 @@ void EnemyBase::DelayRotate(void)
 	angles_.y = AsoUtility::LerpAngle(angles_.y, goal, 0.2f);
 }
 
+void EnemyBase::ChangeStandby(void)
+{
+	// 歩くアニメーションを再生すること！(ループ再生有り)
+	animationController_->Play(static_cast<int>(ANIM_TYPE::WALK));
+}
+void EnemyBase::ChangeDeadReact(void)
+{
+	// DEATHアニメーションを再生すること！(ループ無し)
+	animationController_->Play(static_cast<int>(ANIM_TYPE::DEATH), false);
+}
+void EnemyBase::ChangeEnd(void)
+{
+}
+void EnemyBase::UpdateStandby(void)
+{
+
+}
+void EnemyBase::UpdateDeadReact(void)
+{
+	if (animationController_->IsEnd())
+	{
+		ChangeState(STATE::END);
+	}
+}
+void EnemyBase::UpdateEnd(void)
+{
+}
+void EnemyBase::DrawStandby(void)
+{
+	// モデルの描画
+	MV1DrawModel(modelId_);
+}
+void EnemyBase::DrawDeadReact(void)
+{
+	MV1DrawModel(modelId_);
+}
+void EnemyBase::DrawEnd(void)
+{
+}
