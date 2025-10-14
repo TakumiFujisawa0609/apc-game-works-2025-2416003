@@ -1,4 +1,20 @@
 #pragma once
+#include <map>
+#include "../Object/Enemy/EnemyBase.h"
+
+
+struct EnemyData
+{
+	int hp_;
+	int maxHp_;
+	int speed_;///素早さ
+	int atk_;///攻撃力
+	int def_;///防御力
+	int intel_;///かしこさ
+	int dex_;///回避率
+	int exp_;//経験値
+};
+
 class EnemyStatusManager
 {
 public:
@@ -14,6 +30,12 @@ public:
 
 	void DeleteInstance();
 
+	const EnemyData& GetEnemyData(EnemyBase::TYPE type) const;
+
+	void LoadStatusData(void);
+
+
+	
 
 	//// エネミーの最大体力取得
 	//int GetEnemyMaxHp(int enemyId) const;
@@ -34,7 +56,7 @@ private:
 
 	static EnemyStatusManager* instance_;
 
-
+	std::map < EnemyBase::TYPE, EnemyData> enemyStatusMap_;
 	
 	// デフォルトコンストラクタをprivateにして、
 	// 外部から生成できない様にする

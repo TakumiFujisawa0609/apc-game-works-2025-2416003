@@ -241,7 +241,7 @@ void BattleScene::BattleInit(void)
 
 	
 
-	enemyHp_ = enemyBase_->GetHp();
+
 }
 
 void BattleScene::SelectSkill(SKILL skill)

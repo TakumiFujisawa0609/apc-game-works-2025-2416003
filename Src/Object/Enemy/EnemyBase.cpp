@@ -1,4 +1,5 @@
 #include "EnemyBase.h"
+#include "../../Manager/EnemyStatusManager.h"
 #include "../../Common/AnimationController.h"
 #include "../../Utility/MatrixUtility.h"
 #include "../../Utility/AsoUtility.h"
@@ -26,6 +27,16 @@ void EnemyBase::Init(TYPE type)
 
 	ChangeState(STATE::STANBY);
 
+	const EnemyData& baseData = EnemyStatusManager::Getinstance()->GetEnemyData(type_);
+
+	hp_ = baseData.hp_;
+	
+	
+	GoblinData.hp_ = 200;
+	GoblinData.atk_ = 20;
+	GoblinData.def_ = 5;
+	GoblinData.speed_ = 5;
+	GoblinData.intel_ = 5;
 	
 }
 
@@ -95,12 +106,7 @@ VECTOR EnemyBase::GetPos(void)
 	return pos_;
 }
 
-int EnemyBase::GetHp(void)
-{
-	return hp_;
-  
 
-}
 
 void EnemyBase::HitDamage(int damage)
 {

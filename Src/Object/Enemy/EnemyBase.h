@@ -43,7 +43,6 @@ public:
 	void ChangeState(STATE state);
 	// 座標取得
 	VECTOR GetPos(void);
-	int GetHp(void) ;
 
 	void HitDamage(int damage);
 	
@@ -64,7 +63,6 @@ protected:
 	///param エネミーステータス
 
 	 int hp_;  ///@param体力
-	 int maxhp_; ///@param最大体力 
 	 int atk_; ///@param 攻撃力
 	 int def_; ///@param 防御力
 	 int spd_; ///@param すばやさ
