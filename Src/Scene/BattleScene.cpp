@@ -8,6 +8,7 @@
 #include "../Object/Enemy/EnemyBase.h"
 #include "BattleScene.h"
 #include "../Manager/EnemyManager.h"
+#include "../Manager/EnemyStatusManager.h"
 BattleScene::BattleScene(void)
 {
 }
@@ -25,8 +26,7 @@ void BattleScene::Init(void)
 	enemyManager_ = new EnemyManager();
 	enemyManager_->Init();
 
-	
-	
+
 	BattleInit();
 }
 
@@ -78,7 +78,6 @@ void BattleScene::Update(void)
 		{
 			actionTime_ = 0;
 
-			
 			if (isDamege_)
 			{
 				//endIndx_ = (int)END::WIN
@@ -289,7 +288,7 @@ void BattleScene::ProcessSkill(SKILL skill)
 	enemyHp_ -= damageAmount;
 
 	// 敵HPが0以下になったかチェック
-	if (enemyHp_ <= 0)
+ 	if (enemyHp_ <= 0)
 	{
 		enemyHp_ = 0; // HPがマイナスにならないように
 		isDamege_ = true; // 敵撃破フラグを立てる

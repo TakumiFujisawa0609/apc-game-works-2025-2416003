@@ -7,6 +7,12 @@ class TitleScene : public SceneBase
 
 public:
 
+	// 選択肢の描画座標（仮定）
+	static const int GAME_POS_Y = 350;
+	static const int EXIT_POS_Y = 450;
+	// 選択中のカーソル文字（DxLibの描画を想定）
+	const char* CURSOR_CHAR = ">> ";
+
 	enum class STATE
 	{
 		GAME,

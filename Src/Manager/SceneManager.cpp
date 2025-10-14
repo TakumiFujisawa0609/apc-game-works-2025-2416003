@@ -44,7 +44,7 @@ void SceneManager::Init(void)
 	preTime_ = std::chrono::system_clock::now();
 
 	// ‰ŠúƒV[ƒ“‚Ìİ’è
-	DoChangeScene(SCENE_ID::BATTLE);
+	DoChangeScene(SCENE_ID::SEARCH);
 
 }
 

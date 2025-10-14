@@ -19,7 +19,9 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Object\Actor\MapPlayer.cpp" />
     <ClCompile Include="Src\Manager\EnemyStatusManager.cpp" />
+    <ClCompile Include="Src\Object\Actor\ActorBase.cpp" />
     <ClCompile Include="Src\Scene\GameClear.cpp" />
     <ClCompile Include="Src\Object\Enemy\Goblin.cpp" />
     <ClCompile Include="Src\Common\AnimationController.cpp" />
@@ -49,7 +51,9 @@
     <ClCompile Include="Src\Utility\MatrixUtility.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Object\Actor\MapPlayer.h" />
     <ClInclude Include="Src\Manager\EnemyStatusManager.h" />
+    <ClInclude Include="Src\Object\Actor\ActorBase.h" />
     <ClInclude Include="Src\Scene\GameClear.h" />
     <ClInclude Include="Src\Object\Enemy\Goblin.h" />
     <ClInclude Include="Src\Common\AnimationController.h" />

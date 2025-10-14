@@ -26,17 +26,16 @@ void EnemyBase::Init(TYPE type)
 	type_ = type;
 
 	ChangeState(STATE::STANBY);
-
+	EnemyStatusManager::Getinstance();
+	
 	const EnemyData& baseData = EnemyStatusManager::Getinstance()->GetEnemyData(type_);
 
-	hp_ = baseData.hp_;
-	
-	
-	GoblinData.hp_ = 200;
-	GoblinData.atk_ = 20;
-	GoblinData.def_ = 5;
-	GoblinData.speed_ = 5;
-	GoblinData.intel_ = 5;
+	//数値変化可能なパラメータ
+	hp_ =  baseData.hp_;
+	atk_ = baseData.atk_;
+	def_= baseData.def_;
+	speed_ = baseData.speed_ ;
+	intel_ = baseData.intel_ ;
 	
 }
 

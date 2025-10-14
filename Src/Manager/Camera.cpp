@@ -1,5 +1,6 @@
 #include "../Utility/AsoUtility.h"
 #include "../Manager/InputManager.h"
+#include "../Object/Actor/MapPlayer.h"
 #include "Camera.h"
 
 Camera::Camera(void)
@@ -26,8 +27,8 @@ void Camera::Init(void)
 	// カメラの初期位置
 	pos_ = DERFAULT_POS;
 
-	// カメラの初期角度
-	angles_ = DERFAULT_ANGLES;
+	// カメの初期角度
+	angles_ = { 30.0f * DX_PI_F / 180.0f,0.0f,0.0f};
 }
 
 void Camera::Update(void)
@@ -46,6 +47,9 @@ void Camera::SetBeforeDraw(void)
 		break;
 	case Camera::MODE::FREE:
 		SetBeforeDrawFree();
+		break;
+	case Camera::MODE::FOLLOW:
+		SetBeforeDrawFollow();
 		break;
 	}
 
@@ -87,6 +91,51 @@ void Camera::SetBeforeDrawFree(void)
 	MoveXYZDirection();
 }
 
+void Camera::SetBeforeDrawFollow(void)
+{
+	auto& ins = InputManager::GetInstance();
+	if (GetJoypadNum() == 0)
+	{
+		// 方向回転によるXYZの移動
+		MoveXYZDirection();
+	}
+	else
+	{
+		// 方向回転によるXYZの移動(ゲームパッド)
+		MoveXYZDirectionPad();
+	}
+
+	// カメラの移動
+	// カメラの回転行列を作成
+	MATRIX mat = MGetIdent();
+	//mat = MMult(mat, MGetRotX(angles_.x));
+	mat = MMult(mat, MGetRotY(angles_.y));
+	//mat = MMult(mat, MGetRotZ(angles_.z));
+
+	// 注視点の移動
+	VECTOR followPos = follow_->GetPos();
+	VECTOR targetLocalRotPos = VTransform(FOLLOW_TARGET_LOCAL_POS, mat);
+	targetPos_ = followPos;
+
+
+	// カメラの移動
+	// 相対座標を回転させて、回転後の相対座標を取得する
+	VECTOR cameraLocalRotPos = VTransform(FOLLOW_CAMERA_LOCAL_POS, mat);
+
+	// 相対座標からワールド座標に直して、カメラ座標とする
+	pos_ = VAdd(followPos, cameraLocalRotPos);
+
+	// カメラの上方向を計算
+	VECTOR up = VTransform(AsoUtility::DIR_U, mat);
+
+	// カメラの設定(位置と注視点による制御)
+	SetCameraPositionAndTargetAndUpVec(
+		pos_,
+		targetPos_,
+		up
+	);
+}
+
 void Camera::DrawDebug(void)
 {
 	//DrawFormatString(0, 30, 0xffffff,"カメラ座標　 ：(% .1f, % .1f, % .1f)",pos_.x, pos_.y, pos_.z);
@@ -107,6 +156,11 @@ const VECTOR& Camera::GetAngles(void) const
 	return angles_;
 }
 
+const VECTOR Camera::GetTargetPos(void) const
+{
+	return targetPos_;
+}
+
 void Camera::ChangeMode(MODE mode)
 {
 	//カメラモードの変更
@@ -119,8 +173,16 @@ void Camera::ChangeMode(MODE mode)
 		break;
 	case Camera::MODE::FREE:
 		break;
+	case Camera::MODE::FOLLOW:
+		break;
 
 	}
+}
+
+void Camera::SetFollow(MapPlayer* follow)
+{
+	// 追従対象の設定
+	follow_ = follow;
 }
 
 void Camera::MoveXYZDirection(void)
@@ -178,5 +240,44 @@ void Camera::MoveXYZDirection(void)
 			// 方向×スピードで移動量を作って、座標に足して移動
 			pos_ = VAdd(pos_, VScale(moveDir, movePow));
 		}
+	}
+}
+
+void Camera::MoveXYZDirectionPad(void)
+{
+	auto& ins = InputManager::GetInstance();
+
+	// ゲームパッド操作
+	// 接続されているゲームパッド１の情報を取得
+	InputManager::JOYPAD_IN_STATE padState =
+		ins.GetJPadInputState(InputManager::JOYPAD_NO::PAD1);
+
+	// 上下の傾きが35度以上、-35度以下にならないように制限
+	if (angles_.x > AsoUtility::Deg2RadF(35.0f)) angles_.x = AsoUtility::Deg2RadF(35.0f);
+	if (angles_.x < AsoUtility::Deg2RadF(-35.0f)) angles_.x = AsoUtility::Deg2RadF(-35.0f);
+
+	// アナログキーの入力値から方向を取得
+	VECTOR dir = ins.GetDirectionXZAKey(padState.AKeyRX, padState.AKeyRY);
+	float rotPow = 1.0f * DX_PI_F / 180.0f;
+
+	// 左スティックが上下の傾き
+	angles_.x -= dir.z * rotPow * 3.0f;
+	// 左スティックが左右の傾き
+	angles_.y += dir.x * rotPow * 3.0f;
+
+	// WASDでカメラを移動させる
+	const float movePow = 2.0f;
+	if (!AsoUtility::EqualsVZero(dir))
+	{
+		// XYZの回転行列
+		// XZ平面移動にする場合は、XZの回転を考慮しないようにする
+		MATRIX mat = MGetIdent();
+		mat = MMult(mat, MGetRotX(angles_.x));
+		mat = MMult(mat, MGetRotY(angles_.y));
+		//mat = MMult(mat, MGetRotZ(angles_.z));
+		// 回転行列を使用して、ベクトルを回転させる
+		VECTOR moveDir = VTransform(dir, mat);
+		// 方向×スピードで移動量を作って、座標に足して移動
+		pos_ = VAdd(pos_, VScale(moveDir, movePow));
 	}
 }

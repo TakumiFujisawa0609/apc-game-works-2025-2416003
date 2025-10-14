@@ -60,15 +60,6 @@ protected:
 	// モデル情報
 	int modelId_;
 
-	///param エネミーステータス
-
-	 int hp_;  ///@param体力
-	 int atk_; ///@param 攻撃力
-	 int def_; ///@param 防御力
-	 int spd_; ///@param すばやさ
-
-
-
 	VECTOR pos_;
 	VECTOR angles_;
 	VECTOR scl_;
@@ -79,7 +70,7 @@ protected:
 	VECTOR preInputDir_;
 
 	//エネミーステータス
-	virtual void SetParam() = 0;
+	virtual void SetParam()= 0 ;
 	// リソースロード
 	virtual void InitLoad(void) = 0;
 	// 大きさ、回転、座標の初期化
@@ -100,6 +91,14 @@ protected:
 	void DelayRotate(void);
 
 private:
+
+	///param エネミーステータス
+
+	int hp_;  ///@param体力
+	int atk_; ///@param 攻撃力
+	int def_; ///@param 防御力
+	int speed_; ///@param すばやさ
+	int intel_; ///@param かしこさ
 
 	//敵の行動状態
 	STATE state_;

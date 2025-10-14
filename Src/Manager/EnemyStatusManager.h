@@ -6,11 +6,12 @@
 struct EnemyData
 {
 	int hp_;
-	int maxHp_;
 	int speed_;///‘f‘‚³
 	int atk_;///UŒ‚—Í
 	int def_;///–hŒä—Í
 	int intel_;///‚©‚µ‚±‚³
+
+	int maxHp_;
 	int dex_;///‰ñ”ğ—¦
 	int exp_;//ŒoŒ±’l
 };

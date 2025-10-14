@@ -15,4 +15,5 @@ public:
 	static MATRIX Multiplication(
 		const VECTOR& childEuler, const VECTOR& parentEuler);
 
+
 };

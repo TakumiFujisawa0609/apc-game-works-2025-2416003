@@ -15,6 +15,10 @@ void EnemyStatusManager::CreateInstance(void)
 
 EnemyStatusManager* EnemyStatusManager::Getinstance(void)
 {
+	if(instance_ == nullptr)
+	{
+		CreateInstance();
+	}
     return instance_;
 }
 
@@ -45,14 +49,21 @@ void EnemyStatusManager::DeleteInstance()
 	if (instance_ != nullptr)
 	{
 		delete instance_;
-	}
+	}	instance_ = nullptr;
 	
 }
 
 const EnemyData& EnemyStatusManager::GetEnemyData(EnemyBase::TYPE type) const
 {
 	// TODO: return ステートメントをここに挿入します
-	return enemyStatusMap_.at(type);
+	auto  it = enemyStatusMap_.find(type);
+	if (it == enemyStatusMap_.end())
+	{
+		static EnemyData dummy{};
+		return dummy;
+	}
+
+	return it->second;
 }
 
 void EnemyStatusManager::LoadStatusData(void)
@@ -71,5 +82,5 @@ void EnemyStatusManager::LoadStatusData(void)
 	GoblinData.dex_ = 0;
 	GoblinData.exp_ = 10;
 
-	enemyStatusMap_[EnemyBase::TYPE::GOBLIN];
+	enemyStatusMap_[EnemyBase::TYPE::GOBLIN] = GoblinData;
 }

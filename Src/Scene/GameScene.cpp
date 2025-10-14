@@ -39,20 +39,14 @@ void GameScene::Update(void)
 
 	if (ins.IsTrgDown(KEY_INPUT_SPACE))
 	{
-		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::TITLE);
-	}
-
-	//仮の探索シーンへの遷移
-	if (ins.IsTrgDown(KEY_INPUT_Z))
-	{
-		ChangeScene(PLAYSCENE::BATTLE);
-	}
-
-	//仮の戦闘シーンへの遷移
-	if (ins.IsTrgDown(KEY_INPUT_N))
-	{
 		ChangeScene(PLAYSCENE::SEARCH);
 	}
+
+	////仮の戦闘シーンへの遷移
+	//if (ins.IsTrgDown(KEY_INPUT_N))
+	//{
+	//	ChangeScene(PLAYSCENE::SEARCH);
+	//}
 
 
 
@@ -63,7 +57,7 @@ void GameScene::Draw(void)
 	grid_->Draw();
 
 	DrawString(0, 0, "GameScene", 0xffffff);
-	DrawString(0, 80, "スペースでタイトルへ：Nキーでサーチシーン", 0xffffff);
+	DrawString(0, 80, "スペースでサーチシーン", 0xffffff);
 
 	//モデルテスト
 	DrawSphere3D(testPos, 10, 32, 0xffffff, 0xffffff, true);

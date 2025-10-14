@@ -55,12 +55,7 @@ void Goblin::InitPost()
 
 void Goblin::SetParam()
 {
-	hp_ = 200;
-	maxhp_ = 200;
 
-	atk_ = 20;
-	def_ = 5;
-	spd_ = 5;
 }
 
 void Goblin::ProcessAction()

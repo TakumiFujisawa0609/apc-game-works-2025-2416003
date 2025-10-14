@@ -1,14 +1,12 @@
 #include "SceneBase.h"
 class SceneManager;
 class Grid;
-class Camera;
+class MapPlayer;
 
 class SearchScene : public SceneBase
 {
 
 public:
-
-
 
 	// コンストラクタ
 	SearchScene(void);
@@ -26,5 +24,5 @@ private:
 	int stageId_;
 
 	Grid* grid_;
-	Camera* camera_;
+	MapPlayer* player_;
 };
