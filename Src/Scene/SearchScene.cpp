@@ -69,7 +69,8 @@ void SearchScene::Draw(void)
 
 
 	DrawString(0, 0, "SearchScene", 0xffffff);
-	DrawString(0, 80, "Nキーでバトルシーン", 0xffffff);
+	DrawString(0, 80, "PADを接続してる場合はPADで移動", 0xffffff);
+	DrawString(0, 80, "PADを接続してない場合はWASDで移動", 0xffffff);
 
 }
 

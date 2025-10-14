@@ -26,8 +26,5 @@ private:
 	// エネミー
 	std::vector<EnemyBase*> enemys_;
 
-
-	bool endAlive{ endAlive = false };
-	bool isDead;
 };
 

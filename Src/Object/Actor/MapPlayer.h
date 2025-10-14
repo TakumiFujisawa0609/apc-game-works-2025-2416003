@@ -24,8 +24,8 @@ public:
 	//距離の単位
 	static constexpr float STEP_DISTANCE = 1.0f;
 	// 次のエンカウントまでの歩数初期値
-	static constexpr int  ENCOUNT_MAX_STEPS = 500;
-	static constexpr int  ENCOUNT_MIN_STEPS = 10;
+	static constexpr int  ENCOUNT_MAX_STEPS = 600;
+	static constexpr int  ENCOUNT_MIN_STEPS = 50;
 
 	// アニメーション種別
 	enum class ANIM_TYPE

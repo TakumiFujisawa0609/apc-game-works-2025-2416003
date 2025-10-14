@@ -17,7 +17,7 @@ public:
 		GAME,
 		SEARCH,
 		BATTLE,
-		END,
+		CLEAR
 	};
 	
 	// インスタンスの生成
@@ -53,6 +53,10 @@ public:
 	void SetGameEnd(){isGameEnd = true; }
 	bool IsGameEnd() { return isGameEnd; }
 
+	void AddDefeatedEnemy();       // カウントアップ関数
+	int GetDefeatedEnemyCount();
+
+
 private:
 
 	// 静的インスタンス
@@ -74,6 +78,8 @@ private:
 	bool isSceneChanging_;
 
 	bool isGameEnd;
+
+	int enemyCount_;
 
 	// デルタタイム
 	std::chrono::system_clock::time_point preTime_;

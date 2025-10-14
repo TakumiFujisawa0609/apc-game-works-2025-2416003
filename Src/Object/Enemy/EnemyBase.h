@@ -46,8 +46,6 @@ public:
 
 	void HitDamage(int damage);
 	
-	
-
 protected:
 
 	static constexpr VECTOR DEFAULT_ENEMY_POS = { 0.0f, 45.0f, 0.0f };

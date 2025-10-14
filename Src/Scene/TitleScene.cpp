@@ -18,6 +18,11 @@ TitleScene::~TitleScene(void)
 void TitleScene::Init(void)
 {
 	imgTitle_ = LoadGraph((Application::PATH_IMAGE + "Title.png").c_str());
+	titleHundle_ = LoadSoundMem(TITLE_SE_PATH);
+	SetVolumeSoundMem(BGM1_VOLUME, titleHundle_);
+
+	TitleSE();
+
 }
 
 void TitleScene::Update(void)
@@ -53,7 +58,8 @@ void TitleScene::Update(void)
 	{
 		ChagneState((STATE)cursorIndx_);
 		
-	}
+	} 
+	
 
 }
 
@@ -66,6 +72,7 @@ void TitleScene::Draw(void)
 		1.0f, 0.0, imgTitle_, true);
 	DrawString(0, 0, "TitleScene", 0xffffff);
 	DrawString(0, 80, "スペース：決定：→キーで：選択", 0xffffff);
+	
 
 	// 2. 「GAME START」の描画
 	if (cursorIndx_ == (int)STATE::GAME)
@@ -101,6 +108,7 @@ void TitleScene::Draw(void)
 void TitleScene::Release(void)
 {
 	DeleteGraph(imgTitle_);
+	DeleteSoundMem(titleHundle_);
 }
 
 void TitleScene::ChangeExit(void)
@@ -144,4 +152,14 @@ void TitleScene::DrawCommand(STATE next)
 		DrawFormatString(100, 100, GetColor(255, 255, 255), "選択中: %s", name);
 
 }
+
+void TitleScene::TitleSE(void)
+{
+	if (CheckSoundMem(titleHundle_) == 0) // 再生中でなければ
+	{
+		PlaySoundMem(titleHundle_, DX_PLAYTYPE_LOOP, FALSE);
+	}
+}
+
+
 

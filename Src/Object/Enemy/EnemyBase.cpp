@@ -62,6 +62,7 @@ void EnemyBase::Update()
 
 void EnemyBase::Draw()
 {
+
 	switch (state_)
 	{
 	case EnemyBase::STATE::STANBY:
@@ -74,6 +75,9 @@ void EnemyBase::Draw()
 		DrawEnd();
 		break;
 	}
+
+	// ƒ‚ƒfƒ‹‚Ì•`‰æ
+	MV1DrawModel(modelId_);
 	
 }
 
@@ -116,6 +120,8 @@ void EnemyBase::HitDamage(int damage)
 		ChangeState(STATE::DEAD);
 	}
 }
+
+
 
 void EnemyBase::InitTransformPost(void)
 {
@@ -173,12 +179,11 @@ void EnemyBase::UpdateEnd(void)
 }
 void EnemyBase::DrawStandby(void)
 {
-	// ƒ‚ƒfƒ‹‚Ì•`‰æ
-	MV1DrawModel(modelId_);
+	
 }
 void EnemyBase::DrawDeadReact(void)
 {
-	MV1DrawModel(modelId_);
+	
 }
 void EnemyBase::DrawEnd(void)
 {

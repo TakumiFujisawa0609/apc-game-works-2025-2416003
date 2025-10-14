@@ -1,5 +1,9 @@
 #pragma once
-class BattleEnemy
+#include "../Enemy/EnemyBase.h"
+
+
+class  BattleEnemy
+{
 public:
     // コンストラクタ、デストラクタ
     BattleEnemy();
@@ -7,7 +11,7 @@ public:
 
     // 唯一の初期化メソッド。設計図（EnemyData）を受け取る。
     // ※EnemyData構造体とInitの引数は、以前の回答で推奨した形を想定
-    void Init(const EnemyData& baseData, EnemyBase::TYPE type);
+    void Init();
 
     // メインループから呼ばれる処理
     void Update();
@@ -22,7 +26,7 @@ public:
     void DecidAction();
 
 private:
-    // ★現在の状態を保持するメンバ変数 (動的なデータ)
+    
     int currentHp_ = 0;       // 現在のHP (ダメージで減る)
     int maxHp_ = 0;           // 最大HP
     int attackPower_ = 0;     // 攻撃力

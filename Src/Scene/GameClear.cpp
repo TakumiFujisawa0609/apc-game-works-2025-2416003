@@ -30,6 +30,7 @@ void GameClear::Update(void)
 
 void GameClear::Draw(void)
 {
+	DrawString(320, 240, "ゲームクリア！", GetColor(255, 255, 255));
 }
 
 void GameClear::Release(void)

@@ -9,6 +9,7 @@
 #include "BattleScene.h"
 #include "../Manager/EnemyManager.h"
 #include "../Manager/EnemyStatusManager.h"
+#include "../Object/Enemy/BattleEnemy.h"
 BattleScene::BattleScene(void)
 {
 }
@@ -26,12 +27,16 @@ void BattleScene::Init(void)
 	//敵のデータ取得
 	const EnemyData& baseData = statusManager->GetEnemyData(enemyType);
 
+	
 
-	//state_ = STATE::SELECT;
+	enemyHp_ = baseData.hp_;
+
+	
 	
 
 	enemyManager_ = new EnemyManager();
 	enemyManager_->Init();
+
 
 
 	BattleInit();
@@ -133,9 +138,20 @@ void BattleScene::Update(void)
 
 		if (rewordIndx >= (int)END_REWARD::MAX)
 		{
+			int count = SceneManager::GetInstance().GetDefeatedEnemyCount();
+
+			if (count >= CLEAR_ENEMY_COUNT)
+			{
+				SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::CLEAR);
+				return;
+			}
+		
 			SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::SEARCH);
 			firstcommand_ = false;
 			return;
+			
+			
+			
 		}
 
 	/*	if ( ins.IsTrgDown(KEY_INPUT_SPACE))
@@ -295,14 +311,15 @@ void BattleScene::ProcessSkill(SKILL skill)
 	enemyHp_ -= damageAmount;
 
 	// 敵HPが0以下になったかチェック
- 	if (enemyHp_ <= 0)
+	if (enemyHp_ <= 0)
 	{
 		enemyHp_ = 0; // HPがマイナスにならないように
 		isDamege_ = true; // 敵撃破フラグを立てる
 		//enemyHp_ = 0; // HPがマイナスにならないように 
 		//isDamege_ = true; // 敵撃破フラグを立てる 
-		state_ = STATE::BATTLE_END; 
-		//endIndx_ = (int)END::WIN; // 勝利状態も同時に設定
+		state_ = STATE::BATTLE_END;
+
+		SceneManager::GetInstance().AddDefeatedEnemy();
 	}
 }
 

@@ -5,6 +5,8 @@
 #include "../Scene/GameScene.h"
 #include "../Scene/BattleScene.h"
 #include "../Scene/SearchScene.h"
+#include "../Scene/GameClear.h"
+
 #include "../Manager/Camera.h"
 #include "SceneManager.h"
 
@@ -44,7 +46,7 @@ void SceneManager::Init(void)
 	preTime_ = std::chrono::system_clock::now();
 
 	// èâä˙ÉVÅ[ÉìÇÃê›íË
-	DoChangeScene(SCENE_ID::SEARCH);
+	DoChangeScene(SCENE_ID::TITLE);
 
 }
 
@@ -150,6 +152,16 @@ float SceneManager::GetDeltaTime(void) const
 	return deltaTime_;
 }
 
+void SceneManager::AddDefeatedEnemy()
+{
+	enemyCount_ = enemyCount_+1;
+}
+
+int SceneManager::GetDefeatedEnemyCount()
+{
+	return enemyCount_;
+}
+
 SceneManager::SceneManager(void)
 {
 
@@ -192,14 +204,14 @@ void SceneManager::DoChangeScene(SCENE_ID sceneId)
 		break;
 	case SCENE_ID::GAME:
 		scene_ = new GameScene();
+	case SCENE_ID::SEARCH:
+		scene_ = new SearchScene();
 		break;
 	case SCENE_ID::BATTLE:
 		scene_ = new BattleScene();
 		break;
-	case SCENE_ID::SEARCH:
-		scene_ = new SearchScene();
-	case SCENE_ID::END:
-	
+	case SCENE_ID::CLEAR:
+		scene_ = new GameClear();
 		break;
 	}
 

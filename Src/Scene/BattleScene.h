@@ -19,6 +19,8 @@ public:
 
 	static constexpr int ONE_SECOND = 60;
 
+	static constexpr int CLEAR_ENEMY_COUNT = 2;
+
 	//戦闘終了状態
 	enum class END
 	{
@@ -116,6 +118,9 @@ private:
 	int rewordIndx = 0; //戦闘報酬状態
 	int turnIndx_; //ターン状態カウント
 	int skillIndx_ = 0; //選択しているスキル
+
+	int enemyCount_ = 0;
+	
 
 	bool firstcommand_ = true;
 	bool isEnd_ = false; //戦闘終了フラグ

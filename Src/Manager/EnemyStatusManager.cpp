@@ -94,3 +94,5 @@ void EnemyStatusManager::LoadStatusData(void)
 
 	enemyStatusMap_[EnemyBase::TYPE::GOBLIN] = GoblinData;
 }
+
+

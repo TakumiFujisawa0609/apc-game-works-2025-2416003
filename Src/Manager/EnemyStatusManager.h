@@ -46,7 +46,7 @@ public:
 
 	void LoadStatusData(void);
 
-
+	int GetHp_(void);
 	
 
 	//// エネミーの最大体力取得
