@@ -18,10 +18,17 @@ BattleScene::~BattleScene(void)
 }
 
 void BattleScene::Init(void)
-{
-	
-	
+{	
+	//シングルトンからインスタンスを取得
+	EnemyStatusManager* statusManager = EnemyStatusManager::Getinstance();
+	//敵の種類を取得
+	EnemyBase::TYPE enemyType = statusManager->GetNextEncounterType();
+	//敵のデータ取得
+	const EnemyData& baseData = statusManager->GetEnemyData(enemyType);
+
+
 	//state_ = STATE::SELECT;
+	
 
 	enemyManager_ = new EnemyManager();
 	enemyManager_->Init();

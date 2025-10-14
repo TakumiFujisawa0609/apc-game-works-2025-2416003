@@ -66,6 +66,16 @@ const EnemyData& EnemyStatusManager::GetEnemyData(EnemyBase::TYPE type) const
 	return it->second;
 }
 
+void EnemyStatusManager::SetNextEncounterType(EnemyBase::TYPE type)
+{
+	nextEncounterType_ = type;
+}
+
+EnemyBase::TYPE EnemyStatusManager::GetNextEncounterType() const
+{
+	return nextEncounterType_;
+};
+
 void EnemyStatusManager::LoadStatusData(void)
 {
 	EnemyData GoblinData;

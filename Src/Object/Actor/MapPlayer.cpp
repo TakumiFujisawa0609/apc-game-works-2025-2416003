@@ -7,6 +7,8 @@
 #include "../../Manager/InputManager.h"
 #include "../../Utility/AsoUtility.h"
 #include "../../Utility/MatrixUtility.h"
+#include "../../Object/Enemy/EnemyBase.h"
+#include "../../Manager/EnemyStatusManager.h"
 
 #include "MapPlayer.h"
 
@@ -217,6 +219,10 @@ void MapPlayer::enCount(void)
 		// 4. エンカウント判定
 		if (remainingSteps_ <= 0)
 		{
+			EnemyBase::TYPE enemyType = EnemyBase::TYPE::GOBLIN;
+
+			EnemyStatusManager::Getinstance()->SetNextEncounterType(enemyType);
+
 			// エンカウント発生！
 			SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::BATTLE);
 
@@ -229,20 +235,5 @@ void MapPlayer::enCount(void)
 		}
 	}
 
-	//動いた分エンカウントポイントを加算
-	countPos_ += nowPos_.x - prePos_.x;
-	countPos_ += nowPos_.y - prePos_.y;
-	//既定の距離を超えたらエンカウントポイントをリセットし、エンカウント回数を加算
-	if (countPos_ > ENCOUNT_RANGE)
-	{
-		countPos_ = 0.0f;
-		count_ = count_ + 1;
-
-		if (ENCOUNT_COUNT == count_)
-		{
-			SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::BATTLE);
-			count_ = 0;
-		}
-	}
 
 }

@@ -19,6 +19,9 @@ struct EnemyData
 class EnemyStatusManager
 {
 public:
+
+
+
 	static void CreateInstance(void);///インスタンスの生成
 	static EnemyStatusManager* Getinstance(void);///インスタンスの取得
 	
@@ -32,6 +35,14 @@ public:
 	void DeleteInstance();
 
 	const EnemyData& GetEnemyData(EnemyBase::TYPE type) const;
+
+	// 次の戦闘の種類を設定する
+	void SetNextEncounterType(EnemyBase::TYPE type);
+
+
+	// 次の戦闘の種類を取得する
+	EnemyBase::TYPE GetNextEncounterType() const;
+
 
 	void LoadStatusData(void);
 
@@ -56,7 +67,8 @@ public:
 private:
 
 	static EnemyStatusManager* instance_;
-
+	//次に戦闘する敵の変数
+	EnemyBase::TYPE nextEncounterType_;
 	std::map < EnemyBase::TYPE, EnemyData> enemyStatusMap_;
 	
 	// デフォルトコンストラクタをprivateにして、
