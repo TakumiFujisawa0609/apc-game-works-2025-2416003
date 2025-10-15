@@ -70,7 +70,7 @@ void SearchScene::Draw(void)
 
 	DrawString(0, 0, "SearchScene", 0xffffff);
 	DrawString(0, 80, "PAD‚ğÚ‘±‚µ‚Ä‚éê‡‚ÍPAD‚ÅˆÚ“®", 0xffffff);
-	DrawString(0, 80, "PAD‚ğÚ‘±‚µ‚Ä‚È‚¢ê‡‚ÍWASD‚ÅˆÚ“®", 0xffffff);
+	DrawString(0, 120, "PAD‚ğÚ‘±‚µ‚Ä‚È‚¢ê‡‚ÍWASD‚ÅˆÚ“®", 0xffffff);
 
 }
 
