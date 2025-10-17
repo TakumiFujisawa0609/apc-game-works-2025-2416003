@@ -29,11 +29,23 @@ public:
 	//敵の行動状態
 	enum class STATE
 	{
-		NONE,
 		STANBY,
+		HIT,
 		DEAD,
 		END,
 	};
+
+	// 標準の拡散光色
+	static constexpr COLOR_F COLOR_DIF_DEFAULT = { 0.4f, 0.4f, 0.4f, 1.0f };
+	// 点滅時の拡散光色
+	static constexpr COLOR_F COLOR_DIF_BLINK = { 1.0f, 0.2f, 0.2f, 1.0f };
+	// 点滅間隔
+	static constexpr int TERM_BLINK = 8;
+
+	// 被ダメ時間
+	static constexpr int CNT_HIT_REACT = 40;
+	// 死亡時間
+	static constexpr int CNT_DEAD_REACT = 80;
 
 	void Init(TYPE type);
 	virtual void Update();
@@ -97,6 +109,9 @@ private:
 	int def_; ///@param 防御力
 	int speed_; ///@param すばやさ
 	int intel_; ///@param かしこさ
+
+	//被ダメージカウンタ
+	int cntDamaged_;
 
 	//敵の行動状態
 	STATE state_;

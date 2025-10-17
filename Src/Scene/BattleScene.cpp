@@ -10,6 +10,8 @@
 #include "../Manager/EnemyManager.h"
 #include "../Manager/EnemyStatusManager.h"
 #include "../Object/Enemy/BattleEnemy.h"
+#include "../Manager/Camera.h"
+
 BattleScene::BattleScene(void)
 {
 }
@@ -27,17 +29,12 @@ void BattleScene::Init(void)
 	//敵のデータ取得
 	const EnemyData& baseData = statusManager->GetEnemyData(enemyType);
 
-	
-
 	enemyHp_ = baseData.hp_;
-
-	
-	
 
 	enemyManager_ = new EnemyManager();
 	enemyManager_->Init();
 
-
+	SceneManager::GetInstance().GetCamera()->ChangeMode(Camera::MODE::FIXED_POINT);
 
 	BattleInit();
 }
@@ -176,8 +173,10 @@ void BattleScene::Draw(void)
 	DrawString(0, 80, "Nキーまたは逃げるコマンドでサーチシーン　コマンドは→キーで決定はエンターキー", 0xffffff);
 
 	DrawString(0, 0, "BattleScene", 0xffffff);
-
-	enemyManager_->Draw();
+	if (isDamege_ == false)
+	{
+		enemyManager_->Draw();
+	}
 
 	DrawCommand((COMMAND)cursorIndx_);
 	DrawState((STATE)state_);
@@ -271,6 +270,8 @@ void BattleScene::SelectSkill(SKILL skill)
 	if (selectedSkills_.size() < 2)
 	{
 		selectedSkills_.push_back(skill);
+
+		
 	}
 }
 

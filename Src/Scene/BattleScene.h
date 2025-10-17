@@ -1,4 +1,5 @@
 #include <vector>
+#include <list>
 #include "SceneBase.h"
 class SceneManager;
 class EnemyBase;
@@ -20,6 +21,16 @@ public:
 	static constexpr int ONE_SECOND = 60;
 
 	static constexpr int CLEAR_ENEMY_COUNT = 2;
+
+	enum class SKILL //プレイヤーから持ってこないといけないんだけど一旦仮で
+	{
+		SLASH,//斬撃
+		PROTECT,//防御
+		HEAL,//回復
+		POISON,//毒
+		LIMIT_BREAK,//リミットブレイク
+
+	};
 
 	//戦闘終了状態
 	enum class END
@@ -46,16 +57,6 @@ public:
 		TOOl, //道具
 		ESCAPE, //逃げる
 		MAX
-	};
-
-	enum class SKILL //プレイヤーから持ってこないといけないんだけど一旦仮で
-	{
-		SLASH,//斬撃
-		PROTECT,//防御
-		HEAL,//回復
-		POISON,//毒
-		LIMIT_BREAK,//リミットブレイク
-
 	};
 
 	enum class STATE
@@ -99,6 +100,8 @@ public:
 
 private:
 
+	std::list<SKILL> selectedSkills_;
+
 	EnemyBase* enemyBase_;
 	EnemyManager* enemyManager_;
 
@@ -110,8 +113,6 @@ private:
 	
 	STATE state_;
 
-	std::vector<SKILL> selectedSkills_;
-
 	int cursorIndx_; //選択しているコマンド
 	int actionTime_; //処理待機時間
 	int endIndx_; // 戦闘終了状態
@@ -120,7 +121,7 @@ private:
 	int skillIndx_ = 0; //選択しているスキル
 
 	int enemyCount_ = 0;
-	
+;
 
 	bool firstcommand_ = true;
 	bool isEnd_ = false; //戦闘終了フラグ

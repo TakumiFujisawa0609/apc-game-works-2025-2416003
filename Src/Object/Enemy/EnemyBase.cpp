@@ -28,6 +28,7 @@ void EnemyBase::Init(TYPE type)
 	ChangeState(STATE::STANBY);
 	EnemyStatusManager::Getinstance();
 	
+	//
 	const EnemyData& baseData = EnemyStatusManager::Getinstance()->GetEnemyData(type_);
 
 	//数値変化可能なパラメータ
@@ -93,6 +94,9 @@ void EnemyBase::ChangeState(STATE state)
 	switch (state_)
 	{
 	case EnemyBase::STATE::STANBY:
+		ChangeStandby();
+		break;
+	case EnemyBase::STATE::HIT:
 		ChangeStandby();
 		break;
 	case EnemyBase::STATE::DEAD:

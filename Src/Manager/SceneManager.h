@@ -53,6 +53,8 @@ public:
 	void SetGameEnd(){isGameEnd = true; }
 	bool IsGameEnd() { return isGameEnd; }
 
+
+	//仮ゲームクリア関数
 	void AddDefeatedEnemy();       // カウントアップ関数
 	int GetDefeatedEnemyCount();
 

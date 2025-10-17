@@ -19,6 +19,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Manager\SkillDataManager.cpp" />
+    <ClCompile Include="Src\Manager\PlayerManger.cpp" />
     <ClCompile Include="Src\Object\Enemy\BattleEnemy.cpp" />
     <ClCompile Include="Src\Object\Actor\MapPlayer.cpp" />
     <ClCompile Include="Src\Manager\EnemyStatusManager.cpp" />
@@ -26,10 +28,8 @@
     <ClCompile Include="Src\Scene\GameClear.cpp" />
     <ClCompile Include="Src\Object\Enemy\Goblin.cpp" />
     <ClCompile Include="Src\Common\AnimationController.cpp" />
-    <ClCompile Include="Src\Object\Skill\Default\NomDef.cpp" />
-    <ClCompile Include="Src\Object\Skill\Default\NomAtk.cpp" />
     <ClCompile Include="Src\Object\Skill\SkillBase.cpp" />
-    <ClCompile Include="Src\Object\Skill\SkillManager.cpp" />
+    <ClCompile Include="Src\Manager\SkillManager.cpp" />
     <ClCompile Include="Src\Object\Skill\Skill.cpp" />
     <ClCompile Include="Src\Object\Enemy\EnemyBase.cpp" />
     <ClCompile Include="Src\Manager\EnemyManager.cpp" />
@@ -52,6 +52,8 @@
     <ClCompile Include="Src\Utility\MatrixUtility.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Manager\SkillDataManager.h" />
+    <ClInclude Include="Src\Manager\PlayerManger.h" />
     <ClInclude Include="Src\Object\Enemy\BattleEnemy.h" />
     <ClInclude Include="Src\Object\Actor\MapPlayer.h" />
     <ClInclude Include="Src\Manager\EnemyStatusManager.h" />
@@ -59,10 +61,8 @@
     <ClInclude Include="Src\Scene\GameClear.h" />
     <ClInclude Include="Src\Object\Enemy\Goblin.h" />
     <ClInclude Include="Src\Common\AnimationController.h" />
-    <ClInclude Include="Src\Object\Skill\Default\NomDef.h" />
-    <ClInclude Include="Src\Object\Skill\Default\NomAtk.h" />
     <ClInclude Include="Src\Object\Skill\SkillBase.h" />
-    <ClInclude Include="Src\Object\Skill\SkillManager.h" />
+    <ClInclude Include="Src\Manager\SkillManager.h" />
     <ClInclude Include="Src\Object\Skill\Skill.h" />
     <ClInclude Include="Src\Object\Enemy\EnemyBase.h" />
     <ClInclude Include="Src\Manager\EnemyManager.h" />

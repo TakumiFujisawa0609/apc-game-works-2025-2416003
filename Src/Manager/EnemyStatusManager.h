@@ -20,8 +20,6 @@ class EnemyStatusManager
 {
 public:
 
-
-
 	static void CreateInstance(void);///インスタンスの生成
 	static EnemyStatusManager* Getinstance(void);///インスタンスの取得
 	
@@ -46,13 +44,13 @@ public:
 
 	void LoadStatusData(void);
 
-	int GetHp_(void);
+
 	
 
 	//// エネミーの最大体力取得
 	//int GetEnemyMaxHp(int enemyId) const;
 	//// エネミーの最大体力取得
-	//int GetEnemyHp(int enemyId) const;
+	/*int GetEnemyHp(int enemyId) const;*/
 	//// エネミーの攻撃力取得
 	//int GetEnemyAttack(int enemyId) const;
 	//// エネミーの防御力取得

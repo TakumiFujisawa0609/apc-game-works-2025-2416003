@@ -19,10 +19,10 @@ Camera::~Camera(void)
 void Camera::Init(void)
 {
 
-	//// カメラの初期位置
+	// カメラの初期位置
 	//pos_ = VGet(0.0f, 10.0f, -50.0f);//DERFAULT_POS;
 
-	//// カメラの初期角度
+	// カメラの初期角度
 	//angles_ = VGet(0.0f, 0.0f, 0.0f); //DERFAULT_ANGLES;
 	// カメラの初期位置
 	pos_ = DERFAULT_POS;
@@ -53,18 +53,27 @@ void Camera::SetBeforeDraw(void)
 		break;
 	}
 
-	//カメラの設定（位置と角度による制御)
-	SetCameraPositionAndAngle(
-		pos_,
-		angles_.x,
-		angles_.y,
-		angles_.z
-	);
+	////カメラの設定（位置と角度による制御)
+	//SetCameraPositionAndAngle(
+	//	pos_,
+	//	angles_.x,
+	//	angles_.y,
+	//	angles_.z
+	//);
 }
 
 void Camera::SetBeforeDrawFixedPoint(void)
 {
 	//何もしない
+	pos_ = { 0, 0, -500 };
+	targetPos_ = { 0, 0, 0 };
+		// カメラの設定(位置と注視点による制御)
+	SetCameraPositionAndTargetAndUpVec(
+		pos_,
+		targetPos_,
+		{0.0f,1.0f,0.0f}
+	);
+
 }
 
 void Camera::SetBeforeDrawFree(void)
@@ -138,8 +147,12 @@ void Camera::SetBeforeDrawFollow(void)
 
 void Camera::DrawDebug(void)
 {
-	//DrawFormatString(0, 30, 0xffffff,"カメラ座標　 ：(% .1f, % .1f, % .1f)",pos_.x, pos_.y, pos_.z);
-	//DrawFormatString(0, 50, 0xffffff,"カメラ角度　 ：(% .1f, % .1f, % .1f)",AsoUtility::Rad2DegF(angles_.x),AsoUtility::Rad2DegF(angles_.y),AsoUtility::Rad2DegF(angles_.z));
+	auto& ins = InputManager::GetInstance();
+	if (ins.IsNew(KEY_INPUT_1))
+	{
+		DrawFormatString(0, 180, 0xffffff, "カメラ座標　 ：(% .1f, % .1f, % .1f)", pos_.x, pos_.y, pos_.z);
+		DrawFormatString(0, 210, 0xffffff, "カメラ角度　 ：(% .1f, % .1f, % .1f)", AsoUtility::Rad2DegF(angles_.x), AsoUtility::Rad2DegF(angles_.y), AsoUtility::Rad2DegF(angles_.z));
+	}
 }
 
 void Camera::Release(void)

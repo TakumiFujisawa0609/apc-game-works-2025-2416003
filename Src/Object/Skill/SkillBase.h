@@ -1,6 +1,9 @@
 #pragma once
+#include <list>
 #include <string>
 #include <DxLib.h>
+
+
 
 class SkillBase
 {
@@ -15,50 +18,34 @@ public:
 
 	};
 
+	enum class SKILL
+	{
+		SLASH,//斬撃
+		LIMIT_BREAK,//リミットブレイク
+	};
 
-	void Init(SKILLTYPE skill_type);
+
+	void Init(SKILL skill);
 	// 更新
 	void Update(void);
 	// デバッグ用描画
-	virtual void Draw(void);
+	void Draw(void);
 	// 解放
-	virtual void Release(void);
+	void Release(void);
 
-	SKILLTYPE GetSkill(void);
+
 
 protected:
+	 virtual void SetParam(void) = 0;
 
-	
+	 int skillName_;
+
+private:
+	/// @brief 技
+	SKILL skill_;
+
 	//スキル種別
-	SKILLTYPE skill_type_;
-	//スキル名
-	std::string skill_name_;
-
-	int modelId_;
-	VECTOR pos_;
-	VECTOR rot_;
-	VECTOR scl_;
-	VECTOR moveDir_;
-
-	float speed_;
-	bool isAlive_;
-
-	int size_;
-	//スキル攻撃力
-	int skill_Atk_Power_;
-	//スキル防御力
-	int skill_Def_Power_;
-	//スキル回復力
-	int skill_Heal_Power_;
-	//スキルバフ力
-	int skill_Buff_Power_;
-	//スキルデバフ力
-	int skill_Debuff_Power_;
-
-
-	virtual void Load(void);
-	virtual void SetParam(void);
-	
+	SKILLTYPE skillType_;
 };
 
 
