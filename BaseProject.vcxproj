@@ -19,8 +19,11 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Common\Pause.cpp" />
+    <ClCompile Include="Src\Manager\PlayerManager.cpp" />
+    <ClCompile Include="Src\Object\Skill\LimitBreak.cpp" />
+    <ClCompile Include="Src\Object\Skill\Slash.cpp" />
     <ClCompile Include="Src\Manager\SkillDataManager.cpp" />
-    <ClCompile Include="Src\Manager\PlayerManger.cpp" />
     <ClCompile Include="Src\Object\Enemy\BattleEnemy.cpp" />
     <ClCompile Include="Src\Object\Actor\MapPlayer.cpp" />
     <ClCompile Include="Src\Manager\EnemyStatusManager.cpp" />
@@ -30,7 +33,6 @@
     <ClCompile Include="Src\Common\AnimationController.cpp" />
     <ClCompile Include="Src\Object\Skill\SkillBase.cpp" />
     <ClCompile Include="Src\Manager\SkillManager.cpp" />
-    <ClCompile Include="Src\Object\Skill\Skill.cpp" />
     <ClCompile Include="Src\Object\Enemy\EnemyBase.cpp" />
     <ClCompile Include="Src\Manager\EnemyManager.cpp" />
     <ClCompile Include="Src\Object\Grid.cpp" />
@@ -52,8 +54,11 @@
     <ClCompile Include="Src\Utility\MatrixUtility.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Common\Pause.h" />
+    <ClInclude Include="Src\Manager\PlayerManager.h" />
+    <ClInclude Include="Src\Object\Skill\LimitBreak.h" />
+    <ClInclude Include="Src\Object\Skill\Slash.h" />
     <ClInclude Include="Src\Manager\SkillDataManager.h" />
-    <ClInclude Include="Src\Manager\PlayerManger.h" />
     <ClInclude Include="Src\Object\Enemy\BattleEnemy.h" />
     <ClInclude Include="Src\Object\Actor\MapPlayer.h" />
     <ClInclude Include="Src\Manager\EnemyStatusManager.h" />
@@ -63,7 +68,6 @@
     <ClInclude Include="Src\Common\AnimationController.h" />
     <ClInclude Include="Src\Object\Skill\SkillBase.h" />
     <ClInclude Include="Src\Manager\SkillManager.h" />
-    <ClInclude Include="Src\Object\Skill\Skill.h" />
     <ClInclude Include="Src\Object\Enemy\EnemyBase.h" />
     <ClInclude Include="Src\Manager\EnemyManager.h" />
     <ClInclude Include="Src\Object\Grid.h" />

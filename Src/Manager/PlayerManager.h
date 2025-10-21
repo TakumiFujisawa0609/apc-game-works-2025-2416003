@@ -1,5 +1,9 @@
 #pragma once
 #include <map>
+#include <vector>
+#include <string>
+#include "../Object/Enemy/EnemyBase.h"
+
 struct PlayerData
 {
 	int hp_;
@@ -9,15 +13,20 @@ struct PlayerData
 	int intel_;///かしこさ
 
 	int maxHp_;
-	int dex_;///回避率
-	int getexp_;//獲得した経験値 
+	int  dex_;///回避率
+	int collectExp_;//経験値
 };
-class PlayerManger
-{
-	static void CreateInstance(void);///インスタンスの生成
-	static PlayerManger* Getinstance(void);///インスタンスの取得
 
-	PlayerManger(void);
+class PlayerManager
+{
+public:
+
+
+
+	static void CreateInstance(void);///インスタンスの生成
+	static PlayerManager* Getinstance(void);///インスタンスの取得
+
+	PlayerManager(void);
 
 	void Init(void);
 	void Update(void);
@@ -26,21 +35,25 @@ class PlayerManger
 
 	void DeleteInstance();
 
-	const PlayerData& GetEnemyData() const;
+	
+	const PlayerData& GetPlayerData() const;
 
 	void LoadStatusData(void);
 
+	
+
 private:
 
-	static PlayerManger* instance_;
-	
+	static PlayerManager* instance_;
+	/// @brief 
+	std::map<std::string, PlayerData> playerStatusMap_;
 
 	// デフォルトコンストラクタをprivateにして、
 	// 外部から生成できない様にする
 	// コンストラクタ
-	PlayerManger(const PlayerManger& instance) = default;
+	PlayerManager(const PlayerManager& instance) = default;
 	// デストラクタ
-	~PlayerManger(void) = default;
+	~PlayerManager(void) = default;
 
 };
 

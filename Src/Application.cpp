@@ -69,13 +69,16 @@ void Application::Run(void)
 	SceneManager& sceneManager = SceneManager::GetInstance();
 
 	// ƒQ[ƒ€ƒ‹[ƒv
-	while (ProcessMessage() == 0 && CheckHitKey(KEY_INPUT_ESCAPE) == 0 && !isEnd_)
+	while (ProcessMessage() == 0  && !isEnd_)
 	{
 
 		inputManager.Update();
 		sceneManager.Update();
 
 		sceneManager.Draw();
+
+		if (SceneManager::GetInstance().IsGameEnd())
+			return;
 
 		ScreenFlip();
 

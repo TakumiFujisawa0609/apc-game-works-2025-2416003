@@ -45,22 +45,6 @@ public:
 	void LoadStatusData(void);
 
 
-	
-
-	//// エネミーの最大体力取得
-	//int GetEnemyMaxHp(int enemyId) const;
-	//// エネミーの最大体力取得
-	/*int GetEnemyHp(int enemyId) const;*/
-	//// エネミーの攻撃力取得
-	//int GetEnemyAttack(int enemyId) const;
-	//// エネミーの防御力取得
-	//int GetEnemyDefense(int enemyId) const;
-	//// エネミーの素早さ取得
-	//int GetEnemyAgility(int enemyId) const;
-	//// エネミーの経験値取得
-	//int GetEnemyExp(int enemyId) const;
-	//// エネミーのお金取得
-	//int GetEnemyMoney(int enemyId) const;
 
 private:
 

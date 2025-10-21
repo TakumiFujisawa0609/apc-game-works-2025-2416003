@@ -19,9 +19,14 @@ public:
 	void Draw(void) override;
 	void Release(void) override;
 
+	void Pause(void);
+	void PauseDraw(void);
+
 private:
 
 	int stageId_;
+
+	bool isPauseAlive_;
 
 	Grid* grid_;
 	MapPlayer* player_;

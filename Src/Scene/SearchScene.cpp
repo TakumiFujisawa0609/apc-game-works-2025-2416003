@@ -45,10 +45,10 @@ void SearchScene::Update(void)
 
 	// ƒV[ƒ“‘JˆÚ
 	InputManager& ins = InputManager::GetInstance();
-	//if (ins.IsTrgDown(KEY_INPUT_SPACE))
-	//{
-	//	SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::GAME);
-	//}
+
+	Pause();
+
+
 	if (ins.IsTrgDown(KEY_INPUT_N))
 	{
 		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::BATTLE);
@@ -81,4 +81,22 @@ void SearchScene::Release(void)
 
 	player_->Release();
 	delete player_;
+}
+
+void SearchScene::Pause(void)
+{
+
+	if (InputManager::GetInstance().IsTrgDown(KEY_INPUT_ESCAPE))
+	{
+		isPauseAlive_ = true;
+	}
+
+	if (isPauseAlive_ == true)
+	{
+
+	}
+}
+
+void SearchScene::PauseDraw(void)
+{
 }
