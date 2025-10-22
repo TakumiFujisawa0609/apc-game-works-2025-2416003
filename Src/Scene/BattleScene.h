@@ -97,6 +97,9 @@ public:
 
 	void CreateBox(int x, int y, int width, int height, int color);
 
+	void Pause(void);
+	void PauseDraw(void);
+
 
 private:
 
@@ -127,6 +130,9 @@ private:
 	bool isEnd_ = false; //戦闘終了フラグ
 	bool isSelectingSkill_ = false;
 	bool skipSkillInput_ = false; //
+	//ポーズ判定
+	bool isPauseAlive_;
+
 
 	//αの仮攻撃
 	int enemyHp_;

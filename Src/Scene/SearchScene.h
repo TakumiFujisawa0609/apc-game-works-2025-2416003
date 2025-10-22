@@ -26,7 +26,7 @@ private:
 
 	int stageId_;
 
-	bool isPauseAlive_;
+	bool isPauseAlive_ ;
 
 	Grid* grid_;
 	MapPlayer* player_;

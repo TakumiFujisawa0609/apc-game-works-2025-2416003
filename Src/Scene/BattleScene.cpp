@@ -41,6 +41,16 @@ void BattleScene::Init(void)
 
 void BattleScene::Update(void)
 {
+
+	//ポーズ処理を行う
+	Pause();
+
+	//ポーズがオンの状態
+	if (isPauseAlive_)
+	{
+		return;
+	}
+
 	enemyManager_->Update();
 
 	// シーン遷移
@@ -208,6 +218,11 @@ void BattleScene::Draw(void)
 
 		DrawSkill();
 	}
+
+	if (isPauseAlive_)
+	{
+		PauseDraw();
+	}
 	
 }
 	
@@ -247,6 +262,35 @@ void BattleScene::ChangeCommand(COMMAND command)
 void BattleScene::CreateBox(int x, int y, int width, int height, int color)
 {
 	DrawBox(x, y, x + width, y + height, color, true);
+}
+
+void BattleScene::Pause(void)
+{
+	if (InputManager::GetInstance().IsTrgDown(KEY_INPUT_ESCAPE))
+	{
+		isPauseAlive_ = !isPauseAlive_;
+	}
+}
+
+void BattleScene::PauseDraw(void)
+{
+	int screenWidth = Application::SCREEN_SIZE_X;
+	int screenHeight = Application::SCREEN_SIZE_Y;
+
+	SetDrawBlendMode(DX_BLEND_SRC_ALPHA, 128);
+	DrawBox(0, 0, screenWidth, screenHeight, 0x000000, TRUE);
+	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0); // ブレンドモードを元に戻す
+
+	// ポーズ画面のテキスト描画
+	const char* pauseMessage = "PAUSE";
+	const char* resumeMessage = "Press ESC to Resume";
+	int white = GetColor(255, 255, 255);
+
+	// PAUSE メッセージを画面中央に大きく表示
+	DrawFormatString(screenWidth / 2 - 50, screenHeight / 2 - 50, white, "%s", pauseMessage);
+
+	// 再開メッセージ
+	DrawFormatString(screenWidth / 2 - 100, screenHeight / +50, white, "%s", resumeMessage);
 }
 
 void BattleScene::BattleInit(void)
