@@ -2,9 +2,8 @@
 #include <list>
 #include <string>
 #include <DxLib.h>
-
+#include "../Actor/ActorSkill.h"
 using  namespace std;
-
 
 class SkillBase
 {
@@ -46,29 +45,27 @@ protected:
 
 	//スキル名
 	string skillName_;
-	//ダメージ
-	int damege_;
-	//スキル処理のダメージ
-	int skillDamege_;
 
+	float baseDamege_;
+
+	//リリースロード
+	 virtual void InitLoad(void) = 0;
+	//スキルに必要な情報を入れる
+	 virtual void SetParam(void) = 0;
+	
+	 int CalculateDamege(int attackerAtk, int targetDef) ;
+	 //攻撃スキルのダメージ処理
+	 void SkillProcess(const ActorSkill& user, ActorSkill& target);
+
+private:
 
 	int playerHp_;
 	int playerAtk_;
 	int playerDef_;
 	int playerIntel_;
 
-	//リリースロード
-	 virtual void InitLoad(void) = 0;
-	//スキルに必要な情報を入れる
-	 virtual void SetParam(void) = 0;
-	 //スキルごとの必要な処理
-	 virtual void  SkillProcess(int atk ,int def, int intel) = 0;
-	 //攻撃スキルのダメージ処理
-	 virtual void Damege(int hp, int dmg, int def) = 0;
-
-private:
-
-	
+	int enemyHp_;
+	int enemyDef_;
 
 };
 

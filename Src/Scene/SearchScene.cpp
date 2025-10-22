@@ -85,6 +85,7 @@ void SearchScene::Draw(void)
 	if (isPauseAlive_)
 	{
 		PauseDraw();
+		DrawCommand();
 	}
 }
 
@@ -105,6 +106,31 @@ void SearchScene::Pause(void)
 		isPauseAlive_ = !isPauseAlive_;
 	}
 
+	if (InputManager::GetInstance().IsTrgDown(KEY_INPUT_UP))
+	{
+		cursorIndx_--;
+
+		if (cursorIndx_ < 0)
+		{
+			cursorIndx_ = static_cast<int>(STATE::MAX) - 1;
+		}
+	}
+	if (InputManager::GetInstance().IsTrgDown(KEY_INPUT_DOWN))
+	{
+		cursorIndx_++;
+
+		if (cursorIndx_ > (int)STATE::MAX - 1)
+		{
+			cursorIndx_ = 0;
+		}
+	}
+
+	if (InputManager::GetInstance().IsTrgDown(KEY_INPUT_SPACE))
+	{
+		ChagneState((STATE)cursorIndx_);
+
+	}
+
 }
 
 void SearchScene::PauseDraw(void)
@@ -118,13 +144,73 @@ void SearchScene::PauseDraw(void)
 
 	// ポーズ画面のテキスト描画
 	const char* pauseMessage = "PAUSE";
-	const char* resumeMessage = "Press ESC to Resume";
+
 	int white = GetColor(255, 255, 255);
 
 	// PAUSE メッセージを画面中央に大きく表示
-	DrawFormatString(screenWidth / 2 - 50, screenHeight / 2 - 50, white, "%s", pauseMessage);
+	DrawFormatString(screenWidth / 2 - 50, screenHeight / 3 - 50, white, "%s", pauseMessage);
 
-	// 再開メッセージ
-	DrawFormatString(screenWidth / 2 - 100, screenHeight / 2 + 50, white, "%s", resumeMessage);
+	
+}
 
+void SearchScene::ChangeExit(void)
+{
+	SceneManager::GetInstance().SetGameEnd();
+}
+
+void SearchScene::ChangeGame(void)
+{
+	isPauseAlive_ = !isPauseAlive_;
+}
+
+void SearchScene::ChagneState(STATE next)
+{
+	state_ = next;
+
+	switch (next)
+	{
+	case SearchScene::STATE::GAME:
+		isPauseAlive_ = !isPauseAlive_;
+		break;
+	case SearchScene::STATE::EXIT:
+		isEnd_ = true;
+
+		if (isEnd_ == true)
+		{
+			Application::GetInstance().End();
+		}
+		break;
+
+	}
+}
+
+void SearchScene::DrawCommand()
+{
+	// 2. 「GAME START」の描画
+	if (cursorIndx_ == (int)STATE::GAME)
+	{
+
+		// 選択中の場合、色を変えてカーソルを付ける
+		DrawString(300, RETUTN_GAME_POS_Y, CURSOR_CHAR, GetColor(255, 255, 0)); // 黄色のカーソル
+		DrawString(330, RETUTN_GAME_POS_Y, "GAME START", GetColor(255, 255, 0)); // 黄色
+	}
+	else
+	{
+		// 非選択中の場合
+		DrawString(330, RETUTN_GAME_POS_Y, "GAME START", GetColor(200, 200, 200)); // グレー
+	}
+
+
+	// 3. 「EXIT」の描画
+	if (cursorIndx_ == (int)STATE::EXIT)
+	{
+		// 選択中の場合、色を変えてカーソルを付ける
+		DrawString(300, EXIT_POS_Y, CURSOR_CHAR, GetColor(255, 255, 0)); // 黄色のカーソル
+		DrawString(330, EXIT_POS_Y, "EXIT", GetColor(255, 255, 0)); // 黄色
+	}
+	else
+	{
+		// 非選択中の場合
+		DrawString(330, EXIT_POS_Y, "EXIT", GetColor(200, 200, 200)); // グレー
+	}
 }

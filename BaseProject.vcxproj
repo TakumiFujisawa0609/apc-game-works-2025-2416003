@@ -19,10 +19,11 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Object\Skill\LimitBreakSkill.cpp" />
+    <ClCompile Include="Src\Object\Actor\ActorSkill.cpp" />
     <ClCompile Include="Src\Common\Pause.cpp" />
     <ClCompile Include="Src\Manager\PlayerManager.cpp" />
-    <ClCompile Include="Src\Object\Skill\LimitBreak.cpp" />
-    <ClCompile Include="Src\Object\Skill\Slash.cpp" />
+    <ClCompile Include="Src\Object\Skill\SlashSkill.cpp" />
     <ClCompile Include="Src\Manager\SkillDataManager.cpp" />
     <ClCompile Include="Src\Object\Enemy\BattleEnemy.cpp" />
     <ClCompile Include="Src\Object\Actor\MapPlayer.cpp" />
@@ -54,10 +55,11 @@
     <ClCompile Include="Src\Utility\MatrixUtility.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Object\Skill\LimitBreakSkill.h" />
+    <ClInclude Include="Src\Object\Actor\ActorSkill.h" />
     <ClInclude Include="Src\Common\Pause.h" />
     <ClInclude Include="Src\Manager\PlayerManager.h" />
-    <ClInclude Include="Src\Object\Skill\LimitBreak.h" />
-    <ClInclude Include="Src\Object\Skill\Slash.h" />
+    <ClInclude Include="Src\Object\Skill\SlashSkill.h" />
     <ClInclude Include="Src\Manager\SkillDataManager.h" />
     <ClInclude Include="Src\Object\Enemy\BattleEnemy.h" />
     <ClInclude Include="Src\Object\Actor\MapPlayer.h" />

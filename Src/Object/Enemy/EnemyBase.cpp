@@ -117,7 +117,6 @@ VECTOR EnemyBase::GetPos(void)
 
 void EnemyBase::HitDamage(int damage)
 {
-	hp_ -= damage - def_;
 	if (hp_ <= 0)
 	{
 		hp_ = 0;
