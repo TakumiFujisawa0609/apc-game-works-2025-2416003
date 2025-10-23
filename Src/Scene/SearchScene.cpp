@@ -138,7 +138,7 @@ void SearchScene::PauseDraw(void)
 	int screenWidth = Application::SCREEN_SIZE_X;
 	int screenHeight = Application::SCREEN_SIZE_Y;
 
-	SetDrawBlendMode(DX_BLEND_SRC_ALPHA, 128);
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 128);
 	DrawBox(0, 0, screenWidth, screenHeight, 0x000000, TRUE);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0); // ブレンドモードを元に戻す
 

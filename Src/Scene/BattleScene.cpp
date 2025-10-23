@@ -11,13 +11,17 @@
 #include "../Manager/EnemyStatusManager.h"
 #include "../Object/Enemy/BattleEnemy.h"
 #include "../Manager/Camera.h"
+#include"../Sound/SoundManager.h"
+
 
 BattleScene::BattleScene(void)
 {
+	SoundManager::GetInstance().Play(SoundManager::SRC::GAME_BGM, Sound::TIMES::LOOP);
 }
 
 BattleScene::~BattleScene(void)
 {
+	SoundManager::GetInstance().Stop(SoundManager::SRC::GAME_BGM);
 }
 
 void BattleScene::Init(void)
@@ -277,7 +281,7 @@ void BattleScene::PauseDraw(void)
 	int screenWidth = Application::SCREEN_SIZE_X;
 	int screenHeight = Application::SCREEN_SIZE_Y;
 
-	SetDrawBlendMode(DX_BLEND_SRC_ALPHA, 128);
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 128);//DX_BLEND_SRC_ALPHA
 	DrawBox(0, 0, screenWidth, screenHeight, 0x000000, TRUE);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0); // ブレンドモードを元に戻す
 

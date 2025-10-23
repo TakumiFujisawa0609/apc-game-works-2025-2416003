@@ -10,12 +10,14 @@ public:
 	//リソース名
 	enum class SRC
 	{
-		TITLE_BGM,		//タイトルシーンのBGM
-		GAME_BGM,
-		RESULT_BGM,
+		//TITLE_BGM,		//タイトルシーンのBGM
+		//GAME_BGM,
+		//RESULT_BGM,
 
-		HIPDROP_SE,	//ヒップドロップ
-		DAMAGE_SE,
+		//HIPDROP_SE,	//ヒップドロップ
+		//DAMAGE_SE,
+
+		GAME_BGM,
 
 		MAX
 
