@@ -14,6 +14,8 @@ class SkillManager
 	void Draw(void);
 	void Release(void);
 
+	void SlashSkill(void);
+
 	std::list<SkillBase*>GetSkills(void);
 
 private:

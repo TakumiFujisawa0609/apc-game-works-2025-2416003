@@ -2,29 +2,18 @@
 #include "../../Manager/PlayerManager.h"
 #include "../../Manager/EnemyStatusManager.h"
 
-void SkillBase::Init(void)
+void SkillBase::Init(SKILLTYPE type,SKILL skill)
 {
+	//スキルタイプとスキル名の種別
+	skillType_ = type;
+	skill_ = skill;
 
 	InitLoad();
-
-
-	/*PlayerManager::Getinstance();
-
-	const PlayerData& playerData_ = PlayerManager::Getinstance()->GetPlayerData();
-	
-	playerAtk_ = playerData_.atk_;
-	playerDef_ = playerData_.def_;
-	playerIntel_ = playerData_.intel_;
-	playerHp_ = playerData_.hp_;
-
-	EnemyStatusManager::Getinstance();*/
-
-
+	SetParam();
 }
 
 void SkillBase::Update(void)
 {
-	
 
 }
 
@@ -34,12 +23,6 @@ void SkillBase::Draw(void)
 
 void SkillBase::Release(void)
 {
-}
-
-
-void SkillBase::SetParam(void)
-{
-
 }
 
 int SkillBase::CalculateDamege(int attackerAtk, int targetDef)

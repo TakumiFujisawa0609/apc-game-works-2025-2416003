@@ -1,5 +1,7 @@
 #include "SkillManager.h"
 #include "../Object/Skill/SkillBase.h"
+#include "../Object/Skill/SlashSkill.h"
+
 
 SkillManager::SkillManager(void)
 {
@@ -32,6 +34,13 @@ void SkillManager::Draw(void)
 void SkillManager::Release(void)
 {
 
+}
+
+void SkillManager::SlashSkill(void)
+{
+	//SkillBase* skill = 
+
+	
 }
 
 std::list<SkillBase*> SkillManager::GetSkills(void)

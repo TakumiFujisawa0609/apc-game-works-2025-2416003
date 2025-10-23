@@ -1,6 +1,8 @@
 #pragma once
 #include <string>
 #include <DxLib.h>
+
+class SkillManager;
 class AnimationController;
 
 class ActorBase
@@ -30,6 +32,9 @@ protected://派生クラスから持ってくる情報
 
 	// アニメーション種別
 	int animType_;
+	// スキルマネジャー
+
+	SkillManager* skillManager_;
 
 	// モデル情報
 	int modelId_;
@@ -51,7 +56,7 @@ protected://派生クラスから持ってくる情報
 	virtual void InitTransform(void) = 0;
 
 	// 大きさ、回転、座標のモデル設定
-	void InitTransformPost(void);
+	void TransformUpdate(void);
 
 	// アニメーションの初期化
 	virtual void InitAnimation(void) = 0;

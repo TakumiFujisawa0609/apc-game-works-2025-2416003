@@ -9,6 +9,7 @@
 
 #include "../Manager/Camera.h"
 #include "SceneManager.h"
+#include "../Sound/SoundManager.h"
 
 SceneManager* SceneManager::instance_ = nullptr;
 
@@ -48,10 +49,13 @@ void SceneManager::Init(void)
 	// ‰ŠúƒV[ƒ“‚Ìİ’è
 	DoChangeScene(SCENE_ID::TITLE);
 
+	
+
 }
 
 void SceneManager::Update(void)
 {
+	
 
 	if (scene_ == nullptr)
 	{

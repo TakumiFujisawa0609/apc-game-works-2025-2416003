@@ -30,7 +30,7 @@ void LimitBreakSkill::SetParam(void)
 	//スキル名
 	skillName_ = "リミットブレイク";
 	//スキルごとのスキル固定ダメージ倍率
-	baseDamege_ = 1.0f;
+	baseDamege_ = 3.0f;
 }
 
 

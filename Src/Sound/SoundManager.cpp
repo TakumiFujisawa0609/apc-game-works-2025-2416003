@@ -39,7 +39,7 @@ void SoundManager::Init(void)
 
 	std::shared_ptr<Sound> res;
 
-	res = std::make_unique<Sound>(Sound::TYPE::SOUND_2D, Application::PATH_SOUND_BGM + "GameBgm.wav");
+	res = std::make_unique<Sound>(Sound::TYPE::SOUND_3D, Application::PATH_SOUND_BGM + "GameBgm.mp3");
 	res->ChengeMaxVolume(0.5f);
 	loadMap_.emplace(SRC::GAME_BGM, std::move(res));
 

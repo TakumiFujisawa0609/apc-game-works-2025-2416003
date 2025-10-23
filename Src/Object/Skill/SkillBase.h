@@ -26,8 +26,7 @@ public:
 		LIMIT_BREAK,//リミットブレイク
 	};
 
-
-	void Init(void);
+	void Init(SKILLTYPE type,SKILL skill);
 	// 更新
 	virtual void Update(void);
 	// デバッグ用描画
@@ -35,11 +34,10 @@ public:
 	// 解放
 	virtual void Release(void);
 
-
-
 protected:
 	/// @brief 技
 	SKILL skill_;
+
 	//スキル種別
 	SKILLTYPE skillType_;
 
@@ -50,6 +48,7 @@ protected:
 
 	//リリースロード
 	 virtual void InitLoad(void) = 0;
+
 	//スキルに必要な情報を入れる
 	 virtual void SetParam(void) = 0;
 	

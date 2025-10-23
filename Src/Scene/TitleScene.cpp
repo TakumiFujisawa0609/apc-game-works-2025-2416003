@@ -4,15 +4,18 @@
 #include "../Utility/AsoUtility.h"
 #include "../Manager/SceneManager.h"
 #include "../Manager/InputManager.h"
+#include "./../Sound/SoundManager.h"
 #include "TitleScene.h"
 
 TitleScene::TitleScene(void)
 {
 	imgTitle_ = -1;
+	//SoundManager::GetInstance().Play(SoundManager::SRC::GAME_BGM, Sound::TIMES::LOOP);
 }
 
 TitleScene::~TitleScene(void)
 {
+	//SoundManager::GetInstance().Stop(SoundManager::SRC::GAME_BGM);
 }
 
 void TitleScene::Init(void)

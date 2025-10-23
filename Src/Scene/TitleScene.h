@@ -42,11 +42,8 @@ public:
 	void DrawCommand(STATE next);
 
 	void TitleSE(void);
-	
 
 private:
-
-	
 
 	STATE state_;
 

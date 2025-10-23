@@ -21,6 +21,3 @@ MATRIX MatrixUtility::Multiplication(const VECTOR& childEuler, const VECTOR& par
 	MATRIX parent = MatrixUtility::GetMatrixRotateXYZ(parentEuler);
 	return MMult(child,parent);
 }
-
-
-

@@ -6,6 +6,7 @@
 
 ActorBase::ActorBase(void)
 {
+	skillManager_ = nullptr;
 }
 
 ActorBase::~ActorBase(void)
@@ -19,7 +20,7 @@ void ActorBase::Init(void)
 	// Transform初期化
 	InitTransform();
 	// 大きさ、回転、座標のモデル設定
-	InitTransformPost();
+	TransformUpdate();
 	// アニメーションの初期化
 	InitAnimation();
 	// 初期化後の個別処理
@@ -60,7 +61,7 @@ const VECTOR& ActorBase::GetPos(void) const
 	return pos_;
 }
 
-void ActorBase::InitTransformPost(void)
+void ActorBase::TransformUpdate(void)
 {
 	// 大きさをモデルに反映
 	MV1SetScale(modelId_, scales_);

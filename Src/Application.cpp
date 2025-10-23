@@ -1,6 +1,7 @@
 #include <DxLib.h>
 #include "Manager/InputManager.h"
 #include "Manager/SceneManager.h"
+#include "Sound/SoundManager.h"
 #include "Application.h"
 
 Application* Application::instance_ = nullptr;
@@ -61,6 +62,9 @@ void Application::Init(void)
 	// シーン管理初期化
 	SceneManager::CreateInstance();
 
+	SoundManager::CreateInstance();
+
+
 }
 
 void Application::Run(void)
@@ -68,6 +72,8 @@ void Application::Run(void)
 
 	InputManager& inputManager = InputManager::GetInstance();
 	SceneManager& sceneManager = SceneManager::GetInstance();
+	SoundManager& soundManager = SoundManager::GetInstance();
+	
 
 	// ゲームループ
 	while (ProcessMessage() == 0  && !isEnd_)
@@ -75,6 +81,7 @@ void Application::Run(void)
 
 		inputManager.Update();
 		sceneManager.Update();
+		
 
 		sceneManager.Draw();
 
@@ -95,6 +102,10 @@ void Application::Destroy(void)
 
 	// 入力制御解放
 	InputManager::GetInstance().Destroy();
+
+	SoundManager::GetInstance().Destroy();
+
+
 
 	// DxLib終了
 	if (DxLib_End() == -1)
