@@ -41,7 +41,7 @@ public:
 	void ChagneState(STATE next);
 	void DrawCommand(STATE next);
 
-	void TitleSE(void);
+
 
 private:
 

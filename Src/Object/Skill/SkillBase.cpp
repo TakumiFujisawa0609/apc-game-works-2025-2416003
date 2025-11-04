@@ -1,4 +1,5 @@
 #include "SkillBase.h"
+#include "../Actor/ActorBase.h"
 
 SkillBase::SkillBase(SKILL_KIND skillKind)
 {
@@ -40,6 +41,7 @@ void SkillBase::Attack(ActorBase* attacker, ActorBase* target)
 	case SKILL_TYPE::NON:
 		break;
 	case SKILL_TYPE::ATTACK:
+		
 		break;
 	case SKILL_TYPE::DEFENSE:
 		break;
