@@ -1,6 +1,6 @@
 #include "../Utility/AsoUtility.h"
 #include "../Manager/InputManager.h"
-#include "../Object/Actor/MapPlayer.h"
+#include "../Object/MapPlayer/MapPlayer.h"
 #include "Camera.h"
 
 Camera::Camera(void)

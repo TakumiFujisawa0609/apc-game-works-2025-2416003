@@ -1,6 +1,6 @@
 #pragma once
 #include <DxLib.h>
-#include "ActorBase.h"
+#include "../Actor/ActorBase.h"
 class AnimationController;
 class MatrixUtility;
 class Camera;

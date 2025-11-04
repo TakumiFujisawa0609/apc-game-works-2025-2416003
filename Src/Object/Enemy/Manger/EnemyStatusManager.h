@@ -1,6 +1,6 @@
 #pragma once
 #include <map>
-#include "../Object/Enemy/EnemyBase.h"
+#include "../EnemyBase.h"
 
 
 struct EnemyData

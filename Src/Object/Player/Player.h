@@ -2,6 +2,8 @@
 #include <list>
 #include <map>
 
+class SkillManager;
+
 class Player
 {
 public:
@@ -41,6 +43,6 @@ public:
 	void LoadStatusData(void);
 	
 private:
-
+	SkillManager* skillManager_;
 };
 

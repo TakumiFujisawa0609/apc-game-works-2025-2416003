@@ -2,7 +2,8 @@
 #include <map>
 #include <vector>
 #include <string>
-#include "../Object/Enemy/EnemyBase.h"
+#include "../../../Object/Player/Manger/PlayerManager.h"
+
 
 struct PlayerData
 {

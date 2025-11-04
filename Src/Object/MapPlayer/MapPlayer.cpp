@@ -8,7 +8,7 @@
 #include "../../Utility/AsoUtility.h"
 #include "../../Utility/MatrixUtility.h"
 #include "../../Object/Enemy/EnemyBase.h"
-#include "../../Manager/EnemyStatusManager.h"
+#include "../../Object/Enemy/Manger/EnemyStatusManager.h"
 
 #include "MapPlayer.h"
 

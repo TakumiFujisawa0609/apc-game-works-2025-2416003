@@ -1,5 +1,5 @@
 #include "EnemyBase.h"
-#include "../../Manager/EnemyStatusManager.h"
+#include "../Enemy/Manger/EnemyStatusManager.h"
 #include "../../Common/AnimationController.h"
 #include "../../Utility/MatrixUtility.h"
 #include "../../Utility/AsoUtility.h"

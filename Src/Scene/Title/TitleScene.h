@@ -1,5 +1,5 @@
 #pragma once
-#include "SceneBase.h"
+#include "../SceneBase.h"
 #define TITLE_SE_PATH "Data/Sound/TitleSe.wav"
 
 class SceneManager;

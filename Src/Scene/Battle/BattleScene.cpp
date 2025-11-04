@@ -1,27 +1,25 @@
 #include <string>
 #include <DxLib.h>
-#include "../Application.h"
-#include "../Utility/AsoUtility.h"
-#include "../Manager/SceneManager.h"
-#include "../Manager/InputManager.h"
-#include "GameScene.h"
-#include "../Object/Enemy/EnemyBase.h"
+#include "../../Application.h"
+#include "../../Utility/AsoUtility.h"
+#include "../../Manager/SceneManager.h"
+#include "../../Manager/InputManager.h"
+#include "../GameScene.h"
+#include "../../Object/Enemy/EnemyBase.h"
 #include "BattleScene.h"
-#include "../Manager/EnemyManager.h"
-#include "../Manager/EnemyStatusManager.h"
-#include "../Object/Enemy/BattleEnemy.h"
-#include "../Manager/Camera.h"
-#include"../Sound/SoundManager.h"
+#include "../../Object/Enemy/Manger/EnemyManager.h"
+#include "../../Object/Enemy/Manger/EnemyStatusManager.h"
+#include "../../Manager/Camera.h"
+#include"../../Sound/SoundManager.h"
 
 
 BattleScene::BattleScene(void)
 {
-	SoundManager::GetInstance().Play(SoundManager::SRC::GAME_BGM, Sound::TIMES::LOOP);
+
 }
 
 BattleScene::~BattleScene(void)
 {
-	SoundManager::GetInstance().Stop(SoundManager::SRC::GAME_BGM);
 }
 
 void BattleScene::Init(void)

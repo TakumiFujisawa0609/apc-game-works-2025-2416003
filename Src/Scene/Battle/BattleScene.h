@@ -1,6 +1,6 @@
 #include <vector>
 #include <list>
-#include "SceneBase.h"
+#include "../SceneBase.h"
 class SceneManager;
 class EnemyBase;
 class EnemyManager;
@@ -9,14 +9,7 @@ class BattleScene : public SceneBase
 {
 
 public:
-	//分割画像数
-	static constexpr int NUM_COMMAND_CHOPS_X = 5;
-	static constexpr int NUM_COMMAND_CHOPS_Y = 5;
-	static constexpr int NUM_COMMAND_CHOPS = NUM_COMMAND_CHOPS_X * NUM_COMMAND_CHOPS_Y;
 
-	//マップチップのサイズ
-	static constexpr int CHOPS_SIZE_X = 20;
-	static constexpr int CHOPS_SIZE_Y = 20;
 
 	static constexpr int ONE_SECOND = 60;
 

@@ -1,15 +1,20 @@
 #include "SkillBase.h"
-#include "../../Manager/PlayerManager.h"
-#include "../../Manager/EnemyStatusManager.h"
 
-void SkillBase::Init(SKILLTYPE type,SKILL skill)
+SkillBase::SkillBase(SKILL_KIND skillKind)
 {
-	//スキルタイプとスキル名の種別
-	skillType_ = type;
-	skill_ = skill;
+	skillData_.id = skillTable[static_cast<int>(skillKind)].id;
+	skillData_.mp = skillTable[static_cast<int>(skillKind)].mp;
+	skillData_.name = skillTable[static_cast<int>(skillKind)].name;
+	skillData_.power = skillTable[static_cast<int>(skillKind)].power;
+	skillData_.type = skillTable[static_cast<int>(skillKind)].type;
+}
 
-	InitLoad();
-	SetParam();
+SkillBase::~SkillBase()
+{
+}
+
+void SkillBase::Init(void)
+{
 }
 
 void SkillBase::Update(void)
@@ -19,27 +24,32 @@ void SkillBase::Update(void)
 
 void SkillBase::Draw(void)
 {
+
 }
 
 void SkillBase::Release(void)
 {
+
 }
 
-int SkillBase::CalculateDamege(int attackerAtk, int targetDef)
+void SkillBase::Attack(ActorBase* attacker, ActorBase* target)
 {
-	int damege = baseDamege_ * +-( attackerAtk - targetDef);
 
-	if (damege < 1)damege = 1;
-
-	return damege;
-
-	
-}
-
-void SkillBase::SkillProcess(const ActorSkill& user, ActorSkill& target)
-{
-	//ダメージ計算
-	int damege = CalculateDamege(user.getAtk(), target.getDef());
-	//計算結果を適用させる
-	target.takeDamage(damege);
+	switch (skillData_.type)
+	{
+	case SKILL_TYPE::NON:
+		break;
+	case SKILL_TYPE::ATTACK:
+		break;
+	case SKILL_TYPE::DEFENSE:
+		break;
+	case SKILL_TYPE::HEAL:
+		break;
+	case SKILL_TYPE::BUFF:
+		break;
+	case SKILL_TYPE::DEBUFF:
+		break;
+	default:
+		break;
+	}
 }

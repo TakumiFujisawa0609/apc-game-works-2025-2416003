@@ -1,9 +1,9 @@
 #include <string>
 #include <DxLib.h>
-#include "../Application.h"
-#include "../Utility/AsoUtility.h"
-#include "../Manager/SceneManager.h"
-#include "../Manager/InputManager.h"
+#include "../../Application.h"
+#include "../../Utility/AsoUtility.h"
+#include "../../Manager/SceneManager.h"
+#include "../../Manager/InputManager.h"
 #include "GameClear.h"
 
 GameClear::GameClear(void)

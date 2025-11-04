@@ -1,110 +1,129 @@
 #pragma once
-#include <map>
-#include <vector>
-#include <memory>
-#include "Sound.h"
+#include<unordered_map>
 
+/// <summary>
+/// サウンド管理クラス
+/// DxLibの3D空間上の音声再生機能を利用して、
+/// 音声に距離感を持たせることが可能なサウンド管理システム
+/// </summary>
 class SoundManager
 {
 public:
-	//リソース名
-	enum class SRC
+	/// <summary>
+	/// 再生の種類を分類する列挙型
+	/// </summary>
+	enum class TYPE
 	{
-		//TITLE_BGM,		//タイトルシーンのBGM
-		//GAME_BGM,
-		//RESULT_BGM,
-
-		//HIPDROP_SE,	//ヒップドロップ
-		//DAMAGE_SE,
-
-		GAME_BGM,
-
-		MAX
-
+		NONE,
+		BGM,   // バックグラウンドミュージック
+		SE     // サウンドエフェクト
 	};
-	enum class SOUND_TYPE
+
+	/// <summary>
+	/// 使用する音声データの種類を定義する列挙型
+	/// </summary>
+	enum class SOUND
 	{
-		BGM,
-		SE,
+		//ここに使用する音楽や効果音などを羅列
+		NONE,
+		BGM_TITLE,      // タイトル画面BGM
+		BGM_GAME,       // ゲームプレイ中BGM
+		BGM_GAMEOVER,   // ゲームオーバー時BGM
+		BGM_GAMECLEAR,  // ゲームクリア時BGM
+		BGM_GARDEN_DAY, //ガーデンの朝昼BGM
+		BGM_GARDEN_NIGHT, //ガーデンの夕方夜BGM
+		BGM_ATELIER,    //アトリエBGM
+		BGM_GUILD,      //ギルドのBGM
+
+		SE_PUSH,        // ボタン押下時効果音
+		SE_CANCEL,              //キャンセル音
+		SE_SELECT,      // カーソル移動
+		SE_DAMAGE,      // ダメージ受けた時効果音
+		SE_GET,         // アイテム取得時効果音
+		SE_ALCHEMY,     // 錬金時効果音	
+		SE_ALCHEMY_FAIL, //錬金失敗効果音
+		SE_ALCHEMY_SUCCESS, //錬金成功効果音
 	};
-	// 明示的にインステンスを生成する
+
+	/// <summary>
+	/// 音声データを格納する構造体
+	/// </summary>
+	struct SOUND_DATA
+	{
+		int data;       // 音声データ格納
+		TYPE type;      // 音声データの種類 ※この要素は削除するかも
+		int playMode;   // 音声データの再生タイプ
+	};
+
+	/// <summary>
+	/// インスタンスを生成する
+	/// シングルトンパターンの実装
+	/// </summary>
 	static void CreateInstance(void);
 
-	// 静的インスタンスの取得
+	/// <summary>
+	/// インスタンスを取得する
+	/// </summary>
+	/// <returns>SoundManagerの唯一のインスタンス</returns>
 	static SoundManager& GetInstance(void);
 
-	// 初期化
-	void Init(void);
+	/// <summary>
+	/// サウンドの追加
+	/// </summary>
+	/// <param name="_type">音の種類分け(SEかBGMか)</param>
+	/// <param name="_sound">具体的な用途</param>
+	/// <param name="_data">音のデータ</param>
+	void Add(const TYPE type, const SOUND sound, const int _data);
 
-	// 解放(シーン切替時に一旦解放)
+	/// <summary>
+	/// 音声データの再生
+	/// </summary>
+	/// <param name="_sound">再生する音声データ</param>
+	void Play(const SOUND _sound);
+
+	/// <summary>
+	/// 音声データの停止処理
+	/// </summary>
+	/// <param name="_sound">停止する音声データ</param>
+	void Stop(const SOUND _sound);
+
+	/// <summary>
+	/// 音声データの解放処理
+	/// </summary>
 	void Release(void);
 
-	// リソースの完全破棄
+	/// <summary>
+	/// 音量調節
+	/// </summary>
+	/// <param name="_sound">調整対象の音声</param>
+	/// <param name="_persent">調整割合(0%～100%)</param>
+	void AdjustVolume(const SOUND _sound, const int _persent);
+
+	//なり終わってるかどうか
+	bool IsPlaying(SOUND sound);
+
+	/// <summary>
+	/// インスタンスの破棄
+	/// </summary>
 	void Destroy(void);
 
-	/// <summary>
-	/// 二次元音源再生
-	/// </summary>
-	/// <param name="src">音の種類</param>
-	/// <param name="times">１回かループか</param>
-	/// <returns>再生が成功したらtrue</returns>
-	bool Play(SRC src,Sound::TIMES times);
-
-	/// <summary>
-	/// 三次元音源再生
-	/// </summary>
-	/// <param name="src">音の種類</param>
-	/// <param name="times">１回かループか</param>
-	/// <param name="pos">再生する場所</param>
-	/// <param name="radius">音が聞こえる範囲</param>
-	/// <returns>再生成功したらtrue</returns>
-	bool Play(SRC src,Sound::TIMES times,VECTOR pos, float radius);
-
-	/// <summary>
-	/// 指定の音をすべて停止する
-	/// </summary>
-	/// <param name="src">音の種類</param>
-	void Stop(SRC src);
-
-	/// <summary>
-	/// 指定の音が1つでもなっているかどうか
-	/// </summary>
-	/// <param name="src">音の種類</param>
-	/// <returns>１つでもなっていたらtrue</returns>
-	bool CheckMove(SRC src);
-
-	/// <summary>
-	/// 指定した音の音量を全て変える
-	/// </summary>
-	/// <param name="src">音の種類</param>
-	/// <param name="per">0.0～1.0でパーセントを設定</param>
-	void ChengeVolume(SRC src, float per);
-
-	/// <summary>
-	/// 3D音源の耳の位置と前方ベクトルを設定する
-	/// </summary>
-	/// <param name="pos">耳の位置(カメラ座標)</param>
-	/// <param name="frontPos">前方方向(カメラ注視点)</param>
-	void Set3DListenPosAndFrontPos(VECTOR pos, VECTOR frontPos);
-
-	void DeletePlayMap(void);
 private:
-	// 静的インスタンス
+	//インスタンス用
 	static SoundManager* instance_;
-	//BGMかSEに分ける
-	std::map<SOUND_TYPE, std::vector<SRC>> soundType_;
-	//同時最大再生数
-	std::map<SRC, int> maxPlayNum;
-	//読み込み済みリソース
-	std::map<SRC, std::shared_ptr<Sound>> loadMap_;
-	//プレイ用
-	std::map<SRC, std::vector<std::shared_ptr<Sound>>> playMap_;
 
-	// デフォルトコンストラクタをprivateにして、
-	// 外部から生成できない様にする
-	SoundManager(void) = default;
+	/// <summary>
+	/// 音声データ格納用マップ
+	/// SOUND列挙型をキーとして、対応する音声データを管理
+	/// </summary>
+	std::unordered_map<SOUND, SOUND_DATA>sounds_;
 
-	// デストラクタも同様
-	~SoundManager(void) = default;
+	/// <summary>
+	/// コンストラクタ（シングルトンパターンのため外部からのインスタンス化を防止）
+	/// </summary>
+	SoundManager() = default;
+
+	/// <summary>
+	/// デストラクタ
+	/// </summary>
+	~SoundManager() = default;
 };
-

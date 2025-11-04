@@ -1,12 +1,11 @@
 #include <chrono>
 #include <DxLib.h>
 #include "../Common/Fader.h"
-#include "../Scene/TitleScene.h"
+#include "../Scene/Title/TitleScene.h"
 #include "../Scene/GameScene.h"
-#include "../Scene/BattleScene.h"
-#include "../Scene/SearchScene.h"
-#include "../Scene/GameClear.h"
-
+#include "../Scene/Battle/BattleScene.h"
+#include "../Scene//Search/SearchScene.h"
+#include "../Scene/Clear/GameClear.h"
 #include "../Manager/Camera.h"
 #include "SceneManager.h"
 #include "../Sound/SoundManager.h"

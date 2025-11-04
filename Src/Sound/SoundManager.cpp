@@ -1,214 +1,97 @@
-#include <DxLib.h>
-#include"../Application.h"
 #include "SoundManager.h"
+#include<DxLib.h>
+#include<cassert>
 
+// シングルトンインスタンスの初期化
 SoundManager* SoundManager::instance_ = nullptr;
 
+// インスタンス生成メソッド
+// 未生成の場合のみ新しいインスタンスを作成する
 void SoundManager::CreateInstance(void)
 {
-	if (instance_ == nullptr)
-	{
+	if (instance_ == nullptr) {
 		instance_ = new SoundManager();
 	}
-	instance_->Init();
 }
 
+// インスタンス取得メソッド
 SoundManager& SoundManager::GetInstance(void)
 {
 	return *instance_;
 }
 
-void SoundManager::Init(void)
+// サウンドの追加
+void SoundManager::Add(const TYPE type, const SOUND sound, const int _data)
 {
-	//BGMかSEに分ける
-	//soundType_[SOUND_TYPE::BGM].push_back(SRC::TITLE_BGM);
-	//soundType_[SOUND_TYPE::BGM].push_back(SRC::RESULT_BGM);
-	//soundType_[SOUND_TYPE::SE].push_back(SRC::HIPDROP_SE);
-	//soundType_[SOUND_TYPE::SE].push_back(SRC::DAMAGE_SE);
-	
-	soundType_[SOUND_TYPE::BGM].push_back(SRC::GAME_BGM);
+	// 連想配列内にすでに要素が入っているかを検索
+	// 入っていたら処理終了 (重複登録を防止)
+	if (sounds_.find(sound) != sounds_.end()) return;
 
-	//最大再生数を初期化する
-	for (int i = 0; i < static_cast<int>(SRC::MAX);i++)
-	{
-		//初期化ですべての音が同時に1つしかならないようにする
-		maxPlayNum.emplace(static_cast<SRC>(i), 1);
-		playMap_.emplace(static_cast<SRC>(i), std::vector<std::shared_ptr<Sound>>{});
-	}
+	// 再生するときデータの種類によって
+	// ループ再生か単発かを判断する
+	int mode = -1;
+	if (type == TYPE::BGM) mode = DX_PLAYTYPE_LOOP;  // BGMはループ再生
+	else mode = DX_PLAYTYPE_BACK;                    // SEは単発再生
 
-
-	std::shared_ptr<Sound> res;
-
-	res = std::make_unique<Sound>(Sound::TYPE::SOUND_3D, Application::PATH_SOUND_BGM + "GameBgm.mp3");
-	res->ChengeMaxVolume(0.5f);
-	loadMap_.emplace(SRC::GAME_BGM, std::move(res));
-
-	//res = std::make_unique<Sound>(Sound::TYPE::SOUND_2D, Application::PATH_SOUND_BGM + "Title.mp3");
-	//res->ChengeMaxVolume(0.5f);
-	//loadMap_.emplace(SRC::TITLE_BGM, std::move(res));
-	
-	//res = std::make_unique<Sound>(Sound::TYPE::SOUND_2D, Application::PATH_SOUND_BGM + "Result.mp3");
-	//res->ChengeMaxVolume(0.5f);
-	//loadMap_.emplace(SRC::RESULT_BGM, std::move(res));
-
-	//res = std::make_unique<Sound>(Sound::TYPE::SOUND_2D, Application::PATH_SOUND_SE + "HipDrop.mp3");
-	//res->ChengeMaxVolume(1.0f);
-	//res->SetPitch(2400.0f);
-	//maxPlayNum[SRC::HIPDROP_SE] = 10;
-	//loadMap_.emplace(SRC::HIPDROP_SE, std::move(res));
-	//res = std::make_unique<Sound>(Sound::TYPE::SOUND_2D, Application::PATH_SOUND_SE + "HipDrop.mp3");
-	//res->ChengeMaxVolume(1.0f);
-	//maxPlayNum[SRC::DAMAGE_SE] = 10;
-	//loadMap_.emplace(SRC::DAMAGE_SE, std::move(res));
+	// 新規データのため情報を追加
+	// 注意: 変数名が不一致 (*data → _data)
+	sounds_.emplace(sound, SOUND_DATA{ _data, type, mode });
 }
 
+// 音声データの再生
+void SoundManager::Play(const SOUND _sound)
+{
+	// 元データがないときは警告 (未登録の音声を再生しようとした場合)
+	if (sounds_.find(_sound) == sounds_.end()) assert("設定していない音声を再生しようとしています。");
+
+	// DxLibの関数を使用して音声を再生
+	// 音声データと再生モード(ループ/単発)を指定
+	PlaySoundMem(sounds_[_sound].data, sounds_[_sound].playMode);
+}
+
+// 停止処理
+void SoundManager::Stop(const SOUND _sound)
+{
+	// 元データがないときは警告 (未登録の音声を停止しようとした場合)
+	if (sounds_.find(_sound) == sounds_.end()) assert("設定していない音声を停止しようとしています。");
+
+	// DxLibの関数を使用して音声を停止
+	StopSoundMem(sounds_[_sound].data);
+}
+
+// 全音声データの解放処理
 void SoundManager::Release(void)
 {
-	for (auto& p : loadMap_)
-	{
-		p.second->Release();
-	}
-
-	loadMap_.clear();
-	InitSoundMem();
+	// 連想配列の全要素を削除
+	sounds_.clear();
 }
 
+// 音量調節
+void SoundManager::AdjustVolume(const SOUND sound, const int persent)
+{
+	// 元データがないときは警告 (未登録の音声を設定しようとした場合)
+	// 注意: 変数名が不一致 (_sound → *sound)
+	if (sounds_.find(sound) == sounds_.end()) assert("設定していない音声を設定しようとしています。");
+
+	// DxLibの関数を使用して音量を変更
+	// 0～255の範囲を0～100%に変換
+	ChangeVolumeSoundMem(255  * persent / 100, sounds_[sound].data);
+}
+
+//なり終わってるかどうか
+bool SoundManager::IsPlaying(SOUND sound)
+{
+	auto it = sounds_.find(sound);
+	if (it == sounds_.end()) return false; // 存在しなければ再生していない
+
+	int handle = it->second.data;
+	return CheckSoundMem(handle) == 1;  // 1なら再生中
+}
+
+// インスタンスの破棄処理
 void SoundManager::Destroy(void)
 {
+	// 全音声データを解放してからインスタンスを削除
 	Release();
-	loadMap_.clear();
 	delete instance_;
-}
-
-bool SoundManager::Play(SRC src, Sound::TIMES times)
-{
-	
-	const auto& lPair = loadMap_.find(src);
-	if (lPair != loadMap_.end())
-	{
-		if (!lPair->second->CheckLoad())
-		{
-			lPair->second->Load();
-		}
-		if (playMap_[src].size() < maxPlayNum[src])
-		{
-			std::shared_ptr<Sound>sound;
-			sound = std::make_shared<Sound>();
-			sound->Copy(lPair->second);
-			//sound = lPair->second;
-			sound->DuplicateSound();
-			bool isPlay = sound->Play(times);
-			playMap_[src].push_back(sound);
-
-			return isPlay;
-		}
-		else
-		{
-			for (auto& plays : playMap_[src])
-			{
-				if (plays->CheckMove())
-				{
-					continue;
-				}
-				if (plays->Play(times))
-				{
-					return true;
-				}
-			}
-			return false;
-		}
-	}
-	return false;
-}
-
-bool SoundManager::Play(SRC src, Sound::TIMES times, VECTOR pos, float radius)
-{
-	const auto& lPair = loadMap_.find(src);
-	if (lPair != loadMap_.end())
-	{
-		if (!lPair->second->CheckLoad())
-		{
-			lPair->second->Load();
-		}
-		if (playMap_[src].size() < maxPlayNum[src])
-		{
-			std::shared_ptr<Sound>sound;
-			sound = std::make_shared<Sound>();
-			sound->Copy(lPair->second);
-			//sound = lPair->second;
-			sound->DuplicateSound();
-			bool isPlay = sound->Play(pos, radius, times);
-			playMap_[src].push_back(sound);
-
-			return isPlay;
-		}
-		else
-		{
-			for (auto& plays : playMap_[src])
-			{
-				if (plays->CheckMove())
-				{
-					continue;
-				}
-				if (plays->Play(pos, radius, times))
-				{
-					return true;
-				}
-			}
-			return false;
-		}
-		return lPair->second->Play(pos,radius,times);
-	}
-	return false;
-}
-
-void SoundManager::Stop(SRC src)
-{
-	const auto& lPair = playMap_.find(src);
-	if (lPair != playMap_.end())
-	{
-		for (auto& sound : lPair->second)
-		{
-			sound->Stop();
-		}
-	}
-}
-
-bool SoundManager::CheckMove(SRC src)
-{
-	const auto& lPair = playMap_.find(src);
-	if (lPair != playMap_.end())
-	{
-		for (auto& sound : lPair->second)
-		{
-			if (sound->CheckMove())
-			{
-				return true;
-			}
-		}
-	}
-	return false;
-
-}
-
-void SoundManager::ChengeVolume(SRC src, float per)
-{
-	const auto& lPair = playMap_.find(src);
-	if (lPair != playMap_.end())
-	{
-		for (auto& sound : lPair->second)
-		{
-			sound->ChengeVolume(per);
-		}
-	}
-}
-
-void SoundManager::Set3DListenPosAndFrontPos(VECTOR pos, VECTOR frontPos)
-{
-	Set3DSoundListenerPosAndFrontPos_UpVecY(pos, frontPos);
-}
-
-void SoundManager::DeletePlayMap(void)
-{
-	playMap_.clear();
 }

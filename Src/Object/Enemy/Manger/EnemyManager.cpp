@@ -1,6 +1,6 @@
 #include <DxLib.h>
 #include "EnemyManager.h"
-#include "../Object/Enemy/Goblin.h"
+#include "../Goblin.h"
 
 EnemyManager::EnemyManager(void)
 {

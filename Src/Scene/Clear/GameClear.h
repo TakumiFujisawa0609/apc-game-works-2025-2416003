@@ -1,4 +1,4 @@
-#include "SceneBase.h"
+#include "../SceneBase.h"
 class SceneManager;
 class Grid;
 class Camera;
