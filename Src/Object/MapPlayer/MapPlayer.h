@@ -1,11 +1,11 @@
 #pragma once
 #include <DxLib.h>
-#include "../Actor/ActorBase.h"
+#include "MapPlayerBase.h"
 class AnimationController;
 class MatrixUtility;
 class Camera;
 
-class MapPlayer : public ActorBase
+class MapPlayer : public MapPlayerBase
 {
 public:
 

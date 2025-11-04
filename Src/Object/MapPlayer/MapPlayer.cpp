@@ -27,7 +27,7 @@ void MapPlayer::Update(void)
 	InputManager& ins = InputManager::GetInstance();
 
 
-	ActorBase::Update();
+	MapPlayerBase::Update();
 	nowPos_ = pos_;
 	enCount();
 	prePos_ = nowPos_;
@@ -39,12 +39,12 @@ void MapPlayer::Draw(void)
 	// デバッグ表示
 	//DrawFormatString(0, 100, 0xffffff,"サイコロ角度　 ：(% .1f, % .1f, % .1f)",pos_.x, pos_.y, pos_.z);
 	
-	ActorBase::Draw();
+	MapPlayerBase::Draw();
 }
 
 void MapPlayer::Release(void)
 {
-	ActorBase::Release();
+	MapPlayerBase::Release();
 }
 
 void MapPlayer::InitLoad(void)

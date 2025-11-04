@@ -19,6 +19,12 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Object\Enemy\Manger\EnemyManager.cpp" />
+    <ClCompile Include="Src\Object\Enemy\Manger\EnemyStatusManager.cpp" />
+    <ClCompile Include="Src\Object\MapPlayer\MapPlayer.cpp" />
+    <ClCompile Include="Src\Object\MapPlayer\MapPlayerBase.cpp" />
+    <ClCompile Include="Src\Object\Player\Manger\PlayerManager.cpp" />
+    <ClCompile Include="Src\Object\Player\Player.cpp" />
     <ClCompile Include="Src\Object\Skill\LimitBreakSkill.cpp" />
     <ClCompile Include="Src\Object\Actor\ActorSkill.cpp" />
     <ClCompile Include="Src\Common\Pause.cpp" />
@@ -29,6 +35,8 @@
     <ClCompile Include="Src\Object\Actor\MapPlayer.cpp" />
     <ClCompile Include="Src\Manager\EnemyStatusManager.cpp" />
     <ClCompile Include="Src\Object\Actor\ActorBase.cpp" />
+    <ClCompile Include="Src\Scene\Battle\BattleScene.cpp" />
+    <ClCompile Include="Src\Scene\Clear\GameClear.cpp" />
     <ClCompile Include="Src\Scene\GameClear.cpp" />
     <ClCompile Include="Src\Object\Enemy\Goblin.cpp" />
     <ClCompile Include="Src\Common\AnimationController.cpp" />
@@ -50,13 +58,21 @@
     <ClCompile Include="Src\Manager\InputManager.cpp" />
     <ClCompile Include="Src\Manager\SceneManager.cpp" />
     <ClCompile Include="Src\Scene\SceneBase.cpp" />
+    <ClCompile Include="Src\Scene\Search\SearchScene.cpp" />
     <ClCompile Include="Src\Scene\TitleScene.cpp" />
+    <ClCompile Include="Src\Scene\Title\TitleScene.cpp" />
     <ClCompile Include="Src\Sound\Sound.cpp" />
     <ClCompile Include="Src\Sound\SoundManager.cpp" />
     <ClCompile Include="Src\Utility\AsoUtility.cpp" />
     <ClCompile Include="Src\Utility\MatrixUtility.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Object\Enemy\Manger\EnemyManager.h" />
+    <ClInclude Include="Src\Object\Enemy\Manger\EnemyStatusManager.h" />
+    <ClInclude Include="Src\Object\MapPlayer\MapPlayer.h" />
+    <ClInclude Include="Src\Object\MapPlayer\MapPlayerBase.h" />
+    <ClInclude Include="Src\Object\Player\Manger\PlayerManager.h" />
+    <ClInclude Include="Src\Object\Player\Player.h" />
     <ClInclude Include="Src\Object\Skill\LimitBreakSkill.h" />
     <ClInclude Include="Src\Object\Actor\ActorSkill.h" />
     <ClInclude Include="Src\Common\Pause.h" />
@@ -67,6 +83,8 @@
     <ClInclude Include="Src\Object\Actor\MapPlayer.h" />
     <ClInclude Include="Src\Manager\EnemyStatusManager.h" />
     <ClInclude Include="Src\Object\Actor\ActorBase.h" />
+    <ClInclude Include="Src\Scene\Battle\BattleScene.h" />
+    <ClInclude Include="Src\Scene\Clear\GameClear.h" />
     <ClInclude Include="Src\Scene\GameClear.h" />
     <ClInclude Include="Src\Object\Enemy\Goblin.h" />
     <ClInclude Include="Src\Common\AnimationController.h" />
@@ -88,7 +106,9 @@
     <ClInclude Include="Src\Manager\InputManager.h" />
     <ClInclude Include="Src\Manager\SceneManager.h" />
     <ClInclude Include="Src\Scene\SceneBase.h" />
+    <ClInclude Include="Src\Scene\Search\SearchScene.h" />
     <ClInclude Include="Src\Scene\TitleScene.h" />
+    <ClInclude Include="Src\Scene\Title\TitleScene.h" />
     <ClInclude Include="Src\Sound\Sound.h" />
     <ClInclude Include="Src\Sound\SoundManager.h" />
     <ClInclude Include="Src\Utility\AsoUtility.h" />
