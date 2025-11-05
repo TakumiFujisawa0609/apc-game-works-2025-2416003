@@ -94,30 +94,7 @@ void MapPlayer::Move(void)
 {
 	auto& ins = InputManager::GetInstance();
 
-	// 攻撃中かチェック
-	int currentAnim = animationController_->GetPlayType();
-	bool isAttacking = (currentAnim == static_cast<int>(ANIM_TYPE::ATTACK));
-	bool isJumping = (currentAnim == static_cast<int>(ANIM_TYPE::JUMP));
 
-	// 攻撃アニメーションが終わったらIDLEに戻す
-	if (isAttacking)
-	{
-		if (animationController_->IsEnd())
-		{
-			animationController_->Play(static_cast<int>(ANIM_TYPE::IDLE));
-		}
-		return;  // 攻撃中は移動処理をスキップ
-	}
-
-	// ジャンプアニメーションが終わったらIDLEに戻す
-	if (isJumping)
-	{
-		if (animationController_->IsEnd())
-		{
-			animationController_->Play(static_cast<int>(ANIM_TYPE::IDLE));
-		}
-		return;  // ジャンプ中は移動処理をスキップ
-	}
 
 	// カメラの角度を取得
 	VECTOR camAngles =

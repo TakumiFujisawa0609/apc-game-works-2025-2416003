@@ -1,5 +1,6 @@
 #include "ActorBase.h"
 
+
 void ActorBase::Init(void)
 {
 }
@@ -16,15 +17,75 @@ void ActorBase::Release(void)
 {
 }
 
-void ActorBase::SlashAttack(int atkPower,int defPower,int hp)
+int ActorBase::costMp(int costMp, int mp)
 {
-	int atk_ = atkPower;
-	int def_ = defPower;
-	int hp_ = hp;
+	//ä˘Ç…MPÇ™ÇOÇÃèÍçá
+	if (mp == 0)
+	{
+		return mp;
+	}
 
-	hp_ = hp_ - (atk_ - def_);
+	mp = mp - costMp;
+
+	//Mè¡îÔÇµÇƒÇOÇ…Ç»Ç¡ÇΩèÍçá
+	if (mp <= 0)
+	{	
+		mp = 0;
+	}
+
+	return mp;
 }
 
-void ActorBase::StatusLoadData(void)
+int ActorBase::addMp(int addMp, int targetMp, int targetMaxMp)
 {
+	if (targetMp >= targetMaxMp)
+	{
+
+	}
+
+	targetMp = targetMp + addMp;
+
+	if (targetMp >= targetMaxMp)
+	{
+		targetMp = targetMaxMp;
+	}
+
+	return targetMp;
 }
+
+void ActorBase::addHp(int addHp, int targetHp)
+{
+	targetHp = addHp + targetHp;
+}
+
+int ActorBase::PhysicsDamage(float skillPow, int attckerAtk, int targetDef, int targetHp)
+{
+	int damege;
+
+	damege = (attckerAtk* skillPow) - targetDef;
+
+	targetHp = targetHp - damege;
+
+	return targetHp;
+}
+
+int ActorBase::MagicDamage(float skillPow, int attckerWis, int targetWis, int targetHp)
+{
+	int damage;
+
+	damage = (attckerWis * skillPow) - targetWis;
+
+	targetHp = targetHp - damage;
+
+	return targetHp;
+}
+
+
+
+
+
+
+
+
+
+

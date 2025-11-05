@@ -284,5 +284,8 @@
     <ClInclude Include="Src\Object\Skill\SkillTbl.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="Src\Object\Player\PlayerTbl.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

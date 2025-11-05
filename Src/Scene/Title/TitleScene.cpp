@@ -21,14 +21,6 @@ TitleScene::~TitleScene(void)
 void TitleScene::Init(void)
 {
 	imgTitle_ = LoadGraph((Application::PATH_IMAGE + "Title.png").c_str());
-	titleHundle_ = LoadSoundMem(TITLE_SE_PATH);
-	SetVolumeSoundMem(BGM1_VOLUME, titleHundle_);
-	//サウンドのインスタンス取得
-	auto& sound = SoundManager::GetInstance();
-	//BGM登録
-	sound.Add(SoundManager::TYPE::BGM, SoundManager::SOUND::BGM_GAME, LoadSoundMem("Data/Sound/BGM/GameBgm.wav"));
-
-	sound.AdjustVolume(SoundManager::SOUND::BGM_GAME, 60);//音量調整
 
 
 }
@@ -38,11 +30,8 @@ void TitleScene::Update(void)
 
 	// シーン遷移
 	InputManager& ins = InputManager::GetInstance();
-	//サウンドのインスタンス取得
-	auto& sound = SoundManager::GetInstance();
 
-	sound.Play(SoundManager::SOUND::BGM_GAME);
-
+ 
 
 	if (ins.IsTrgDown(KEY_INPUT_UP))
 	{

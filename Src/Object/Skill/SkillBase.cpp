@@ -41,7 +41,9 @@ void SkillBase::Attack(ActorBase* attacker, ActorBase* target)
 	case SKILL_TYPE::NON:
 		break;
 	case SKILL_TYPE::ATTACK:
-		
+		//actorBase_->SlashAttack(target.hp, skillData_.power);
+
+		//actorBase_->SlashAttack(‚±‚±‚ðtarget.hp, skillData_.power);
 		break;
 	case SKILL_TYPE::DEFENSE:
 		break;

@@ -2,7 +2,6 @@
 #include <string>
 #include <DxLib.h>
 
-class SkillManager;
 class AnimationController;
 
 class MapPlayerBase
@@ -34,7 +33,6 @@ protected://派生クラスから持ってくる情報
 	int animType_;
 	// スキルマネジャー
 
-	SkillManager* skillManager_;
 
 	// モデル情報
 	int modelId_;

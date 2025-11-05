@@ -20,4 +20,5 @@ public:
 protected:
 	SkillData skillData_;		// ƒXƒLƒ‹î•ñ
 
+	ActorBase* actorBase_;
 };

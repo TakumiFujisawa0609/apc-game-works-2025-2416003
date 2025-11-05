@@ -37,7 +37,7 @@ struct SkillData
 	SKILL_KIND id;		// スキルID
 	SKILL_TYPE type;	// スキルタイプ
 	std::string name;	// 名前 (文字列)
-	int power;			// 威力
+	float power;			// 威力
 	int mp;				// 消費MP
 };
 
@@ -45,11 +45,11 @@ struct SkillData
 // スキルテーブル（配列）
 const SkillData skillTable[] =
 {
-	// スキルID					// スキルタイプ 		// スキル名				// 威力		// 消費MP
-	{ SKILL_KIND::NON			,SKILL_TYPE::NON		, "なし"				, 0			, 0		},
-	{ SKILL_KIND::FIRE			,SKILL_TYPE::ATTACK		, "ファイア"			, 10		, 3		},
-	{ SKILL_KIND::THUNDER		,SKILL_TYPE::ATTACK		, "サンダー"			, 10		, 3		},
-	{ SKILL_KIND::ICE			,SKILL_TYPE::ATTACK		, "ブリザド"			, 10		, 3		},
-	{ SKILL_KIND::SLASH			,SKILL_TYPE::ATTACK		, "スラッシュ"			, 15		, 10	},
-	{ SKILL_KIND::LIMIT_BREAK	,SKILL_TYPE::ATTACK		, "リミットブレイク"	, 30		, 15	},
+	// スキルID					// スキルタイプ 		// スキル名				// 威力倍率		// 消費MP
+	{ SKILL_KIND::NON			,SKILL_TYPE::NON		, "なし"				, 0.0f			, 0		},
+	{ SKILL_KIND::FIRE			,SKILL_TYPE::ATTACK		, "ファイア"			, 1.2f			, 3		},
+	{ SKILL_KIND::THUNDER		,SKILL_TYPE::ATTACK		, "サンダー"			, 1.2f			, 3		},
+	{ SKILL_KIND::ICE			,SKILL_TYPE::ATTACK		, "ブリザド"			, 1.2f			, 3		},
+	{ SKILL_KIND::SLASH			,SKILL_TYPE::ATTACK		, "スラッシュ"			, 1.5f			, 10	},
+	{ SKILL_KIND::LIMIT_BREAK	,SKILL_TYPE::ATTACK		, "リミットブレイク"	, 3.0f			, 15	},
 };
