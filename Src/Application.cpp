@@ -1,7 +1,7 @@
 #include <DxLib.h>
 #include "Manager/InputManager.h"
 #include "Manager/SceneManager.h"
-#include "Sound/SoundManager.h"
+#include "Sound/AudioManager.h"
 #include "Application.h"
 
 Application* Application::instance_ = nullptr;
@@ -11,6 +11,7 @@ const std::string Application::PATH_IMAGE =  "Data/Image/";
 const std::string Application::PATH_MODEL = "Data/Model/";
 const std::string Application::PATH_EFFECT =  "Data/Effect/";
 const std::string Application::PATH_SOUND_BGM = "Data/Sound/BGM/";
+const std::string Application::PATH_SOUND_SE = "Data/Sound/SE/";
 
 void Application::CreateInstance(void)
 {
@@ -58,11 +59,15 @@ void Application::Init(void)
 	// 入力制御初期化
 	SetUseDirectInputFlag(true);
 	InputManager::CreateInstance();
-
+	
+	
 	// シーン管理初期化
 	SceneManager::CreateInstance();
+	
+	//サウンド管理初期化
+	AudioManager::CreateInstance();
+	AudioManager::GetInstance()->Init();
 
-	SoundManager::CreateInstance();
 
 
 }
@@ -72,7 +77,7 @@ void Application::Run(void)
 
 	InputManager& inputManager = InputManager::GetInstance();
 	SceneManager& sceneManager = SceneManager::GetInstance();
-	SoundManager& soundManager = SoundManager::GetInstance();
+
 	
 
 	// ゲームループ
@@ -103,7 +108,10 @@ void Application::Destroy(void)
 	// 入力制御解放
 	InputManager::GetInstance().Destroy();
 
-	SoundManager::GetInstance().Destroy();
+	// サウンド管理削除
+	AudioManager::GetInstance()->DeleteAll();
+	AudioManager::DeleteInstance();
+
 
 
 

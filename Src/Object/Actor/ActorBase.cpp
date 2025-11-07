@@ -17,6 +17,41 @@ void ActorBase::Release(void)
 {
 }
 
+int ActorBase::SetHp()
+{
+	return hp_;
+}
+
+int ActorBase::SetMaxHp()
+{
+	return maxHp_;
+}
+
+int ActorBase::SetMp()
+{
+	return mp_;
+}
+
+int ActorBase::SetMaxMp()
+{
+	return maxMp_;
+}
+
+int ActorBase::SetAtk()
+{
+	return atk_;
+}
+
+int ActorBase::SetDef()
+{
+	return def_;
+}
+
+int ActorBase::SetWis()
+{
+	return wis_;
+}
+
 int ActorBase::costMp(int costMp, int mp)
 {
 	//ä˘Ç…MPÇ™ÇOÇÃèÍçá
@@ -53,9 +88,11 @@ int ActorBase::addMp(int addMp, int targetMp, int targetMaxMp)
 	return targetMp;
 }
 
-void ActorBase::addHp(int addHp, int targetHp)
+int  ActorBase::addHp(int addHp, int targetHp)
 {
 	targetHp = addHp + targetHp;
+
+	return targetHp;
 }
 
 int ActorBase::PhysicsDamage(float skillPow, int attckerAtk, int targetDef, int targetHp)

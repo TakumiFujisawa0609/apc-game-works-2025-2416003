@@ -10,7 +10,7 @@
 #include "../../Object/Enemy/Manger/EnemyManager.h"
 #include "../../Object/Enemy/Manger/EnemyStatusManager.h"
 #include "../../Manager/Camera.h"
-#include"../../Sound/SoundManager.h"
+#include "../../Sound/AudioManager.h"
 
 
 BattleScene::BattleScene(void)
@@ -39,6 +39,11 @@ void BattleScene::Init(void)
 	SceneManager::GetInstance().GetCamera()->ChangeMode(Camera::MODE::FIXED_POINT);
 
 	BattleInit();
+
+	AudioManager::GetInstance()->LoadSceneSound(LoadScene::GAME);
+	AudioManager::GetInstance()->PlayBGM(SoundID::BGM_BATTLE);
+
+
 }
 
 void BattleScene::Update(void)
@@ -50,6 +55,7 @@ void BattleScene::Update(void)
 	//ポーズがオンの状態
 	if (isPauseAlive_)
 	{
+		//AudioManager::GetInstance()->StopBGM();
 		return;
 	}
 
@@ -67,6 +73,7 @@ void BattleScene::Update(void)
 	// Nキーでの強制終了（デバッグ用）
 	if (ins.IsTrgDown(KEY_INPUT_N))
 	{
+		AudioManager::GetInstance()->StopBGM();
 		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::SEARCH);
 		firstcommand_ = false;
 		return; // シーン遷移後は以降の処理をスキップ
@@ -83,6 +90,7 @@ void BattleScene::Update(void)
 		//決定処理
 		if (ins.IsTrgDown(KEY_INPUT_SPACE))
 		{
+			AudioManager::GetInstance()->PlaySE(SoundID::SE_COMMAND_DECISION);
 			ExecuteCommand(static_cast<COMMAND>(cursorIndx_));
 		}
 		break;
@@ -155,6 +163,7 @@ void BattleScene::Update(void)
 				return;
 			}
 		
+			AudioManager::GetInstance()->StopBGM();
 			SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::SEARCH);
 			firstcommand_ = false;
 			return;
@@ -162,14 +171,6 @@ void BattleScene::Update(void)
 			
 			
 		}
-
-	/*	if ( ins.IsTrgDown(KEY_INPUT_SPACE))
-		{
-			*/
-			//rewordIndx++;
-
-			
-		//}
 
 	}
 	
@@ -461,6 +462,7 @@ void BattleScene::HandleCommandSelectInput()
 	// カーソル移動 (修正後の範囲チェック)
 	if (ins.IsTrgDown(KEY_INPUT_UP))
 	{
+		AudioManager::GetInstance()->PlaySE(SoundID::SE_COMMAND_SELECT);
 		cursorIndx_--;
 		if (cursorIndx_ < 0)
 		{
@@ -469,6 +471,7 @@ void BattleScene::HandleCommandSelectInput()
 	}
 	if (ins.IsTrgDown(KEY_INPUT_DOWN))
 	{
+		AudioManager::GetInstance()->PlaySE(SoundID::SE_COMMAND_SELECT);
 		cursorIndx_++;
 		// 修正: MAX自体は有効なインデックスではないので、等号を含める
 		if (cursorIndx_ >= (int)COMMAND::MAX)
@@ -496,6 +499,7 @@ void BattleScene::ExecuteCommand(COMMAND command)
 		break;
 	case COMMAND::ESCAPE:
 		// 逃走成功判定などを経てシーン遷移
+		AudioManager::GetInstance()->StopBGM();
 		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::SEARCH);
 		firstcommand_ = false;
 		break;
@@ -514,6 +518,8 @@ void BattleScene::HandleSkillSelectInput()
 	// カーソル移動
 	if (ins.IsTrgDown(KEY_INPUT_UP))
 	{
+		
+		AudioManager::GetInstance()->PlaySE(SoundID::SE_COMMAND_SELECT);
 		skillIndx_--;
 		if (skillIndx_ < 0)
 		{
@@ -522,6 +528,7 @@ void BattleScene::HandleSkillSelectInput()
 	}
 	if (ins.IsTrgDown(KEY_INPUT_DOWN))
 	{
+		AudioManager::GetInstance()->PlaySE(SoundID::SE_COMMAND_SELECT);
 		skillIndx_++;
 		if (skillIndx_ >= skillCount)
 		{
@@ -532,6 +539,8 @@ void BattleScene::HandleSkillSelectInput()
 	// スキル決定
 	if (ins.IsTrgDown(KEY_INPUT_SPACE))
 	{
+
+		AudioManager::GetInstance()->PlaySE(SoundID::SE_COMMAND_DECISION);
 		SelectSkill(static_cast<SKILL>(skillIndx_));
 
 		//行動回数処理

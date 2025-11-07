@@ -8,7 +8,7 @@
 #include "../Scene/Clear/GameClear.h"
 #include "../Manager/Camera.h"
 #include "SceneManager.h"
-#include "../Sound/SoundManager.h"
+
 
 SceneManager* SceneManager::instance_ = nullptr;
 

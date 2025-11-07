@@ -41,13 +41,13 @@ void SkillBase::Attack(ActorBase* attacker, ActorBase* target)
 	case SKILL_TYPE::NON:
 		break;
 	case SKILL_TYPE::ATTACK:
-		//actorBase_->SlashAttack(target.hp, skillData_.power);
-
-		//actorBase_->SlashAttack(‚±‚±‚ðtarget.hp, skillData_.power);
+		attacker->costMp(skillData_.mp, attacker->SetHp());
+		attacker->PhysicsDamage(skillData_.power,attacker->SetAtk(),target->SetDef(),target->SetHp());
 		break;
 	case SKILL_TYPE::DEFENSE:
 		break;
 	case SKILL_TYPE::HEAL:
+
 		break;
 	case SKILL_TYPE::BUFF:
 		break;

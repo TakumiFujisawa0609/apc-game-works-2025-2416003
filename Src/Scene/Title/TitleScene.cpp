@@ -4,7 +4,6 @@
 #include "../../Utility/AsoUtility.h"
 #include "../../Manager/SceneManager.h"
 #include "../../Manager/InputManager.h"
-#include "../../Sound/SoundManager.h"
 #include "TitleScene.h"
 
 TitleScene::TitleScene(void)

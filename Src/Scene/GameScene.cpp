@@ -7,6 +7,7 @@
 #include "../Object/Grid.h"
 #include "../Manager/Camera.h"
 #include "GameScene.h"
+#include "../Sound/AudioManager.h"
 
 GameScene::GameScene(void)
 {
@@ -39,6 +40,7 @@ void GameScene::Update(void)
 
 	if (ins.IsTrgDown(KEY_INPUT_SPACE))
 	{
+		
 		ChangeScene(PLAYSCENE::SEARCH);
 	}
 
