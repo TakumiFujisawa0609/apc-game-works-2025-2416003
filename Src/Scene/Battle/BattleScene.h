@@ -14,6 +14,11 @@ public:
 	static constexpr int ONE_SECOND = 60;
 
 	static constexpr int CLEAR_ENEMY_COUNT = 2;
+	//ポーズ中のBGMボリューム
+	static constexpr int PAUSE_SOUND_VOLUME = 50;
+	//通常BGMボリューム
+	static constexpr int BGM_SOUND_VOLUME = 150;
+
 
 	enum class SKILL //プレイヤーから持ってこないといけないんだけど一旦仮で
 	{

@@ -44,13 +44,6 @@ void GameScene::Update(void)
 		ChangeScene(PLAYSCENE::SEARCH);
 	}
 
-	////‰¼‚Ìí“¬ƒV[ƒ“‚Ö‚Ì‘JˆÚ
-	//if (ins.IsTrgDown(KEY_INPUT_N))
-	//{
-	//	ChangeScene(PLAYSCENE::SEARCH);
-	//}
-
-
 
 }
 

@@ -12,6 +12,7 @@ enum class SoundID
 	SE_ATTACK,
 	SE_COMMAND_SELECT,
 	SE_COMMAND_DECISION,
+	SE_TITLE_DECISION,
 };
 
 // ì«Ç›çûÇﬁÉVÅ[Éì

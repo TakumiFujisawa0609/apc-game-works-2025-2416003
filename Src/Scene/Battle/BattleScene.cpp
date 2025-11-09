@@ -42,6 +42,7 @@ void BattleScene::Init(void)
 
 	AudioManager::GetInstance()->LoadSceneSound(LoadScene::GAME);
 	AudioManager::GetInstance()->PlayBGM(SoundID::BGM_BATTLE);
+	AudioManager::GetInstance()->SetBgmVolume(150);
 
 
 }
@@ -224,6 +225,7 @@ void BattleScene::Draw(void)
 
 	if (isPauseAlive_)
 	{
+		
 		PauseDraw();
 	}
 	
@@ -269,9 +271,22 @@ void BattleScene::CreateBox(int x, int y, int width, int height, int color)
 
 void BattleScene::Pause(void)
 {
+
+	//ESCキーが押されたらポーズ状態を切り替え
 	if (InputManager::GetInstance().IsTrgDown(KEY_INPUT_ESCAPE))
 	{
+
 		isPauseAlive_ = !isPauseAlive_;
+
+		if (isPauseAlive_ == false)
+		{
+			AudioManager::GetInstance()->SetBgmVolume(BGM_SOUND_VOLUME);
+		}
+
+		if (isPauseAlive_)
+		{
+			AudioManager::GetInstance()->SetBgmVolume(PAUSE_SOUND_VOLUME);
+		}
 	}
 }
 

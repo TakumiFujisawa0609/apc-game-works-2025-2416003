@@ -18,8 +18,8 @@ namespace SoundTable_Title
 {
 	static const std::unordered_map<SoundID, std::string> Table =
 	{
-		{ SoundID::BGM_TITLE, "Data/Sound/BGM/maou_bgm_neorock83.mp3" },
-		{ SoundID::SE_BUTTON, "Data/Sound/SE/maou_se_sound24.mp3" },
+		{ SoundID::BGM_TITLE, Application::PATH_SOUND_SE + "TitleBgm.wav" },
+		{ SoundID::SE_TITLE_DECISION, Application::PATH_SOUND_SE + "Title_Decision.wav" },
 	};
 }
 

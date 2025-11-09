@@ -4,12 +4,12 @@
 #include "../../Utility/AsoUtility.h"
 #include "../../Manager/SceneManager.h"
 #include "../../Manager/InputManager.h"
+#include "../../Sound/AudioManager.h"
 #include "TitleScene.h"
 
 TitleScene::TitleScene(void)
 {
 	imgTitle_ = -1;
-	//SoundManager::GetInstance().Play(SoundManager::SRC::GAME_BGM, Sound::TIMES::LOOP);
 }
 
 TitleScene::~TitleScene(void)
@@ -20,7 +20,8 @@ TitleScene::~TitleScene(void)
 void TitleScene::Init(void)
 {
 	imgTitle_ = LoadGraph((Application::PATH_IMAGE + "Title.png").c_str());
-
+	//AudioManager::GetInstance()->LoadSceneSound(LoadScene::TITLE);
+	//AudioManager::GetInstance()->PlayBGM(SoundID::BGM_TITLE);
 
 }
 
@@ -29,23 +30,26 @@ void TitleScene::Update(void)
 
 	// シーン遷移
 	InputManager& ins = InputManager::GetInstance();
-
+	VECTOR dir = AsoUtility::VECTOR_ZERO;
  
 
 	if (ins.IsTrgDown(KEY_INPUT_UP))
 	{
+		AudioManager::GetInstance()->PlaySE(SoundID::SE_COMMAND_SELECT);
 		cursorIndx_--;
 
 		if (cursorIndx_ < 0)
 		{
+
 			cursorIndx_ = static_cast<int>(STATE::MAX) - 1;
 		}
 	}
 	if (ins.IsTrgDown(KEY_INPUT_DOWN))
 	{
+		AudioManager::GetInstance()->PlaySE(SoundID::SE_COMMAND_SELECT);
 		cursorIndx_++;
 
-		if (cursorIndx_ > (int)STATE::MAX -1)
+		if (cursorIndx_ > (int)STATE::MAX - 1)
 		{
 			cursorIndx_ = 0;
 		}
@@ -53,9 +57,26 @@ void TitleScene::Update(void)
 
 	if (ins.IsTrgDown(KEY_INPUT_SPACE))
 	{
+		AudioManager::GetInstance()->PlaySE(SoundID::SE_TITLE_DECISION);
 		ChagneState((STATE)cursorIndx_);
+
+	}
+	//わからない
+	if (GetJoypadNum() == 0)
+	{
 		
-	} 
+	}
+	else
+	{
+		//PAD操作
+
+		InputManager::JOYPAD_IN_STATE padState =
+			ins.GetJPadInputState(InputManager::JOYPAD_NO::PAD1);
+
+		// アナログキーの入力値から方向を取得
+		dir = ins.GetDirectionXZAKey(padState.AKeyLX, padState.AKeyLY);
+		ins.IsPadBtnNew(InputManager::JOYPAD_NO::PAD1,InputManager::JOYPAD_BTN::LEFT);
+	}
 	
 
 }
@@ -125,6 +146,8 @@ void TitleScene::ChagneState(STATE next)
 	switch (next)
 	{
 	case TitleScene::STATE::GAME:
+
+		AudioManager::GetInstance()->StopBGM();
 		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::GAME);
 
 		break;
