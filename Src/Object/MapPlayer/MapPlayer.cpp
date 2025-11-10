@@ -9,6 +9,7 @@
 #include "../../Utility/MatrixUtility.h"
 #include "../../Object/Enemy/EnemyBase.h"
 #include "../../Object/Enemy/Manger/EnemyStatusManager.h"
+#include "../../Sound/AudioManager.h"
 
 #include "MapPlayer.h"
 
@@ -94,8 +95,6 @@ void MapPlayer::Move(void)
 {
 	auto& ins = InputManager::GetInstance();
 
-
-
 	// カメラの角度を取得
 	VECTOR camAngles =
 		SceneManager::GetInstance().GetCamera()->GetAngles();
@@ -104,9 +103,12 @@ void MapPlayer::Move(void)
 	// ダッシュ判定
 	bool isDash_ = false;
 
-	// ゲームパッドが接続されている数で処理を分ける
+	
+	
+
 	if (GetJoypadNum() == 0)
 	{
+
 		// キーボード操作
 		if (ins.IsNew(KEY_INPUT_W)) { dir = AsoUtility::DIR_F; }
 		if (ins.IsNew(KEY_INPUT_A)) { dir = AsoUtility::DIR_L; }
@@ -115,6 +117,7 @@ void MapPlayer::Move(void)
 
 		// ダッシュキー
 		isDash_ = ins.IsNew(KEY_INPUT_LSHIFT);
+
 	}
 	else
 	{
@@ -128,12 +131,23 @@ void MapPlayer::Move(void)
 		isDash_ = ins.IsPadBtnNew(InputManager::JOYPAD_NO::PAD1,
 			InputManager::JOYPAD_BTN::LEFT);
 	}
-
 	// ダッシュ速度を歩行速度の2倍にする(書き方が違うけどif文と同じ意味)
 	float movePow = isDash_ ? 6.0f : 3.0f;
 
 	if (!AsoUtility::EqualsVZero(dir))
 	{
+
+		if (isDash_)
+		{
+			// アニメーションを走りにする
+			animationController_->Play(static_cast<int>(ANIM_TYPE::RUN));
+		}
+		else
+		{
+			// アニメーションを歩きにする
+			animationController_->Play(static_cast<int>(ANIM_TYPE::WALK));
+		}
+
 		// XYZの回転行列
 		// XZ平面移動にする場合は、XZの回転を考慮しないようにする
 		MATRIX mat = MGetIdent();
@@ -150,16 +164,7 @@ void MapPlayer::Move(void)
 		// 方向×スピードで移動量を作って、座標に足して移動
 		pos_ = VAdd(pos_, VScale(moveDir_, movePow));
 
-		if (isDash_)
-		{
-			// アニメーションを走りにする
-			animationController_->Play(static_cast<int>(ANIM_TYPE::RUN));
-		}
-		else
-		{
-			// アニメーションを歩きにする
-			animationController_->Play(static_cast<int>(ANIM_TYPE::WALK));
-		}
+		
 	}
 	else
 	{
@@ -198,6 +203,7 @@ void MapPlayer::enCount(void)
 			EnemyStatusManager::Getinstance()->SetNextEncounterType(enemyType);
 
 			// エンカウント発生！
+			AudioManager::GetInstance()->StopBGM();
 			SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::BATTLE);
 
 			// 次のエンカウント歩数を再設定

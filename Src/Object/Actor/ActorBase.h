@@ -17,37 +17,37 @@ public:
 	virtual void Draw(void);		// 描画
 	virtual void Release(void); 	// 解放
 
+
 	/// @brief HP情報
 	/// @return HP
-	int SetHp();
+	virtual int SetHp();
 	/// @brief 最大HP情報
 	/// @return 最大HP
-	int SetMaxHp();
+	virtual int SetMaxHp();
 	/// @brief MP情報
 	/// @return MP
-	int SetMp();
+	virtual int SetMp();
 	/// @brief 最大MP情報
 	/// @return 最大MP
-	int SetMaxMp();
+	virtual int SetMaxMp();
 	/// @brief ATK情報
 	/// @return ATK
-	int SetAtk();
+	virtual int SetAtk();
 	/// @brief DEF情報
 	/// @return DEF
-	int SetDef();
+	virtual int SetDef();
 	/// @brief WIS情報
 	/// @return WIS
-	int SetWis();
-	
+	virtual int SetWis();
 
 	/// @brief HP増加処理
-	/// @param addHp 回復する量（魔法、アイテム等）
+	/// @param addHp 回復する量（魔法）
 	/// @param hp 使用される体力
-	int  addHp(int addHp, int targetHp);
+	int  addHp(float skillPow,int attckerWis , int attckerHp,int attckerMaxHp);
 
 	/// @brief  MP消費処理
 	/// @param costMp 消費するMP
-	/// @param mp 使用する人のMP残量
+	/// @param mp 使用する人のMP残量(attkerで統一）
 	int costMp(int costMp, int mp);//MP消費処理
 
 	/// @brief 
@@ -85,7 +85,6 @@ protected://派生クラスから持ってくる情報
 	int atk_;
 	int def_;
 	int wis_;
-	
 
 private:
 

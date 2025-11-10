@@ -91,6 +91,7 @@ void BattleScene::Update(void)
 		//決定処理
 		if (ins.IsTrgDown(KEY_INPUT_SPACE))
 		{
+			AudioManager::GetInstance()->SetSeVolume(100);
 			AudioManager::GetInstance()->PlaySE(SoundID::SE_COMMAND_DECISION);
 			ExecuteCommand(static_cast<COMMAND>(cursorIndx_));
 		}
@@ -160,6 +161,7 @@ void BattleScene::Update(void)
 
 			if (count >= CLEAR_ENEMY_COUNT)
 			{
+				AudioManager::GetInstance()->StopBGM();
 				SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::CLEAR);
 				return;
 			}
@@ -229,6 +231,7 @@ void BattleScene::Draw(void)
 		PauseDraw();
 	}
 	
+	
 }
 	
 
@@ -285,7 +288,7 @@ void BattleScene::Pause(void)
 
 		if (isPauseAlive_)
 		{
-			AudioManager::GetInstance()->SetBgmVolume(PAUSE_SOUND_VOLUME);
+			AudioManager::GetInstance()->SetBgmVolume(BGM_SOUND_VOLUME_ZERO);
 		}
 	}
 }
@@ -477,6 +480,7 @@ void BattleScene::HandleCommandSelectInput()
 	// カーソル移動 (修正後の範囲チェック)
 	if (ins.IsTrgDown(KEY_INPUT_UP))
 	{
+		AudioManager::GetInstance()->SetSeVolume(100);
 		AudioManager::GetInstance()->PlaySE(SoundID::SE_COMMAND_SELECT);
 		cursorIndx_--;
 		if (cursorIndx_ < 0)
@@ -486,6 +490,7 @@ void BattleScene::HandleCommandSelectInput()
 	}
 	if (ins.IsTrgDown(KEY_INPUT_DOWN))
 	{
+		AudioManager::GetInstance()->SetSeVolume(100);
 		AudioManager::GetInstance()->PlaySE(SoundID::SE_COMMAND_SELECT);
 		cursorIndx_++;
 		// 修正: MAX自体は有効なインデックスではないので、等号を含める
@@ -533,7 +538,7 @@ void BattleScene::HandleSkillSelectInput()
 	// カーソル移動
 	if (ins.IsTrgDown(KEY_INPUT_UP))
 	{
-		
+		AudioManager::GetInstance()->SetSeVolume(100);
 		AudioManager::GetInstance()->PlaySE(SoundID::SE_COMMAND_SELECT);
 		skillIndx_--;
 		if (skillIndx_ < 0)
@@ -543,6 +548,7 @@ void BattleScene::HandleSkillSelectInput()
 	}
 	if (ins.IsTrgDown(KEY_INPUT_DOWN))
 	{
+		AudioManager::GetInstance()->SetSeVolume(100);
 		AudioManager::GetInstance()->PlaySE(SoundID::SE_COMMAND_SELECT);
 		skillIndx_++;
 		if (skillIndx_ >= skillCount)
@@ -555,6 +561,7 @@ void BattleScene::HandleSkillSelectInput()
 	if (ins.IsTrgDown(KEY_INPUT_SPACE))
 	{
 
+		AudioManager::GetInstance()->SetSeVolume(100);
 		AudioManager::GetInstance()->PlaySE(SoundID::SE_COMMAND_DECISION);
 		SelectSkill(static_cast<SKILL>(skillIndx_));
 

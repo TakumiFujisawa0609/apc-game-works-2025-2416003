@@ -18,7 +18,8 @@ public:
 	static constexpr int PAUSE_SOUND_VOLUME = 50;
 	//通常BGMボリューム
 	static constexpr int BGM_SOUND_VOLUME = 150;
-
+	
+	static constexpr int BGM_SOUND_VOLUME_ZERO = 0;
 
 	enum class SKILL //プレイヤーから持ってこないといけないんだけど一旦仮で
 	{

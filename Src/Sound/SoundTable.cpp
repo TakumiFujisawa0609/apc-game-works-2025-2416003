@@ -29,8 +29,10 @@ namespace SoundTable_Game
 	static const std::unordered_map<SoundID, std::string> Table = 
 	{
 		{ SoundID::BGM_BATTLE, Application::PATH_SOUND_BGM + "GameBgm.wav" },
-
+		{ SoundID::BGM_SEARCH, Application::PATH_SOUND_BGM + "SearchScene.wav" },
 		{ SoundID::SE_COMMAND_SELECT,	Application::PATH_SOUND_SE + "Command_Select.wav" },
 		{ SoundID::SE_COMMAND_DECISION, Application::PATH_SOUND_SE + "Command_Decision.wav" },
+
+		
 	};
 }

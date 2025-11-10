@@ -1,9 +1,10 @@
 #pragma once
 #include <map>
-#include "../Actor/ActorBase.h"
+#include "../../Actor/ActorBase.h"
+
 class SkillManager;
 
-class Player : public ActorBase
+class TestGoblin: public ActorBase
 {
 public:
 
@@ -15,20 +16,20 @@ public:
 
 protected:
 
-	int hp_ = 100;
+	int hp_ = 50;
 	int mp_ = 100;
-	int maxHp_ = 100;
+	int maxHp_ = 50;
 	int maxMp_ = 100;
 
-	int atk_ = 20;
-	int def_ = 20;
-	int wis_ = 20;
+	int atk_ = 30;
+	int def_ = 10;
+	int wis_ = 5;
 
 
-	
+
 private:
 	SkillManager* skillManager_;
 
-	
+
 };
 

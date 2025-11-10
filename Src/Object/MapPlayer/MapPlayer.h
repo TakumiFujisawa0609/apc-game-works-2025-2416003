@@ -50,6 +50,8 @@ public:
 	void Draw(void) override;
 	void Release(void) override;
 
+	void enCount(void);
+
 protected:
 
 	// リソースロード
@@ -88,7 +90,7 @@ private:
 	int remainingSteps_ = 0;          // 次のエンカウントまでの残り歩数
 	          // プレイヤーが移動しているか（アニメーション制御用
 
-	void enCount(void);
+	
 ;
 
 	//void playerAttack(void);

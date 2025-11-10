@@ -9,6 +9,7 @@
 #include "../../Object/Grid.h"
 #include "SearchScene.h"
 #include "../../Object/MapPlayer/MapPlayer.h"
+#include "../../Sound/AudioManager.h"
 
 SearchScene::SearchScene(void)
 {
@@ -37,6 +38,10 @@ void SearchScene::Init(void)
 	camera->ChangeMode(Camera::MODE::FOLLOW);
 
 	isPauseAlive_ = false;
+
+	/*AudioManager::GetInstance()->LoadSceneSound(LoadScene::GAME);
+	AudioManager::GetInstance()->PlayBGM(SoundID::BGM_SEARCH);
+	AudioManager::GetInstance()->SetBgmVolume(150);*/
 	
 }
 
@@ -53,21 +58,20 @@ void SearchScene::Update(void)
 
 
 
-	// ƒV[ƒ“‘JˆÚ
+	// ƒV[ƒ“‘J
 	InputManager& ins = InputManager::GetInstance();
-
-
 
 
 	if (ins.IsTrgDown(KEY_INPUT_N))
 	{
+		AudioManager::GetInstance()->StopBGM();
 		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::BATTLE);
-
 
 	}
 
 	grid_->Update();
 	player_->Update();
+	
 }
 
 void SearchScene::Draw(void)
@@ -104,33 +108,44 @@ void SearchScene::Pause(void)
 	if (InputManager::GetInstance().IsTrgDown(KEY_INPUT_ESCAPE))
 	{
 		isPauseAlive_ = !isPauseAlive_;
-	}
-
-	if (InputManager::GetInstance().IsTrgDown(KEY_INPUT_UP))
-	{
-		cursorIndx_--;
-
-		if (cursorIndx_ < 0)
+		
+		//‰¹—Ê’²®
+		if (isPauseAlive_ == false)
 		{
-			cursorIndx_ = static_cast<int>(STATE::MAX) - 1;
+			AudioManager::GetInstance()->SetBgmVolume(BGM_SOUND_VOLUME);
+		}
+
+		if (isPauseAlive_)
+		{
+			AudioManager::GetInstance()->SetBgmVolume(BGM_SOUND_VOLUME_ZERO);
+		}
+
+
+		if (InputManager::GetInstance().IsTrgDown(KEY_INPUT_UP))
+		{
+			cursorIndx_--;
+
+			if (cursorIndx_ < 0)
+			{
+				cursorIndx_ = static_cast<int>(STATE::MAX) - 1;
+			}
+		}
+		if (InputManager::GetInstance().IsTrgDown(KEY_INPUT_DOWN))
+		{
+			cursorIndx_++;
+
+			if (cursorIndx_ > (int)STATE::MAX - 1)
+			{
+				cursorIndx_ = 0;
+			}
+		}
+
+		if (InputManager::GetInstance().IsTrgDown(KEY_INPUT_SPACE))
+		{
+			ChagneState((STATE)cursorIndx_);
+
 		}
 	}
-	if (InputManager::GetInstance().IsTrgDown(KEY_INPUT_DOWN))
-	{
-		cursorIndx_++;
-
-		if (cursorIndx_ > (int)STATE::MAX - 1)
-		{
-			cursorIndx_ = 0;
-		}
-	}
-
-	if (InputManager::GetInstance().IsTrgDown(KEY_INPUT_SPACE))
-	{
-		ChagneState((STATE)cursorIndx_);
-
-	}
-
 }
 
 void SearchScene::PauseDraw(void)
@@ -171,6 +186,7 @@ void SearchScene::ChagneState(STATE next)
 	{
 	case SearchScene::STATE::GAME:
 		isPauseAlive_ = !isPauseAlive_;
+		AudioManager::GetInstance()->PlayBGM(SoundID::BGM_SEARCH);
 		break;
 	case SearchScene::STATE::EXIT:
 		isEnd_ = true;

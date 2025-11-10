@@ -52,6 +52,24 @@ int ActorBase::SetWis()
 	return wis_;
 }
 
+int ActorBase::addHp(float skillPow, int attckerWis,  int attckerHp , int attckerMaxHp)
+{
+	int addHp_ = skillPow * attckerWis;
+
+	if (attckerHp <= attckerMaxHp)
+	{
+		attckerHp = attckerHp * addHp_;
+
+		//HP‚ÌÅ‘å’l‚ð’´‚¦‚È‚¢‚æ‚¤‚É
+		if (attckerHp > attckerMaxHp)
+		{
+			attckerHp == attckerMaxHp;
+		}
+	}
+
+	return attckerHp;
+}
+
 int ActorBase::costMp(int costMp, int mp)
 {
 	//Šù‚ÉMP‚ª‚O‚Ìê‡
@@ -73,10 +91,6 @@ int ActorBase::costMp(int costMp, int mp)
 
 int ActorBase::addMp(int addMp, int targetMp, int targetMaxMp)
 {
-	if (targetMp >= targetMaxMp)
-	{
-
-	}
 
 	targetMp = targetMp + addMp;
 
@@ -88,12 +102,6 @@ int ActorBase::addMp(int addMp, int targetMp, int targetMaxMp)
 	return targetMp;
 }
 
-int  ActorBase::addHp(int addHp, int targetHp)
-{
-	targetHp = addHp + targetHp;
-
-	return targetHp;
-}
 
 int ActorBase::PhysicsDamage(float skillPow, int attckerAtk, int targetDef, int targetHp)
 {

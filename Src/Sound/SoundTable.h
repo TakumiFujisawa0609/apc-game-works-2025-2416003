@@ -7,6 +7,7 @@ enum class SoundID
 {
 	BGM_TITLE,
 	BGM_BATTLE,
+	BGM_SEARCH,
 	SE_BUTTON,
 	SE_RUN,
 	SE_ATTACK,

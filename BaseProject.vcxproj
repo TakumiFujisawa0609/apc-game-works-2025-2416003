@@ -51,6 +51,7 @@
     <ClCompile Include="Src\Sound\SoundTable.cpp" />
     <ClCompile Include="Src\Utility\AsoUtility.cpp" />
     <ClCompile Include="Src\Utility\MatrixUtility.cpp" />
+    <ClCompile Include="Src\Object\Enemy\TestGoblin\TestGoblin.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Src\Object\Enemy\Manger\EnemyManager.h" />
@@ -103,6 +104,7 @@
     <ClInclude Include="Src\Sound\SoundTable.h" />
     <ClInclude Include="Src\Utility\AsoUtility.h" />
     <ClInclude Include="Src\Utility\MatrixUtility.h" />
+    <ClInclude Include="Src\Object\Enemy\TestGoblin\TestGoblin.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

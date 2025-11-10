@@ -41,6 +41,8 @@ public:
 
 private:
 
+	static constexpr int BGM_SOUND_VOLUME = 150;
+	static constexpr int BGM_SOUND_VOLUME_ZERO = 0;
 
 	//ステージハンドル
 	int stageId_;
