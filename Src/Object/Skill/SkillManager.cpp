@@ -1,6 +1,8 @@
 #include "SkillManager.h"
 #include "SkillBase.h"
 
+
+
 SkillManager::SkillManager(void)
 {
 }
@@ -8,6 +10,7 @@ SkillManager::SkillManager(void)
 SkillManager::~SkillManager(void)
 {
 }
+
 
 void SkillManager::Init(void)
 {
@@ -72,3 +75,5 @@ void SkillManager::PopSkillList(void)
 	// ƒXƒLƒ‹‚ğíœ
 	skills_.pop_back();
 }
+
+

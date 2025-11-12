@@ -4,12 +4,14 @@
 #include "../../Utility/AsoUtility.h"
 #include "../../Manager/SceneManager.h"
 #include "../../Manager/InputManager.h"
-#include "../GameScene.h"
+#include "../Game/GameScene.h"
 #include "../../Manager/Camera.h"
 #include "../../Object/Grid.h"
 #include "SearchScene.h"
 #include "../../Object/MapPlayer/MapPlayer.h"
 #include "../../Sound/AudioManager.h"
+#include "../../Object/Enemy/EnemyBase.h"
+#include "../../Object/Enemy/Manger/EnemyStatusManager.h"
 
 SearchScene::SearchScene(void)
 {
@@ -39,9 +41,14 @@ void SearchScene::Init(void)
 
 	isPauseAlive_ = false;
 
-	/*AudioManager::GetInstance()->LoadSceneSound(LoadScene::GAME);
+
+	remainingSteps_ = GetRand(ENCOUNT_MAX_STEPS - ENCOUNT_MIN_STEPS) + ENCOUNT_MIN_STEPS;
+	accumulatedDistance_ = 0.0f;
+
+
+	AudioManager::GetInstance()->LoadSceneSound(LoadScene::GAME);
 	AudioManager::GetInstance()->PlayBGM(SoundID::BGM_SEARCH);
-	AudioManager::GetInstance()->SetBgmVolume(150);*/
+	AudioManager::GetInstance()->SetBgmVolume(150);
 	
 }
 
@@ -68,6 +75,19 @@ void SearchScene::Update(void)
 		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::BATTLE);
 
 	}
+
+	if (ins.IsTrgDown(KEY_INPUT_X))
+	{
+		AudioManager::GetInstance()->StopBGM();
+		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::GAME);
+
+	}
+
+	nowPos_ = player_->GetPos();
+	EnCount();
+	prePos_ = nowPos_;
+
+	
 
 	grid_->Update();
 	player_->Update();
@@ -105,11 +125,12 @@ void SearchScene::Release(void)
 void SearchScene::Pause(void)
 {
 
+	// 1. ポーズON/OFF切り替えと音量調整
 	if (InputManager::GetInstance().IsTrgDown(KEY_INPUT_ESCAPE))
 	{
 		isPauseAlive_ = !isPauseAlive_;
-		
-		//音量調整
+
+		// 音量調整
 		if (isPauseAlive_ == false)
 		{
 			AudioManager::GetInstance()->SetBgmVolume(BGM_SOUND_VOLUME);
@@ -119,8 +140,11 @@ void SearchScene::Pause(void)
 		{
 			AudioManager::GetInstance()->SetBgmVolume(BGM_SOUND_VOLUME_ZERO);
 		}
+	}
 
-
+	// 2. ポーズ中のメニュー操作 (isPauseAlive_がtrueのときのみ実行)
+	if (isPauseAlive_)
+	{
 		if (InputManager::GetInstance().IsTrgDown(KEY_INPUT_UP))
 		{
 			cursorIndx_--;
@@ -142,10 +166,13 @@ void SearchScene::Pause(void)
 
 		if (InputManager::GetInstance().IsTrgDown(KEY_INPUT_SPACE))
 		{
-			ChagneState((STATE)cursorIndx_);
-
+			// ここで ChagneState((STATE)cursorIndx_) が呼ばれ、
+			// STATE::GAMEが選択されていれば isPauseAlive_ が反転し、ポーズが解除されます。
+			ChagneState(static_cast<STATE>(cursorIndx_));
 		}
 	}
+
+	
 }
 
 void SearchScene::PauseDraw(void)
@@ -228,5 +255,46 @@ void SearchScene::DrawCommand()
 	{
 		// 非選択中の場合
 		DrawString(330, EXIT_POS_Y, "EXIT", GetColor(200, 200, 200)); // グレー
+	}
+}
+
+void SearchScene::EnCount(void)
+{
+	VECTOR diff = VSub(nowPos_, prePos_);
+	diff.y = 0.0f; // Y軸(高さ)の差分は無視
+
+	float distanceMoved = VSize(diff);
+
+	if (distanceMoved < 0.01f)
+	{
+		return;
+	}
+
+	accumulatedDistance_ = distanceMoved;
+
+	while (accumulatedDistance_ >= STEP_DISTANCE)
+	{
+		accumulatedDistance_ -= STEP_DISTANCE; // 1歩分消費
+		remainingSteps_--;                           // 残りエンカウント歩数を減らす
+
+		// 4. エンカウント判定
+		if (remainingSteps_ <= 0)
+		{
+			EnemyBase::TYPE enemyType = EnemyBase::TYPE::GOBLIN;
+
+			EnemyStatusManager::Getinstance()->SetNextEncounterType(enemyType);
+
+			// エンカウント発生！
+			AudioManager::GetInstance()->PlaySE(SoundID::SE_ENCOUNT);//エンカウントSE再生
+			AudioManager::GetInstance()->StopBGM();
+			SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::BATTLE);
+
+			// 次のエンカウント歩数を再設定
+			remainingSteps_ = GetRand(ENCOUNT_MAX_STEPS - ENCOUNT_MIN_STEPS) + ENCOUNT_MIN_STEPS;
+			accumulatedDistance_ = 0.0f; // 蓄積距離もリセット
+
+			// 戦闘に移行するため、ここで処理を終了
+			return;
+		}
 	}
 }

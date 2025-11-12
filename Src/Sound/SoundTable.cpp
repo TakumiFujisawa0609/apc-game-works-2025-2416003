@@ -32,7 +32,24 @@ namespace SoundTable_Game
 		{ SoundID::BGM_SEARCH, Application::PATH_SOUND_BGM + "SearchScene.wav" },
 		{ SoundID::SE_COMMAND_SELECT,	Application::PATH_SOUND_SE + "Command_Select.wav" },
 		{ SoundID::SE_COMMAND_DECISION, Application::PATH_SOUND_SE + "Command_Decision.wav" },
+		{ SoundID::SE_ENCOUNT, Application::PATH_SOUND_SE + "EnCount.wav" },
+		{ SoundID::SE_WIN, Application::PATH_SOUND_SE + "Battle_Win.wav" },
+		{ SoundID::SKILL_SE_SLASH, Application::PATH_SOUND_SE + "Slash_Se.wav" },
+		
+	};
+}
 
+// システム用
+namespace SoundTable_Skill
+{
+	static const std::unordered_map<SoundID, std::string> Table =
+	{
+	
+		//{ SoundID::SKILL_SE_SLASH, Application::PATH_SOUND_SKILL_SE + "Slash_Se.wav" },
+		{ SoundID::SKILL_SE_HELL, Application::PATH_SOUND_SKILL_SE + "Skill_Hell.wav" },
+
+		/*{ SoundID::SKILL_SE_SLASH, Application::PATH_SOUND_SKILL_SE + "Slash_Se.wav" },
+		{ SoundID::SKILL_SE_HELL, Application::PATH_SOUND_SKILL_SE + "Skill_Hell.wav" },*/
 		
 	};
 }

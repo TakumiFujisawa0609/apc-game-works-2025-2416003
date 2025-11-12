@@ -18,6 +18,7 @@ public:
 	static const std::string PATH_EFFECT;
 	static const std::string PATH_SOUND_BGM;
 	static const std::string PATH_SOUND_SE;
+	static const std::string PATH_SOUND_SKILL_SE;
 
 	//-------------------------------------------
 

@@ -4,13 +4,16 @@
 #include "../../Utility/AsoUtility.h"
 #include "../../Manager/SceneManager.h"
 #include "../../Manager/InputManager.h"
-#include "../GameScene.h"
+#include "../Game/GameScene.h"
 #include "../../Object/Enemy/EnemyBase.h"
 #include "BattleScene.h"
 #include "../../Object/Enemy/Manger/EnemyManager.h"
 #include "../../Object/Enemy/Manger/EnemyStatusManager.h"
+#include "../../Object/Skill/SkillManager.h"
 #include "../../Manager/Camera.h"
 #include "../../Sound/AudioManager.h"
+
+
 
 
 BattleScene::BattleScene(void)
@@ -24,6 +27,9 @@ BattleScene::~BattleScene(void)
 
 void BattleScene::Init(void)
 {	
+
+	
+
 	//シングルトンからインスタンスを取得
 	EnemyStatusManager* statusManager = EnemyStatusManager::Getinstance();
 	//敵の種類を取得
@@ -41,8 +47,14 @@ void BattleScene::Init(void)
 	BattleInit();
 
 	AudioManager::GetInstance()->LoadSceneSound(LoadScene::GAME);
+	AudioManager::GetInstance()->LoadSceneSound(LoadScene::SKILL);
 	AudioManager::GetInstance()->PlayBGM(SoundID::BGM_BATTLE);
 	AudioManager::GetInstance()->SetBgmVolume(150);
+	
+
+	skillManger_ = new SkillManager();
+	skillManger_->Init();
+	
 
 
 }
@@ -62,120 +74,145 @@ void BattleScene::Update(void)
 
 	enemyManager_->Update();
 
-	// シーン遷移
+	//シーン遷移
 	InputManager& ins = InputManager::GetInstance();
 
-	if (endIndx_ == (int)END::WIN)
+	//テスト
+	if (ins.IsTrgDown(KEY_INPUT_2))
 	{
-		//勝利判定が取れたら、戦闘終了
-		state_ = STATE::BATTLE_END;
-		actionTime_ = 0;
+		test++;
 	}
-	// Nキーでの強制終了（デバッグ用）
-	if (ins.IsTrgDown(KEY_INPUT_N))
+	if (ins.IsTrgDown(KEY_INPUT_3))
 	{
-		AudioManager::GetInstance()->StopBGM();
-		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::SEARCH);
-		firstcommand_ = false;
-		return; // シーン遷移後は以降の処理をスキップ
+		test--;
 	}
-	switch (state_)
+	if (ins.IsTrgDown(KEY_INPUT_4))
 	{
-	case BattleScene::STATE::TURN_START:
-
-		state_ = STATE::COMMAND_SELECT;
-		break;
-	case BattleScene::STATE::COMMAND_SELECT:
-		HandleCommandSelectInput();
-
-		//決定処理
-		if (ins.IsTrgDown(KEY_INPUT_SPACE))
-		{
-			AudioManager::GetInstance()->SetSeVolume(100);
-			AudioManager::GetInstance()->PlaySE(SoundID::SE_COMMAND_DECISION);
-			ExecuteCommand(static_cast<COMMAND>(cursorIndx_));
-		}
-		break;
-	case BattleScene::STATE::SKILL_SELECT:
-
-		// 現在の isSelectingSkill_ のブロック
-		HandleSkillSelectInput();
-		break;
-	case BattleScene::STATE::PLAYER_ACTION:
-		// プレイヤーの行動（アニメーション、ダメージ計算など）
-		// プレイヤーの行動アニメーションやダメージ表示の待機
-		actionTime_++;
-		if (actionTime_ > ONE_SECOND) // 1秒(60フレーム)待機
-		{
-			actionTime_ = 0;
-
-			if (isDamege_)
-			{
-				//endIndx_ = (int)END::WIN
-				// 敵を倒した場合は、この後 BATTLE_END に移行（共通ロジックで処理）
-				state_ = STATE::BATTLE_END;
-			}
-			else
-			{
-				// 敵が生きている場合は、敵のターンへ
-				state_ = STATE::ENEMY_ACTION;
-			}
-		}
-		break;
-	case BattleScene::STATE::ENEMY_ACTION:
-
-		// 敵の行動処理（AI、アニメーション、ダメージ計算など）
-
-		actionTime_++;
-		if (actionTime_ > ONE_SECOND) // 敵の行動時間待機
-		{
-			actionTime_ = 0;
-			state_ = STATE::TURN_END;
-		}
-		break;
-	case BattleScene::STATE::TURN_END:
-		// ターン終了時のクリーンアップやメッセージ表示
-		state_ = STATE::TURN_START;
-		break;
-	case BattleScene::STATE::BATTLE_END:
-		// 戦闘終了後の待機時間処理
-			// endIndx_ == (int)END::WIN の判定でここに到達している
-		actionTime_++;
-		if (actionTime_ > ONE_SECOND) // 1秒待機
-		{
-			// 報酬表示フェーズへ移行（現在のコードの DrawReword へ繋ぐ）
-			state_ = STATE::REWARD_VIEW;
-			actionTime_ = 0; // actionTime_を再利用するためにリセット
-		}
-
-		/*state_ = STATE::REWARD_VIEW;*/
-
-		break;
-	case BattleScene::STATE::REWARD_VIEW:
 		
-		rewordIndx++;
-
-		if (rewordIndx >= (int)END_REWARD::MAX)
-		{
-			int count = SceneManager::GetInstance().GetDefeatedEnemyCount();
-
-			if (count >= CLEAR_ENEMY_COUNT)
-			{
-				AudioManager::GetInstance()->StopBGM();
-				SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::CLEAR);
-				return;
-			}
-		
-			AudioManager::GetInstance()->StopBGM();
-			SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::SEARCH);
-			firstcommand_ = false;
-			return;
-			
-			
-			
-		}
-
 	}
+	
+
+
+
+
+	skillManger_->Update();
+	
+
+	//// シーン遷移
+	//InputManager& ins = InputManager::GetInstance();
+
+	//if (endIndx_ == (int)END::WIN)
+	//{
+	//	//勝利判定が取れたら、戦闘終了
+	//	state_ = STATE::BATTLE_END;
+	//	actionTime_ = 0;
+	//}
+	//// Nキーでの強制終了（デバッグ用）
+	//if (ins.IsTrgDown(KEY_INPUT_N))
+	//{
+	//	AudioManager::GetInstance()->StopBGM();
+	//	SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::SEARCH);
+	//	firstcommand_ = false;
+	//	return; // シーン遷移後は以降の処理をスキップ
+	//}
+	//switch (state_)
+	//{
+	//case BattleScene::STATE::TURN_START:
+
+	//	state_ = STATE::COMMAND_SELECT;
+	//	break;
+	//case BattleScene::STATE::COMMAND_SELECT:
+	//	HandleCommandSelectInput();
+
+	//	//決定処理
+	//	if (ins.IsTrgDown(KEY_INPUT_SPACE))
+	//	{
+	//		AudioManager::GetInstance()->SetSeVolume(100);
+	//		AudioManager::GetInstance()->PlaySE(SoundID::SE_COMMAND_DECISION);
+	//		ExecuteCommand(static_cast<COMMAND>(cursorIndx_));
+	//	}
+	//	break;
+	//case BattleScene::STATE::SKILL_SELECT:
+
+	//	// 現在の isSelectingSkill_ のブロック
+	//	HandleSkillSelectInput();
+	//	break;
+	//case BattleScene::STATE::PLAYER_ACTION:
+	//	// プレイヤーの行動（アニメーション、ダメージ計算など）
+	//	// プレイヤーの行動アニメーションやダメージ表示の待機
+	//	actionTime_++;
+	//	if (actionTime_ > ONE_SECOND) // 1秒(60フレーム)待機
+	//	{
+	//		actionTime_ = 0;
+
+	//		if (isDamege_)
+	//		{
+	//			//endIndx_ = (int)END::WIN
+	//			// 敵を倒した場合は、この後 BATTLE_END に移行（共通ロジックで処理）
+	//			state_ = STATE::BATTLE_END;
+	//		}
+	//		else
+	//		{
+	//			// 敵が生きている場合は、敵のターンへ
+	//			state_ = STATE::ENEMY_ACTION;
+	//		}
+	//	}
+	//	break;
+	//case BattleScene::STATE::ENEMY_ACTION:
+
+	//	// 敵の行動処理（AI、アニメーション、ダメージ計算など）
+
+	//	actionTime_++;
+	//	if (actionTime_ > ONE_SECOND) // 敵の行動時間待機
+	//	{
+	//		actionTime_ = 0;
+	//		state_ = STATE::TURN_END;
+	//	}
+	//	break;
+	//case BattleScene::STATE::TURN_END:
+	//	// ターン終了時のクリーンアップやメッセージ表示
+	//	state_ = STATE::TURN_START;
+	//	break;
+	//case BattleScene::STATE::BATTLE_END:
+	//	// 戦闘終了後の待機時間処理
+	//	// endIndx_ == (int)END::WIN の判定でここに到達している
+	//	
+	//	actionTime_++;
+	//	if (actionTime_ > ONE_SECOND) // 1秒待機
+	//	{
+	//		AudioManager::GetInstance()->SetSeVolume(300);
+	//		AudioManager::GetInstance()->PlaySE(SoundID::SE_WIN);
+
+	//		// 報酬表示フェーズへ移行（現在のコードの DrawReword へ繋ぐ）
+	//		state_ = STATE::REWARD_VIEW;
+	//		actionTime_ = 0; // actionTime_を再利用するためにリセット
+	//	}
+
+	//
+	//	break;
+	//case BattleScene::STATE::REWARD_VIEW:
+	//	
+	//	rewordIndx++;
+
+	//	if (rewordIndx >= (int)END_REWARD::MAX)
+	//	{
+	//		int count = SceneManager::GetInstance().GetDefeatedEnemyCount();
+
+	//		if (count >= CLEAR_ENEMY_COUNT)
+	//		{
+	//			AudioManager::GetInstance()->StopBGM();
+	//			SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::CLEAR);
+	//			return;
+	//		}
+	//	
+	//		AudioManager::GetInstance()->StopBGM();
+	//		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::SEARCH);
+	//		firstcommand_ = false;
+	//		return;
+	//		
+	//	}
+
+	//}
 	
 	
 
@@ -184,6 +221,14 @@ void BattleScene::Update(void)
 
 void BattleScene::Draw(void)
 {
+
+	//テスト
+	SkillData skill = skillTable[test];
+	const char* SkillName = skill.name.c_str();
+	DrawFormatString(100, 300, 0xffffff, "%s", SkillName);
+
+
+
 
 	DrawFormatString(600, 100, 0xffffff, "EnemyHp:%d", enemyHp_);
 	DrawString(0, 80, "Nキーまたは逃げるコマンドでサーチシーン　コマンドは→キーで決定はエンターキー", 0xffffff);
@@ -195,7 +240,7 @@ void BattleScene::Draw(void)
 	}
 
 	DrawCommand((COMMAND)cursorIndx_);
-	DrawState((STATE)state_);
+	DrawStates((STATE)state_);
 
 	DrawEnd((END)endIndx_);
 
@@ -204,12 +249,14 @@ void BattleScene::Draw(void)
 		DrawReword((END_REWARD)rewordIndx);
 	}
 
+
+
+
 	if (firstcommand_ == true)
 	{
 		const char* commands[] =
 		{
 			"たたかう",
-			"アイテム",
 			"にげる"
 		};
 
@@ -227,7 +274,7 @@ void BattleScene::Draw(void)
 
 	if (isPauseAlive_)
 	{
-		
+		//ポーズ画面の描画
 		PauseDraw();
 	}
 	
@@ -237,6 +284,8 @@ void BattleScene::Draw(void)
 
 void BattleScene::Release(void)
 {
+
+	skillManger_->Release();
 	enemyManager_->Release();
 	delete enemyManager_;
 }
@@ -253,7 +302,7 @@ void BattleScene::ChangeCommand(COMMAND command)
 
 		break;
 	
-	case BattleScene::COMMAND::TOOl: //道具
+	//case BattleScene::COMMAND::TOOl: //道具
 	
 		break;
 	case BattleScene::COMMAND::ESCAPE:  //逃げる
@@ -275,6 +324,15 @@ void BattleScene::CreateBox(int x, int y, int width, int height, int color)
 void BattleScene::Pause(void)
 {
 
+	// Nキーでの強制終了（デバッグ用）
+	if (InputManager::GetInstance().IsTrgDown(KEY_INPUT_N))
+	{
+		AudioManager::GetInstance()->StopBGM();
+		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::SEARCH);
+		firstcommand_ = false;
+		return; // シーン遷移後は以降の処理をスキップ
+	}
+
 	//ESCキーが押されたらポーズ状態を切り替え
 	if (InputManager::GetInstance().IsTrgDown(KEY_INPUT_ESCAPE))
 	{
@@ -290,6 +348,7 @@ void BattleScene::Pause(void)
 		{
 			AudioManager::GetInstance()->SetBgmVolume(BGM_SOUND_VOLUME_ZERO);
 		}
+
 	}
 }
 
@@ -324,10 +383,6 @@ void BattleScene::BattleInit(void)
 	actionTime_ = 0;
 
 	command_ = COMMAND::BATTLE;
-
-	
-
-
 }
 
 void BattleScene::SelectSkill(SKILL skill)
@@ -362,19 +417,21 @@ void BattleScene::ProcessSkill(SKILL skill)
 	{
 	case BattleScene::SKILL::SLASH:
 		damageAmount = 10;
+		Damage();
 		break;
 	case BattleScene::SKILL::PROTECT:
 		break;
 	case BattleScene::SKILL::HEAL:
+		Hell();
 		break;
 	case BattleScene::SKILL::LIMIT_BREAK:
-		damageAmount = 50;
+		damageAmount = 30;
+		Damage();
 		break;
 
 	}
 
-	// ダメージ適用
-	enemyHp_ -= damageAmount;
+	
 
 	// 敵HPが0以下になったかチェック
 	if (enemyHp_ <= 0)
@@ -391,10 +448,20 @@ void BattleScene::ProcessSkill(SKILL skill)
 
 void BattleScene::Damage(void)
 {
+	// ダメージ適用
+	AudioManager::GetInstance()->PlaySE(SoundID::SKILL_SE_SLASH);
+
+	enemyHp_ -= damageAmount;
+
 	if (enemyHp_ <= 0)
 	{
 		isDamege_ = true;
 	}
+}
+
+void BattleScene::Hell(void)
+{
+	AudioManager::GetInstance()->PlaySE(SoundID::SKILL_SE_HELL);
 }
 
 
@@ -404,7 +471,7 @@ void BattleScene::DrawCommand(COMMAND command)
 	const char* name = "";
 
 	if (command == COMMAND::BATTLE) name = "たたかう";
-	else if (command == COMMAND::TOOl) name = "アイテム";
+	//else if (command == COMMAND::TOOl) name = "アイテム";
 	else if (command == COMMAND::ESCAPE) name = "にげる";
 
 
@@ -443,14 +510,13 @@ void BattleScene::DrawSkill(void)
 		"斬撃",
 		"防御",
 		"回復",
-		"毒",
-		"リミットブレイク"
+		"リミットブレイク",
 	};
 
 	CreateBox(350, 350, 250, 220, GetColor(0, 0, 128));
 	DrawString(360, 360, "スキルを2つ選んでください", GetColor(255, 255, 0));
 
-	for (int i = 0; i < 5; i++)
+	for (int i = 0; i < 4; i++)
 	{
 		int color = (i == skillIndx_) ? GetColor(255, 255, 0) : GetColor(255, 255, 255);
 		DrawString(380, 390 + i * 30, skillNames[i], color);
@@ -459,7 +525,7 @@ void BattleScene::DrawSkill(void)
 	DrawFormatString(380, 570, GetColor(200, 200, 200), "選択中：%d / 2", (int)selectedSkills_.size());
 }
 
-void BattleScene::DrawState(STATE state)
+void BattleScene::DrawStates(STATE state)
 {
 	const char* name = "";
 	if (state == STATE::TURN_START) name = "TURN_START";
@@ -513,10 +579,10 @@ void BattleScene::ExecuteCommand(COMMAND command)
 		selectedSkills_.clear();
 		// スキル選択画面への遷移時に入力スキップは不要になることが多い
 		break;
-	case COMMAND::TOOl:
-		// 道具使用処理。終了後 PLAYER_ACTION または ENEMY_ACTION へ
-		state_ = STATE::PLAYER_ACTION;
-		break;
+	//case COMMAND::TOOl:
+	//	// 道具使用処理。終了後 PLAYER_ACTION または ENEMY_ACTION へ
+	//	state_ = STATE::PLAYER_ACTION;
+	//	break;
 	case COMMAND::ESCAPE:
 		// 逃走成功判定などを経てシーン遷移
 		AudioManager::GetInstance()->StopBGM();
@@ -533,7 +599,7 @@ void BattleScene::HandleSkillSelectInput()
 	// シーン遷移
 	InputManager& ins = InputManager::GetInstance();
 
-	const int skillCount = 5; // SKILL::MAXに置き換えるのが望ましい
+	const int skillCount = (int)SKILL::MAX; // SKILL::MAXに置き換えるのが望ましい
 
 	// カーソル移動
 	if (ins.IsTrgDown(KEY_INPUT_UP))

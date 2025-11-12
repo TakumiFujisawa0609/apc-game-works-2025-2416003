@@ -14,16 +14,16 @@ TitleScene::TitleScene(void)
 
 TitleScene::~TitleScene(void)
 {
-	//SoundManager::GetInstance().Stop(SoundManager::SRC::GAME_BGM);
 }
 
 void TitleScene::Init(void)
 {
 	imgTitle_ = LoadGraph((Application::PATH_IMAGE + "Title.png").c_str());
-	//AudioManager::GetInstance()->LoadSceneSound(LoadScene::TITLE);
-	//AudioManager::GetInstance()->PlayBGM(SoundID::BGM_TITLE);
-
+	
+	/*AudioManager::GetInstance()->LoadSceneSound(LoadScene::GAME);
+	AudioManager::GetInstance()->PlayBGM(SoundID::BGM_TITLE);*/
 }
+
 
 void TitleScene::Update(void)
 {

@@ -9,13 +9,13 @@ enum SKILL_KIND
 	NON,			// なし
 
 	// 魔法スキル
-	FIRE,			// 炎
-	THUNDER,		// 雷
-	ICE,			// 氷
+	FIRE,			// 炎	1
+	THUNDER,		// 雷	2
+	ICE,			// 氷	3
 
 	// 物理スキル
-	SLASH,			// スラッシュ
-	LIMIT_BREAK,	// リミットブレイク	
+	SLASH,			// スラッシュ	4
+	LIMIT_BREAK,	// リミットブレイク	5
 
 	MAX,
 };

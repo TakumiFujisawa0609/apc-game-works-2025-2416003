@@ -12,6 +12,7 @@ const std::string Application::PATH_MODEL = "Data/Model/";
 const std::string Application::PATH_EFFECT =  "Data/Effect/";
 const std::string Application::PATH_SOUND_BGM = "Data/Sound/BGM/";
 const std::string Application::PATH_SOUND_SE = "Data/Sound/SE/";
+const std::string Application::PATH_SOUND_SKILL_SE = "Data/Sound/SE/Skill/";
 
 void Application::CreateInstance(void)
 {

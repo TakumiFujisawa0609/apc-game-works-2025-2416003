@@ -7,6 +7,7 @@ class SkillBase;
 
 class SkillManager
 {
+public:
 	
 	SkillManager(void);		// コンストラクタ
 	~SkillManager(void);	// デストラクタ
@@ -25,7 +26,10 @@ class SkillManager
 	// 全てのスキルを取得する
 	std::list<SkillBase*>GetSkills(void) { return skills_; };
 
+
 private:
+
+
 	// スキルの配列
 	std::list<SkillBase*> skills_;
 };

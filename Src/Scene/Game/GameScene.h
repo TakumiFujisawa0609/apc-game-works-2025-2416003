@@ -1,22 +1,14 @@
+#include "../SceneBase.h"
 
-#include "SceneBase.h"
 class SceneManager;
 class Grid;
 class Camera;
-
 
 class GameScene : public SceneBase
 {
 
 
 public:
-
-	enum class PLAYSCENE
-	{
-		PREPARATION,
-		SEARCH,
-		BATTLE,
-	};
 
 
 	// コンストラクタ
@@ -29,8 +21,6 @@ public:
 	void Update(void) override;
 	void Draw(void) override;
 	void Release(void) override;
-
-	void ChangeScene(PLAYSCENE playscene);
 
 	
 
@@ -46,6 +36,5 @@ private:
 
 	VECTOR testPos;
 
-	PLAYSCENE playscene_;
 };
 

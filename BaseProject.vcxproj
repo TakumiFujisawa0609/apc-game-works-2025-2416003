@@ -36,7 +36,7 @@
     <ClCompile Include="Src\Object\Enemy\EnemyBase.cpp" />
     <ClCompile Include="Src\Object\Grid.cpp" />
     <ClCompile Include="Src\Manager\Camera.cpp" />
-    <ClCompile Include="Src\Scene\GameScene.cpp" />
+    <ClCompile Include="Src\Scene\Game\GameScene.cpp" />
     <ClCompile Include="Src\Application.cpp" />
     <ClCompile Include="Src\Common\Fader.cpp" />
     <ClCompile Include="Src\Common\Quaternion.cpp" />
@@ -87,7 +87,7 @@
     <ClInclude Include="Src\Object\Player.h" />
     <ClInclude Include="Src\Scene\SearchScene.h" />
     <ClInclude Include="Src\Scene\BattleScene.h" />
-    <ClInclude Include="Src\Scene\GameScene.h" />
+    <ClInclude Include="Src\Scene\Game\GameScene.h" />
     <ClInclude Include="Src\Application.h" />
     <ClInclude Include="Src\Common\Fader.h" />
     <ClInclude Include="Src\Common\Quaternion.h" />

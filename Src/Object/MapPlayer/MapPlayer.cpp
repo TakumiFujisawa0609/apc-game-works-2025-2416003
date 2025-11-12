@@ -29,9 +29,9 @@ void MapPlayer::Update(void)
 
 
 	MapPlayerBase::Update();
-	nowPos_ = pos_;
-	enCount();
-	prePos_ = nowPos_;
+	//nowPos_ = pos_;
+	//enCount();
+	//prePos_ = nowPos_;
 }
 
 void MapPlayer::Draw(void)
@@ -86,9 +86,9 @@ void MapPlayer::InitAnimation(void)
 void MapPlayer::InitPost(void)
 {
 
-	remainingSteps_ = GetRand(ENCOUNT_MAX_STEPS - ENCOUNT_MIN_STEPS) + ENCOUNT_MIN_STEPS;
-	accumulatedDistance_ = 0.0f;
-	
+	//remainingSteps_ = GetRand(ENCOUNT_MAX_STEPS - ENCOUNT_MIN_STEPS) + ENCOUNT_MIN_STEPS;
+	//accumulatedDistance_ = 0.0f;
+	//
 }
 
 void MapPlayer::Move(void)
@@ -178,42 +178,47 @@ void MapPlayer::Move(void)
 
 void MapPlayer::enCount(void)
 {
-	VECTOR diff = VSub(nowPos_, prePos_);
-	diff.y = 0.0f; // Y軸(高さ)の差分は無視
+	//VECTOR diff = VSub(nowPos_, prePos_);
+	//diff.y = 0.0f; // Y軸(高さ)の差分は無視
 
-	float distanceMoved = VSize(diff); 
+	//float distanceMoved = VSize(diff); 
 
-	if (distanceMoved < 0.01f)
-	{
-		return;
-	}
+	//if (distanceMoved < 0.01f)
+	//{
+	//	return;
+	//}
 
-	accumulatedDistance_ = distanceMoved;
+	//accumulatedDistance_ = distanceMoved;
 
-	while (accumulatedDistance_ >= STEP_DISTANCE)
-	{
-		accumulatedDistance_ -= STEP_DISTANCE; // 1歩分消費
-		remainingSteps_--;                           // 残りエンカウント歩数を減らす
+	//while (accumulatedDistance_ >= STEP_DISTANCE)
+	//{
+	//	accumulatedDistance_ -= STEP_DISTANCE; // 1歩分消費
+	//	remainingSteps_--;                           // 残りエンカウント歩数を減らす
 
-		// 4. エンカウント判定
-		if (remainingSteps_ <= 0)
-		{
-			EnemyBase::TYPE enemyType = EnemyBase::TYPE::GOBLIN;
+	//	// 4. エンカウント判定
+	//	if (remainingSteps_ <= 0)
+	//	{
+	//		EnemyBase::TYPE enemyType = EnemyBase::TYPE::GOBLIN;
 
-			EnemyStatusManager::Getinstance()->SetNextEncounterType(enemyType);
+	//		EnemyStatusManager::Getinstance()->SetNextEncounterType(enemyType);
 
-			// エンカウント発生！
-			AudioManager::GetInstance()->StopBGM();
-			SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::BATTLE);
+	//		// エンカウント発生！
+	//		AudioManager::GetInstance()->StopBGM();
+	//		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::BATTLE);
 
-			// 次のエンカウント歩数を再設定
-			remainingSteps_ = GetRand(ENCOUNT_MAX_STEPS - ENCOUNT_MIN_STEPS) + ENCOUNT_MIN_STEPS;
-			accumulatedDistance_ = 0.0f; // 蓄積距離もリセット
+	//		// 次のエンカウント歩数を再設定
+	//		remainingSteps_ = GetRand(ENCOUNT_MAX_STEPS - ENCOUNT_MIN_STEPS) + ENCOUNT_MIN_STEPS;
+	//		accumulatedDistance_ = 0.0f; // 蓄積距離もリセット
 
-			// 戦闘に移行するため、ここで処理を終了
-			return;
-		}
-	}
+	//		// 戦闘に移行するため、ここで処理を終了
+	//		return;
+	//	}
+	//}
 
 
+}
+
+VECTOR MapPlayer::GetPos(void)
+{
+	return pos_;
 }

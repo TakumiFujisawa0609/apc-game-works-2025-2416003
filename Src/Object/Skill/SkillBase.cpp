@@ -43,7 +43,7 @@ void SkillBase::Attack(ActorBase* attacker, ActorBase* target)
 	case SKILL_TYPE::ATTACK:
 		attacker->costMp(skillData_.mp, attacker->SetHp());
 		attacker->PhysicsDamage(skillData_.power,attacker->SetAtk(),target->SetDef(),target->SetHp());
-		attacker->MagicDamage(skillData_.power, attacker->SetWis(), target->SetWis(), target->SetHp());
+		//attacker->MagicDamage(skillData_.power, attacker->SetWis(), target->SetWis(), target->SetHp());
 		break;
 	case SKILL_TYPE::DEFENSE:
 

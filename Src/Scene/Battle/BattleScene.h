@@ -4,6 +4,9 @@
 class SceneManager;
 class EnemyBase;
 class EnemyManager;
+class SkillManager;
+
+
 
 class BattleScene : public SceneBase
 {
@@ -26,8 +29,8 @@ public:
 		SLASH,//斬撃
 		PROTECT,//防御
 		HEAL,//回復
-		POISON,//毒
 		LIMIT_BREAK,//リミットブレイク
+		MAX
 
 	};
 
@@ -53,7 +56,7 @@ public:
 	{
 		BATTLE, //たたかう
 		//SKILL,//スキル
-		TOOl, //道具
+		//TOOl, //道具
 		ESCAPE, //逃げる
 		MAX
 	};
@@ -102,10 +105,18 @@ public:
 
 private:
 
+	
+	const char* SkillName;//テスト
+	int test = 1;
+
 	std::list<SKILL> selectedSkills_;
 
 	EnemyBase* enemyBase_;
 	EnemyManager* enemyManager_;
+	SkillManager* skillManger_;
+	
+
+
 
 	//コマンド選択
 	COMMAND command_;
@@ -148,13 +159,14 @@ private:
 	void ProcessSkill(SKILL skill);
 
 	void Damage(void);
+	void Hell(void);
 
 	void DrawCommand(COMMAND command);
 	void DrawEnd(END end);
 	void DrawReword(END_REWARD endreward);
 
 	void DrawSkill(void);
-	void DrawState(STATE state);
+	void DrawStates(STATE state);
 
 	void HandleCommandSelectInput(void);
 	void ExecuteCommand(COMMAND command);

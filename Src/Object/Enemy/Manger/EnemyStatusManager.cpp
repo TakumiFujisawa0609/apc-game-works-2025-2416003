@@ -81,7 +81,7 @@ void EnemyStatusManager::LoadStatusData(void)
 	EnemyData GoblinData;
 
 	//戦闘中に変化があるステータス
-	GoblinData.hp_ = 20;
+	GoblinData.hp_ = 100;
 	GoblinData.atk_ = 2;
 	GoblinData.def_ = 5;
 	GoblinData.speed_ = 5;

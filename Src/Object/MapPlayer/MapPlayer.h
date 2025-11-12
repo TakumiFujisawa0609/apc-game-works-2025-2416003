@@ -17,15 +17,7 @@ public:
 	// プレイヤーの初期座標
 	static constexpr VECTOR DEFAULT_PLAYER_POS = { 0.0f, 45.0f, 0.0f };
 
-	static constexpr float ENCOUNT_RANGE = 100.0f;
-	//最大エンカウント回数
-	static constexpr int  ENCOUNT_COUNT = 5;
 
-	//距離の単位
-	static constexpr float STEP_DISTANCE = 1.0f;
-	// 次のエンカウントまでの歩数初期値
-	static constexpr int  ENCOUNT_MAX_STEPS = 600;
-	static constexpr int  ENCOUNT_MIN_STEPS = 50;
 
 	// アニメーション種別
 	enum class ANIM_TYPE
@@ -51,6 +43,8 @@ public:
 	void Release(void) override;
 
 	void enCount(void);
+
+	VECTOR GetPos(void);
 
 protected:
 
@@ -88,7 +82,7 @@ private:
 	int count_ = 0;
 	float accumulatedDistance_ = 0.0f; // 実際に歩いた距離の累計
 	int remainingSteps_ = 0;          // 次のエンカウントまでの残り歩数
-	          // プレイヤーが移動しているか（アニメーション制御用
+	          
 
 	
 ;

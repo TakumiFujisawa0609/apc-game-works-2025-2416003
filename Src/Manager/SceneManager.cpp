@@ -2,7 +2,7 @@
 #include <DxLib.h>
 #include "../Common/Fader.h"
 #include "../Scene/Title/TitleScene.h"
-#include "../Scene/GameScene.h"
+#include "../Scene/Game/GameScene.h"
 #include "../Scene/Battle/BattleScene.h"
 #include "../Scene//Search/SearchScene.h"
 #include "../Scene/Clear/GameClear.h"
