@@ -77,6 +77,8 @@ public:
 
 protected://派生クラスから持ってくる情報
 	
+	
+
 	int hp_;
 	int mp_;
 	int maxHp_;
@@ -85,6 +87,8 @@ protected://派生クラスから持ってくる情報
 	int atk_;
 	int def_;
 	int wis_;
+
+	virtual void SetParam(void) = 0;
 
 private:
 

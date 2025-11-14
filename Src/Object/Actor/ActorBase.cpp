@@ -3,6 +3,7 @@
 
 void ActorBase::Init(void)
 {
+	SetParam();
 }
 
 void ActorBase::Update(void)

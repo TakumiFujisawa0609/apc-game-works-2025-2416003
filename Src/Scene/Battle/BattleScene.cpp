@@ -13,6 +13,10 @@
 #include "../../Manager/Camera.h"
 #include "../../Sound/AudioManager.h"
 
+#include "../../Object/Skill/SkillBase.h"
+#include "../../Object/Player/Player.h"
+#include "../../Object/Enemy/TestGoblin/TestGoblin.h"
+
 
 
 
@@ -55,7 +59,12 @@ void BattleScene::Init(void)
 	skillManger_ = new SkillManager();
 	skillManger_->Init();
 	
+	player_ = new Player();
+	player_->Init();
 
+	testGoblin_ = new TestGoblin();
+	testGoblin_->Init();
+	GoblinHp = testGoblin_->SetHp();
 
 }
 
@@ -80,18 +89,29 @@ void BattleScene::Update(void)
 	//テスト
 	if (ins.IsTrgDown(KEY_INPUT_2))
 	{
-		test++;
+		testIndex_++;
 	}
 	if (ins.IsTrgDown(KEY_INPUT_3))
 	{
-		test--;
+		testIndex_--;
 	}
-	if (ins.IsTrgDown(KEY_INPUT_4))
-	{
-		
-	}
+
+	//テスト
+	SkillData testSkills = skillTable[testIndex_];
 	
 
+	if (ins.IsTrgDown(KEY_INPUT_SPACE))
+	{
+		skillManger_->PushSkillList(testSkills.id);
+
+		skillBase_->Attack(player_, testGoblin_);
+
+		skillManger_->PopSkillList();
+	}
+
+
+
+	
 
 
 
@@ -223,9 +243,13 @@ void BattleScene::Draw(void)
 {
 
 	//テスト
-	SkillData skill = skillTable[test];
-	const char* SkillName = skill.name.c_str();
+	SkillData testSkills = skillTable[testIndex_];
+	const char* SkillName = testSkills.name.c_str();
 	DrawFormatString(100, 300, 0xffffff, "%s", SkillName);
+
+
+
+	DrawFormatString(100, 350, 0xffffff, "%s", GoblinHp);
 
 
 
@@ -286,8 +310,15 @@ void BattleScene::Release(void)
 {
 
 	skillManger_->Release();
+
 	enemyManager_->Release();
 	delete enemyManager_;
+
+	player_->Release();
+	delete player_;
+
+	testGoblin_->Release();
+	delete testGoblin_;
 }
 
 

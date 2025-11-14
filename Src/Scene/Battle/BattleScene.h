@@ -5,6 +5,9 @@ class SceneManager;
 class EnemyBase;
 class EnemyManager;
 class SkillManager;
+class Player;
+class TestGoblin;
+class SkillBase;
 
 
 
@@ -103,17 +106,30 @@ public:
 	void PauseDraw(void);
 
 
+
+
 private:
 
 	
 	const char* SkillName;//テスト
 	int test = 1;
 
+	//テスト用
+	Player* player_;			//テスト用
+	TestGoblin* testGoblin_;	//テスト用
+	SkillBase* skillBase_;
+	SkillManager* skillManger_;
+
+
+
+
+
+
 	std::list<SKILL> selectedSkills_;
 
 	EnemyBase* enemyBase_;
 	EnemyManager* enemyManager_;
-	SkillManager* skillManger_;
+	
 	
 
 
@@ -125,6 +141,13 @@ private:
 	SKILL skill_;
 	
 	STATE state_;
+
+	int testIndex_;	//テスト
+
+	int GoblinHp; //テストゴブリンHp
+
+	
+
 
 	int cursorIndx_; //選択しているコマンド
 	int actionTime_; //処理待機時間

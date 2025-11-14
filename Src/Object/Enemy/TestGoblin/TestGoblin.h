@@ -16,14 +16,9 @@ public:
 
 protected:
 
-	int hp_ = 50;
-	int mp_ = 100;
-	int maxHp_ = 50;
-	int maxMp_ = 100;
+	void SetParam()override;
 
-	int atk_ = 30;
-	int def_ = 10;
-	int wis_ = 5;
+	
 
 
 
