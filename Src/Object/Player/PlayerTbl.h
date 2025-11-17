@@ -26,14 +26,15 @@ struct PlayerData
 	int maxMp;			// 最大MP
 	int atk;			// 攻撃力
 	int def;			// 防御力
+	int wis;
 };
 
 // ↓csv等で外部ファイルから受け取れるようにする。
 // プレイヤーレベルテーブル（配列）
 const PlayerData PlayerStatusTable[] =
 {
-	// プレイヤーレベル		//レベル	//HP	//MAXHP		//MP	//MAXMP		//ATK	//DEF
-	{ PLAYER_LEVEL::ONE	,	"Lv .1",	100,	100,		100,	100,		10		,10},
+	// プレイヤーレベル		//レベル	//HP	//MAXHP		//MP	//MAXMP		//ATK	//DEF	//WIS
+	{ PLAYER_LEVEL::ONE	,	"Lv .1",	100,	100,		100,	100,		10		,10		,10},
 
 };
 

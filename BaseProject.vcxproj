@@ -25,7 +25,6 @@
     <ClCompile Include="Src\Object\MapPlayer\MapPlayerBase.cpp" />
     <ClCompile Include="Src\Object\Player\Manger\PlayerManager.cpp" />
     <ClCompile Include="Src\Object\Player\Player.cpp" />
-    <ClCompile Include="Src\Object\Actor\ActorSkill.cpp" />
     <ClCompile Include="Src\Object\Actor\ActorBase.cpp" />
     <ClCompile Include="Src\Object\Skill\SkillManager.cpp" />
     <ClCompile Include="Src\Scene\Battle\BattleScene.cpp" />
@@ -62,7 +61,6 @@
     <ClInclude Include="Src\Object\Player\Player.h" />
     <ClInclude Include="Src\Object\Player\PlayerTbl.h" />
     <ClInclude Include="Src\Object\Skill\LimitBreakSkill.h" />
-    <ClInclude Include="Src\Object\Actor\ActorSkill.h" />
     <ClInclude Include="Src\Common\Pause.h" />
     <ClInclude Include="Src\Manager\PlayerManager.h" />
     <ClInclude Include="Src\Object\Skill\SkillManager.h" />

@@ -51,12 +51,10 @@ public:
 	virtual void Update();
 	virtual void Draw();
 	virtual void Release();
-	//状態遷移
-	void ChangeState(STATE state);
+
 	// 座標取得
 	VECTOR GetPos(void);
 
-	void HitDamage(int damage);
 	
 protected:
 
@@ -67,6 +65,7 @@ protected:
 
 	// アニメーション種別
 	int animType_;
+
 	// モデル情報
 	int modelId_;
 
@@ -95,10 +94,7 @@ protected:
 	//エネミーの戦闘行動処理
 	virtual void ProcessAction(void) = 0;
 
-	// 移動処理
-	//virtual void Move(void);
-	// 遅延回転処理
-	void DelayRotate(void);
+
 
 private:
 
@@ -108,7 +104,7 @@ private:
 	int atk_; ///@param 攻撃力
 	int def_; ///@param 防御力
 	int speed_; ///@param すばやさ
-	int intel_; ///@param かしこさ
+	int wisdom_; ///@param かしこさ
 
 	//被ダメージカウンタ
 	int cntDamaged_;
@@ -121,18 +117,6 @@ private:
 	ANIM_TYPE animationType_;
 
 	
-	// 状態遷移
-	void ChangeStandby(void);
-	 void ChangeDeadReact(void);
-	 void ChangeEnd(void);
-	// 状態別更新
-	 void UpdateStandby(void);
-	 void UpdateDeadReact(void);
-	 void UpdateEnd(void);
-	// 状態別描画
-	 void DrawStandby(void);
-	 void DrawDeadReact(void);
-	 void DrawEnd(void);
 	
 };
 
