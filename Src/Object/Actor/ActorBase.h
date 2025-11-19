@@ -79,14 +79,7 @@ protected://”h¶ƒNƒ‰ƒX‚©‚ç‚Á‚Ä‚­‚éî•ñ
 	
 	
 
-	int hp_;
-	int mp_;
-	int maxHp_;
-	int maxMp_;
 
-	int atk_;
-	int def_;
-	int wis_;
 
 	virtual void SetParam(void) = 0;
 

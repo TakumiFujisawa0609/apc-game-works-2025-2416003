@@ -42,10 +42,7 @@ void Goblin::InitTransform()
 
 void Goblin::InitAnimation()
 {
-	/// @init animation
-	animationController_ = new AnimationController(modelId_);
-
-	/// @add animation
+	
 
 }
 
@@ -55,9 +52,10 @@ void Goblin::InitPost()
 
 void Goblin::SetParam()
 {
-
+	hp_ = 100;		//ëÃóÕ
+	atk_ = 20;		//çUåÇóÕ
+	def_ = 10;		//ñhå‰óÕ
+	speed_ = 10;	//Ç∑ÇŒÇ‚Ç≥
+	wisdom_ = 0;		//Ç©ÇµÇ±Ç≥
 }
 
-void Goblin::ProcessAction()
-{
-}

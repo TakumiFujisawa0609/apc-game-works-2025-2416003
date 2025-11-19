@@ -8,15 +8,11 @@
 #include "../../Object/Enemy/EnemyBase.h"
 #include "BattleScene.h"
 #include "../../Object/Enemy/Manger/EnemyManager.h"
-#include "../../Object/Enemy/Manger/EnemyStatusManager.h"
 #include "../../Object/Skill/SkillManager.h"
 #include "../../Manager/Camera.h"
 #include "../../Sound/AudioManager.h"
-
 #include "../../Object/Skill/SkillBase.h"
 #include "../../Object/Player/Player.h"
-#include "../../Object/Enemy/TestGoblin/TestGoblin.h"
-
 
 
 
@@ -34,18 +30,6 @@ void BattleScene::Init(void)
 
 	
 
-	//シングルトンからインスタンスを取得
-	EnemyStatusManager* statusManager = EnemyStatusManager::Getinstance();
-	//敵の種類を取得
-	EnemyBase::TYPE enemyType = statusManager->GetNextEncounterType();
-	//敵のデータ取得
-	const EnemyData& baseData = statusManager->GetEnemyData(enemyType);
-
-	enemyHp_ = baseData.hp_;
-
-	enemyManager_ = new EnemyManager();
-	enemyManager_->Init();
-
 	SceneManager::GetInstance().GetCamera()->ChangeMode(Camera::MODE::FIXED_POINT);
 
 	BattleInit();
@@ -58,13 +42,12 @@ void BattleScene::Init(void)
 
 	skillManger_ = new SkillManager();
 	skillManger_->Init();
-	
+
+	enemyManager_ = new EnemyManager();
+	enemyManager_->Init();
+
 	player_ = new Player();
 	player_->Init();
-
-	testGoblin_ = new TestGoblin();
-	testGoblin_->Init();
-	GoblinHp = testGoblin_->SetHp();
 
 }
 
@@ -102,18 +85,14 @@ void BattleScene::Update(void)
 
 	if (ins.IsTrgDown(KEY_INPUT_SPACE))
 	{
-		skillManger_->PushSkillList(testSkills.id);
+		skillManger_->PushSkillList(testSkills.id);		//先頭にスキル追加
 
-		skillBase_->Attack(player_, testGoblin_);
+		//skillBase_->Attack(player_, testGoblin_);		//スキルの処理
 
-		skillManger_->PopSkillList();
+		skillManger_->PopSkillList();					//先頭のスキルを削除
 	}
 
-
-
-	
-
-
+	enemyManager_->Update();
 
 	skillManger_->Update();
 	
@@ -247,9 +226,16 @@ void BattleScene::Draw(void)
 	const char* SkillName = testSkills.name.c_str();
 	DrawFormatString(100, 300, 0xffffff, "%s", SkillName);
 
+	enemyManager_->Draw();
 
+	enemys_ = enemyManager_->GetEnemys();//エネミーの情報取得
+	for (EnemyBase* enemy : enemys_)
+	{
+		testHp = enemy->GetHp();
+		DrawFormatString(100, 350, 0xffffff, "%s", testHp);
+	}
 
-	DrawFormatString(100, 350, 0xffffff, "%s", GoblinHp);
+	
 
 
 
@@ -310,6 +296,7 @@ void BattleScene::Release(void)
 {
 
 	skillManger_->Release();
+	delete skillManger_;
 
 	enemyManager_->Release();
 	delete enemyManager_;
@@ -317,8 +304,6 @@ void BattleScene::Release(void)
 	player_->Release();
 	delete player_;
 
-	testGoblin_->Release();
-	delete testGoblin_;
 }
 
 

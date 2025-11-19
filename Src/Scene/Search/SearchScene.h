@@ -2,6 +2,7 @@
 class SceneManager;
 class Grid;
 class MapPlayer;
+class EnemyManager;
 
 class SearchScene : public SceneBase
 {
@@ -71,6 +72,8 @@ private:
 
 	Grid* grid_;
 	MapPlayer* player_;
+	EnemyManager* enemyMng_;
+
 	STATE state_;
 
 

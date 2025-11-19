@@ -10,8 +10,8 @@
 #include "SearchScene.h"
 #include "../../Object/MapPlayer/MapPlayer.h"
 #include "../../Sound/AudioManager.h"
-#include "../../Object/Enemy/EnemyBase.h"
-#include "../../Object/Enemy/Manger/EnemyStatusManager.h"
+#include "../../Object/Enemy/Manger/EnemyManager.h"
+
 
 SearchScene::SearchScene(void)
 {
@@ -280,11 +280,10 @@ void SearchScene::EnCount(void)
 		// 4. エンカウント判定
 		if (remainingSteps_ <= 0)
 		{
-			EnemyBase::TYPE enemyType = EnemyBase::TYPE::GOBLIN;
+			//たたかう敵の抽選
+			EnemyManager::ENEMY_BATTLE enemyType = EnemyManager::ENEMY_BATTLE::GOBLIN;
 
-			EnemyStatusManager::Getinstance()->SetNextEncounterType(enemyType);
-
-			// エンカウント発生！
+			// エンカウント発生
 			AudioManager::GetInstance()->PlaySE(SoundID::SE_ENCOUNT);//エンカウントSE再生
 			AudioManager::GetInstance()->StopBGM();
 			SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::BATTLE);

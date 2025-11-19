@@ -1,5 +1,7 @@
 #pragma once
 #include <DxLib.h>
+#include <vector>
+#include"../../Common/Transform.h"
 class AnimationController;
 
 class EnemyBase
@@ -42,18 +44,16 @@ public:
 	// 点滅間隔
 	static constexpr int TERM_BLINK = 8;
 
-	// 被ダメ時間
-	static constexpr int CNT_HIT_REACT = 40;
-	// 死亡時間
-	static constexpr int CNT_DEAD_REACT = 80;
-
-	void Init(TYPE type);
+	void Init(TYPE type, int baseModelId);
 	virtual void Update();
 	virtual void Draw();
 	virtual void Release();
 
-	// 座標取得
-	VECTOR GetPos(void);
+	// 大きさ、回転、座標等の取得
+	const Transform& GetTransform(void) const;
+
+	//HPの取得
+	int GetHp();
 
 	
 protected:
@@ -62,12 +62,20 @@ protected:
 
 	// アニメーション制御
 	AnimationController* animationController_;
+	//モデル制御の基本情報
+	Transform transform_;
 
 	// アニメーション種別
 	int animType_;
-
 	// モデル情報
 	int modelId_;
+
+	//エネミーステータス
+	int hp_;  //体力
+	int atk_; //攻撃力
+	int def_; //防御力
+	int speed_; //すばやさ
+	int wisdom_; //かしこさ
 
 	VECTOR pos_;
 	VECTOR angles_;
@@ -84,30 +92,14 @@ protected:
 	virtual void InitLoad(void) = 0;
 	// 大きさ、回転、座標の初期化
 	virtual void InitTransform(void) = 0;
-	// 大きさ、回転、座標のモデル設定
-	virtual void InitTransformPost(void);
+
 	// アニメーションの初期化
 	virtual void InitAnimation(void) = 0;
 	// 初期化後の個別処理
 	virtual void InitPost(void) = 0;
 
-	//エネミーの戦闘行動処理
-	virtual void ProcessAction(void) = 0;
-
-
 
 private:
-
-	///param エネミーステータス
-
-	int hp_;  ///@param体力
-	int atk_; ///@param 攻撃力
-	int def_; ///@param 防御力
-	int speed_; ///@param すばやさ
-	int wisdom_; ///@param かしこさ
-
-	//被ダメージカウンタ
-	int cntDamaged_;
 
 	//敵の行動状態
 	STATE state_;
@@ -116,7 +108,5 @@ private:
 	///エネミーのアニメーション
 	ANIM_TYPE animationType_;
 
-	
-	
 };
 

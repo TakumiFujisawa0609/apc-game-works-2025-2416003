@@ -5,6 +5,12 @@ class EnemyBase;
 class EnemyManager
 {
 public:
+
+	enum class ENEMY_BATTLE
+	{
+		GOBLIN,
+
+	};
 	// コンストラクタ
 	EnemyManager(void);
 	// デストラクタ
@@ -20,11 +26,20 @@ public:
 
 private:
 
-	// エネミー用のモデルハンドルID
-	//std::vector<int> enemyModelIds_;
-	
 	// エネミー
 	std::vector<EnemyBase*> enemys_;
+	// エネミー用のモデルハンドルID
+	std::vector<int> enemyModelIds_;
+	
+	//エネミー編成
+	ENEMY_BATTLE enemy_Battle;
+
+
+	void GoblinParty(void);
+
+	bool spaw_ = false;
+
+	int count_;
 
 };
 

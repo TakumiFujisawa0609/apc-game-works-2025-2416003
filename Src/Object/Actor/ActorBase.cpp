@@ -18,40 +18,7 @@ void ActorBase::Release(void)
 {
 }
 
-int ActorBase::SetHp()
-{
-	return hp_;
-}
 
-int ActorBase::SetMaxHp()
-{
-	return maxHp_;
-}
-
-int ActorBase::SetMp()
-{
-	return mp_;
-}
-
-int ActorBase::SetMaxMp()
-{
-	return maxMp_;
-}
-
-int ActorBase::SetAtk()
-{
-	return atk_;
-}
-
-int ActorBase::SetDef()
-{
-	return def_;
-}
-
-int ActorBase::SetWis()
-{
-	return wis_;
-}
 
 int ActorBase::addHp(float skillPow, int attckerWis,  int attckerHp , int attckerMaxHp)
 {

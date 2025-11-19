@@ -8,7 +8,6 @@
 #include "../../Utility/AsoUtility.h"
 #include "../../Utility/MatrixUtility.h"
 #include "../../Object/Enemy/EnemyBase.h"
-#include "../../Object/Enemy/Manger/EnemyStatusManager.h"
 #include "../../Sound/AudioManager.h"
 
 #include "MapPlayer.h"

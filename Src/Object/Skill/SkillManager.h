@@ -32,5 +32,6 @@ private:
 
 	// ƒXƒLƒ‹‚Ì”z—ñ
 	std::list<SkillBase*> skills_;
+
 };
 

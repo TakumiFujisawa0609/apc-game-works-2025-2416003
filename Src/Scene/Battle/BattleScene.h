@@ -6,7 +6,6 @@ class EnemyBase;
 class EnemyManager;
 class SkillManager;
 class Player;
-class TestGoblin;
 class SkillBase;
 
 
@@ -114,24 +113,19 @@ private:
 	const char* SkillName;//テスト
 	int test = 1;
 
+	int testHp;//テストHP
+
 	//テスト用
 	Player* player_;			//テスト用
-	TestGoblin* testGoblin_;	//テスト用
+	
 	SkillBase* skillBase_;
 	SkillManager* skillManger_;
-
-
-
-
-
+	EnemyBase* enemyBase_;
+	EnemyManager* enemyManager_;
 
 	std::list<SKILL> selectedSkills_;
 
-	EnemyBase* enemyBase_;
-	EnemyManager* enemyManager_;
-	
-	
-
+	std::vector<EnemyBase*> enemys_;
 
 
 	//コマンド選択

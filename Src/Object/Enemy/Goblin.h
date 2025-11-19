@@ -15,6 +15,7 @@ public:
 	void Release(void)override;
 
 protected://継承する際に必要な情報
+
 	//リソースロード
 	void InitLoad(void)override;
 	//大きさ、回転、座標設定
@@ -23,10 +24,9 @@ protected://継承する際に必要な情報
 	void InitAnimation(void)override;
 	//初期化後の個別処理
 	void InitPost(void)override;
-	
+	//ステータス入力
 	void SetParam()override;
 
-	void ProcessAction() override;
 
 private:
 
