@@ -1,5 +1,5 @@
 #pragma once
-#include "EnemyBase.h"
+#include "../EnemyBase.h"
 class AnimatarionController;
 
 class Goblin : public EnemyBase

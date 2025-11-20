@@ -64,38 +64,7 @@ void BattleScene::Update(void)
 		return;
 	}
 
-	enemyManager_->Update();
 
-	//シーン遷移
-	InputManager& ins = InputManager::GetInstance();
-
-	//テスト
-	if (ins.IsTrgDown(KEY_INPUT_2))
-	{
-		testIndex_++;
-	}
-	if (ins.IsTrgDown(KEY_INPUT_3))
-	{
-		testIndex_--;
-	}
-
-	//テスト
-	SkillData testSkills = skillTable[testIndex_];
-	
-
-	if (ins.IsTrgDown(KEY_INPUT_SPACE))
-	{
-		skillManger_->PushSkillList(testSkills.id);		//先頭にスキル追加
-
-		//skillBase_->Attack(player_, testGoblin_);		//スキルの処理
-
-		skillManger_->PopSkillList();					//先頭のスキルを削除
-	}
-
-	enemyManager_->Update();
-
-	skillManger_->Update();
-	
 
 	//// シーン遷移
 	//InputManager& ins = InputManager::GetInstance();
@@ -229,11 +198,7 @@ void BattleScene::Draw(void)
 	enemyManager_->Draw();
 
 	enemys_ = enemyManager_->GetEnemys();//エネミーの情報取得
-	for (EnemyBase* enemy : enemys_)
-	{
-		testHp = enemy->GetHp();
-		DrawFormatString(100, 350, 0xffffff, "%s", testHp);
-	}
+
 
 	
 

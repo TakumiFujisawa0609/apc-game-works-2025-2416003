@@ -1,7 +1,8 @@
 #include <DxLib.h>
 #include "EnemyManager.h"
 #include "../EnemyBase.h"
-#include "../Goblin.h"
+#include "../EnemyType/Goblin.h"
+#include "../EnemyType/BlueDemon.h"
 #include "../../../Application.h"
 
 EnemyManager::EnemyManager(void)
@@ -15,31 +16,23 @@ EnemyManager::~EnemyManager(void)
 
 void EnemyManager::Init(void)
 {
-	//エネミーのモデルロード
-	//ゴブリンモデルロード
-	enemyModelIds_.emplace_back(
-		MV1LoadModel((Application::PATH_MODEL + "Enemy/Goblin.mv1").c_str()));
 
+	/*enemyModelIds_.emplace_back(
+		MV1LoadModel((Application::PATH_MODEL + "Enemy/Goblin.mv1").c_str()));*/
+	
+	//ゴブリンモデルロード
+	goblinModelId = MV1LoadModel((Application::PATH_MODEL + "Enemy/Goblin.mv1").c_str()); 
+	//スライムモデルロード
+	blueDemonModelId = MV1LoadModel((Application::PATH_MODEL + "Enemy/BlueDemon.mv1").c_str());
+
+	//戦う敵の抽選
+	type_ = EnemyBase::TYPE::GOBLIN;//一旦仮
 }
 
 
 
 void EnemyManager::Update(void)
 {
-	//敵編成
-	switch (enemy_Battle)
-	{
-	case EnemyManager::ENEMY_BATTLE::GOBLIN:
-
-		if (enemys_.empty())
-		{
-			GoblinParty();
-		}
-		
-		break;
-	default:
-		break;
-	}
 
 	for (const auto enemy : enemys_)
 	{
@@ -49,18 +42,25 @@ void EnemyManager::Update(void)
 
 void EnemyManager::Draw(void)
 {
-	for (const auto enemy : enemys_)
+	
+	//敵編成
+	switch (type_)
 	{
-		enemy->Draw();
+	case EnemyBase::TYPE::BLUEDEMON:
+		BlueDemonDraw();
+		break;
+	case EnemyBase::TYPE::GOBLIN:
+		GoblinDraw();
+		break;
+	default:
+		break;
 	}
 }
 
 void EnemyManager::Release(void)
 {
-	for (int id : enemyModelIds_)
-	{
-		MV1DeleteModel(id);
-	}
+	MV1DeleteModel(goblinModelId);
+	MV1DeleteModel(blueDemonModelId);
 }
 
 const std::vector<EnemyBase*>& EnemyManager::GetEnemys(void) const
@@ -68,14 +68,16 @@ const std::vector<EnemyBase*>& EnemyManager::GetEnemys(void) const
 	return enemys_;
 }
 
-void EnemyManager::GoblinParty(void)
+void EnemyManager::GoblinDraw(void)
 {
-	EnemyBase* enemy = new Goblin();
-	enemy->Init(EnemyBase::TYPE::GOBLIN,
-		enemyModelIds_[0]);
-
-	enemys_.push_back(enemy);
+	MV1DrawModel(goblinModelId);
 }
+
+void EnemyManager::BlueDemonDraw(void)
+{
+	MV1DrawModel(blueDemonModelId);
+}
+
 
 
 

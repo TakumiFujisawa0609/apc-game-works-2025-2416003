@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Object\Enemy\EnemyType\BlueDemon.cpp" />
     <ClCompile Include="Src\Common\Transform.cpp" />
     <ClCompile Include="Src\Object\Enemy\Manger\EnemyManager.cpp" />
     <ClCompile Include="Src\Object\MapPlayer\MapPlayer.cpp" />
@@ -29,7 +30,7 @@
     <ClCompile Include="Src\Object\Skill\SkillManager.cpp" />
     <ClCompile Include="Src\Scene\Battle\BattleScene.cpp" />
     <ClCompile Include="Src\Scene\Clear\GameClear.cpp" />
-    <ClCompile Include="Src\Object\Enemy\Goblin.cpp" />
+    <ClCompile Include="Src\Object\Enemy\EnemyType\Goblin.cpp" />
     <ClCompile Include="Src\Common\AnimationController.cpp" />
     <ClCompile Include="Src\Object\Skill\SkillBase.cpp" />
     <ClCompile Include="Src\Object\Enemy\EnemyBase.cpp" />
@@ -52,6 +53,7 @@
     <ClCompile Include="Src\Utility\MatrixUtility.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Object\Enemy\EnemyType\BlueDemon.h" />
     <ClInclude Include="Src\Common\Transform.h" />
     <ClInclude Include="Src\Object\Enemy\Manger\EnemyManager.h" />
     <ClInclude Include="Src\Object\MapPlayer\MapPlayer.h" />
@@ -73,7 +75,7 @@
     <ClInclude Include="Src\Scene\Battle\BattleScene.h" />
     <ClInclude Include="Src\Scene\Clear\GameClear.h" />
     <ClInclude Include="Src\Scene\GameClear.h" />
-    <ClInclude Include="Src\Object\Enemy\Goblin.h" />
+    <ClInclude Include="Src\Object\Enemy\EnemyType\Goblin.h" />
     <ClInclude Include="Src\Common\AnimationController.h" />
     <ClInclude Include="Src\Object\Skill\SkillBase.h" />
     <ClInclude Include="Src\Manager\SkillManager.h" />

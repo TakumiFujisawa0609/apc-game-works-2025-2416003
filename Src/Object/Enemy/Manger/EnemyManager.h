@@ -1,16 +1,13 @@
 #pragma once
 #include <vector>
+#include "../EnemyBase.h"
 class EnemyBase;
 
 class EnemyManager
 {
 public:
 
-	enum class ENEMY_BATTLE
-	{
-		GOBLIN,
 
-	};
 	// コンストラクタ
 	EnemyManager(void);
 	// デストラクタ
@@ -26,20 +23,25 @@ public:
 
 private:
 
+	//enemyBaseの種類
+	EnemyBase::TYPE  type_;
 	// エネミー
 	std::vector<EnemyBase*> enemys_;
 	// エネミー用のモデルハンドルID
-	std::vector<int> enemyModelIds_;
+	//std::vector<int> enemyModelIds_;
+
+	//ゴブリンモデルID
+	int goblinModelId;
+	//スライムモデルID
+	int blueDemonModelId;
 	
-	//エネミー編成
-	ENEMY_BATTLE enemy_Battle;
 
+	//エネミーの描画
+	void GoblinDraw(void);
 
-	void GoblinParty(void);
+	void BlueDemonDraw(void);
 
-	bool spaw_ = false;
-
-	int count_;
+	
 
 };
 

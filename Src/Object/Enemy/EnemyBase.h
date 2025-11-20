@@ -2,6 +2,7 @@
 #include <DxLib.h>
 #include <vector>
 #include"../../Common/Transform.h"
+#include "../../Object/Status/StatusTbl.h"
 class AnimationController;
 
 class EnemyBase
@@ -24,7 +25,7 @@ public:
 	// エネミー種別
 	enum class TYPE
 	{
-		SLIME,
+		BLUEDEMON,
 		GOBLIN,
 	};
 
@@ -44,13 +45,14 @@ public:
 	// 点滅間隔
 	static constexpr int TERM_BLINK = 8;
 
-	void Init(TYPE type, int baseModelId);
+	void Init();
 	virtual void Update();
 	virtual void Draw();
 	virtual void Release();
 
 	// 大きさ、回転、座標等の取得
 	const Transform& GetTransform(void) const;
+
 
 	//HPの取得
 	int GetHp();
@@ -64,18 +66,14 @@ protected:
 	AnimationController* animationController_;
 	//モデル制御の基本情報
 	Transform transform_;
+	//ステータス
+	StatusData status;
 
 	// アニメーション種別
 	int animType_;
 	// モデル情報
 	int modelId_;
 
-	//エネミーステータス
-	int hp_;  //体力
-	int atk_; //攻撃力
-	int def_; //防御力
-	int speed_; //すばやさ
-	int wisdom_; //かしこさ
 
 	VECTOR pos_;
 	VECTOR angles_;
@@ -107,6 +105,7 @@ private:
 	TYPE type_;
 	///エネミーのアニメーション
 	ANIM_TYPE animationType_;
+
 
 };
 

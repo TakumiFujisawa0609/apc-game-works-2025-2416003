@@ -1,6 +1,6 @@
 #include "Goblin.h"
-#include"../../Common/AnimationController.h"
-#include "../../Application.h"
+#include"../../../Common/AnimationController.h"
+#include "../../../Application.h"
 
 Goblin::Goblin(void)
 {
@@ -12,22 +12,21 @@ Goblin::~Goblin(void)
 
 void Goblin::Update()
 {
-	EnemyBase::Update();
+	
 }
 
 void Goblin::Draw()
 {
-	EnemyBase::Draw();
+	
 }
 
 void Goblin::Release(void)
 {
-	EnemyBase::Release();
+	
 }
 
 void Goblin::InitLoad()
 {
-	modelId_ = MV1LoadModel((Application::PATH_MODEL+"Enemy/Goblin.mv1").c_str());
 }
 
 void Goblin::InitTransform()
@@ -52,10 +51,15 @@ void Goblin::InitPost()
 
 void Goblin::SetParam()
 {
-	hp_ = 100;		//体力
-	atk_ = 20;		//攻撃力
-	def_ = 10;		//防御力
-	speed_ = 10;	//すばやさ
-	wisdom_ = 0;		//かしこさ
+	status.hp_ = 60;		//体力
+	status.maxHp_ = 60;		//最大体力
+
+	status.sp_ = 50;		//スキルポイント
+	status.maxSp_ = 50;		//最大スキルポイント
+
+	status.atk_ = 30;		//攻撃力
+	status.def_ = 10;		//防御力
+	status.speed_ = 10;		//すばやさ
+	status.wisdom_ = 5;		//かしこさ
 }
 

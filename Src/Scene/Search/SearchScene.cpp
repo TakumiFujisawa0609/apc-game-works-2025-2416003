@@ -281,7 +281,9 @@ void SearchScene::EnCount(void)
 		if (remainingSteps_ <= 0)
 		{
 			//たたかう敵の抽選
-			EnemyManager::ENEMY_BATTLE enemyType = EnemyManager::ENEMY_BATTLE::GOBLIN;
+			// enemybase::ENEMY_BATTLE enemyType = EnemyManager::ENEMY_BATTLE::GOBLIN;
+			//EnemyBase::TYPE enemyType = EnemyBase::TYPE::BLUEDEMON;
+			
 
 			// エンカウント発生
 			AudioManager::GetInstance()->PlaySE(SoundID::SE_ENCOUNT);//エンカウントSE再生

@@ -4,25 +4,18 @@
 #include "../../Utility/AsoUtility.h"
 
 
-void EnemyBase::Init(TYPE type,int baseModelId)
+void EnemyBase::Init()
 {
-	
-	//エネミー種別
-	type_ = type;
-
-	modelId_ = baseModelId;
-	
+	SetParam();
 }
 
 void EnemyBase::Update()
 {
 	
-	
 }
 
 void EnemyBase::Draw()
 {
-	MV1DrawModel(modelId_);
 }
 
 void EnemyBase::Release()
@@ -35,9 +28,11 @@ const Transform& EnemyBase::GetTransform(void) const
 	return transform_;
 }
 
+
+
 int EnemyBase::GetHp()
 {
-	return hp_;
+	return status.hp_;
 }
 
 
