@@ -7,6 +7,8 @@ class EnemyManager;
 class SkillManager;
 class Player;
 class SkillBase;
+class BlueDemon;
+class Goblin;
 
 
 
@@ -23,7 +25,7 @@ public:
 	static constexpr int PAUSE_SOUND_VOLUME = 50;
 	//通常BGMボリューム
 	static constexpr int BGM_SOUND_VOLUME = 150;
-	
+
 	static constexpr int BGM_SOUND_VOLUME_ZERO = 0;
 
 	enum class SKILL //プレイヤーから持ってこないといけないんだけど一旦仮で
@@ -57,8 +59,6 @@ public:
 	enum class COMMAND
 	{
 		BATTLE, //たたかう
-		//SKILL,//スキル
-		//TOOl, //道具
 		ESCAPE, //逃げる
 		MAX
 	};
@@ -83,6 +83,7 @@ public:
 		REWARD_VIEW,
 	};
 
+
 	// コンストラクタ
 	BattleScene(void);
 
@@ -94,8 +95,6 @@ public:
 	void Draw(void) override;
 	void Release(void) override;
 
-	
-	
 	//コマンド選択
 	void ChangeCommand(COMMAND command);
 
@@ -105,27 +104,32 @@ public:
 	void PauseDraw(void);
 
 
-
-
 private:
 
-	
-	const char* SkillName;//テスト
-	int test = 1;
+	enum class ENEMYS
+	{
+		GOBLIN,
+		BLUEDEMON,
+	};
 
-	int testHp;//テストHP
+
+	VECTOR enemyPos;
+	std::list<SKILL> selectedSkills_;
+
 
 	//テスト用
-	Player* player_;			//テスト用
-	
+	Player* player_;
+
 	SkillBase* skillBase_;
 	SkillManager* skillManger_;
 	EnemyBase* enemyBase_;
 	EnemyManager* enemyManager_;
 
-	std::list<SKILL> selectedSkills_;
 
-	std::vector<EnemyBase*> enemys_;
+	BlueDemon* blueDemon_;
+	Goblin* goblin_;
+
+
 
 
 	//コマンド選択
@@ -133,14 +137,10 @@ private:
 
 	//スキル選択
 	SKILL skill_;
-	
+	//状態
 	STATE state_;
 
-	int testIndex_;	//テスト
-
-	int GoblinHp; //テストゴブリンHp
-
-	
+	ENEMYS enemys;
 
 
 	int cursorIndx_; //選択しているコマンド
@@ -151,7 +151,7 @@ private:
 	int skillIndx_ = 0; //選択しているスキル
 
 	int enemyCount_ = 0;
-;
+	;
 
 	bool firstcommand_ = true;
 	bool isEnd_ = false; //戦闘終了フラグ
@@ -176,7 +176,7 @@ private:
 	void ProcessSkill(SKILL skill);
 
 	void Damage(void);
-	void Hell(void);
+
 
 	void DrawCommand(COMMAND command);
 	void DrawEnd(END end);
@@ -188,4 +188,7 @@ private:
 	void HandleCommandSelectInput(void);
 	void ExecuteCommand(COMMAND command);
 	void HandleSkillSelectInput(void);
+
+	void GoblinDraw();
+	void BlueDemonDraw();
 };

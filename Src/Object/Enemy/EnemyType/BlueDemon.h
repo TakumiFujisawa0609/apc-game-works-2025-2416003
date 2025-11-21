@@ -16,7 +16,7 @@ public:
 
 private:
 	//デフォルトの座標
-	static constexpr VECTOR DEFAULT_ENEMY_POS = { 0.0f, 45.0f, 0.0f };
+	static constexpr VECTOR DEFAULT_ENEMY_POS = { 0.0f, 50.0f, -520.0f };
 
 	int modelId;//モデルハンドル
 

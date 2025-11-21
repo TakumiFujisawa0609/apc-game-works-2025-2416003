@@ -1,8 +1,8 @@
 #pragma once
-#include "../EnemyBase.h"
+#include "../../Status/StatusTbl.h"
 class AnimatarionController;
 
-class Goblin : public EnemyBase
+class Goblin
 
 {
 public:
@@ -10,25 +10,35 @@ public:
 	Goblin(void);
 	~Goblin(void);
 
-	void Update(void)override;
-	void Draw(void)override;
-	void Release(void)override;
+	void Init(void);
+	void Update(void);
+	void Draw(void);
+	void Release(void);
 
-protected://継承する際に必要な情報
-
-	//リソースロード
-	void InitLoad(void)override;
-	//大きさ、回転、座標設定
-	void InitTransform(void)override;
-	//アニメーション初期化
-	void InitAnimation(void)override;
-	//初期化後の個別処理
-	void InitPost(void)override;
-	//ステータス入力
-	void SetParam()override;
-
+	VECTOR GetPos();
 
 private:
+	//デフォルトの座標
+	static constexpr VECTOR DEFAULT_ENEMY_POS = { 0.0f, 50.0f, -520.0f };
+
+	int modelId;//モデルハンドル
+
+	VECTOR pos_;
+	VECTOR angles_;
+	VECTOR scl_;
+	VECTOR localAngles_;
+
+	//ステータス
+	StatusData status;
+
+	void SetParam(void);
+
 
 };
+
+
+
+
+
+
 

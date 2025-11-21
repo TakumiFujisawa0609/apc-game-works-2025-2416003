@@ -5,14 +5,14 @@
 #include "../../Manager/SceneManager.h"
 #include "../../Manager/InputManager.h"
 #include "../Game/GameScene.h"
-#include "../../Object/Enemy/EnemyBase.h"
 #include "BattleScene.h"
-#include "../../Object/Enemy/Manger/EnemyManager.h"
 #include "../../Object/Skill/SkillManager.h"
 #include "../../Manager/Camera.h"
 #include "../../Sound/AudioManager.h"
 #include "../../Object/Skill/SkillBase.h"
 #include "../../Object/Player/Player.h"
+#include "../../Object/Enemy/EnemyType/Goblin.h"
+#include "../../Object/Enemy/EnemyType/BlueDemon.h"
 
 
 
@@ -27,15 +27,11 @@ BattleScene::~BattleScene(void)
 
 void BattleScene::Init(void)
 {	
-
+	BattleInit();
 	
 
 	SceneManager::GetInstance().GetCamera()->ChangeMode(Camera::MODE::FIXED_POINT);
-
-	BattleInit();
-
 	AudioManager::GetInstance()->LoadSceneSound(LoadScene::GAME);
-	AudioManager::GetInstance()->LoadSceneSound(LoadScene::SKILL);
 	AudioManager::GetInstance()->PlayBGM(SoundID::BGM_BATTLE);
 	AudioManager::GetInstance()->SetBgmVolume(150);
 	
@@ -43,11 +39,20 @@ void BattleScene::Init(void)
 	skillManger_ = new SkillManager();
 	skillManger_->Init();
 
-	enemyManager_ = new EnemyManager();
-	enemyManager_->Init();
-
 	player_ = new Player();
 	player_->Init();
+
+	goblin_ = new Goblin();
+	goblin_->Init();
+
+	blueDemon_ = new BlueDemon();
+	blueDemon_->Init();
+
+
+	//ここに敵の抽選を作る
+	enemys = ENEMYS::GOBLIN;//一旦仮
+
+	enemyPos = goblin_->GetPos();
 
 }
 
@@ -64,7 +69,16 @@ void BattleScene::Update(void)
 		return;
 	}
 
-
+	switch (enemys)
+	{
+	case BattleScene::ENEMYS::GOBLIN:
+		goblin_->Update();
+		break;
+	case BattleScene::ENEMYS::BLUEDEMON:
+		break;
+	default:
+		break;
+	}
 
 	//// シーン遷移
 	//InputManager& ins = InputManager::GetInstance();
@@ -190,29 +204,27 @@ void BattleScene::Update(void)
 void BattleScene::Draw(void)
 {
 
-	//テスト
-	SkillData testSkills = skillTable[testIndex_];
-	const char* SkillName = testSkills.name.c_str();
-	DrawFormatString(100, 300, 0xffffff, "%s", SkillName);
-
-	enemyManager_->Draw();
-
-	enemys_ = enemyManager_->GetEnemys();//エネミーの情報取得
-
-
-	
 
 
 
+	switch (enemys)
+	{
+	case BattleScene::ENEMYS::GOBLIN:
+		GoblinDraw();
+		break;
+	case BattleScene::ENEMYS::BLUEDEMON:
+		BlueDemonDraw();
+		break;
+	default:
+		break;
+	}
 
-	DrawFormatString(600, 100, 0xffffff, "EnemyHp:%d", enemyHp_);
+
+	//デバッグ表示
+	DrawFormatString(600, 100, 0xffffff, "enemyPos:%.2f,%.2f,%.2f",enemyPos.x, enemyPos.y, enemyPos.z);
 	DrawString(0, 80, "Nキーまたは逃げるコマンドでサーチシーン　コマンドは→キーで決定はエンターキー", 0xffffff);
 
 	DrawString(0, 0, "BattleScene", 0xffffff);
-	if (isDamege_ == false)
-	{
-		enemyManager_->Draw();
-	}
 
 	DrawCommand((COMMAND)cursorIndx_);
 	DrawStates((STATE)state_);
@@ -223,7 +235,6 @@ void BattleScene::Draw(void)
 	{
 		DrawReword((END_REWARD)rewordIndx);
 	}
-
 
 
 
@@ -262,12 +273,14 @@ void BattleScene::Release(void)
 
 	skillManger_->Release();
 	delete skillManger_;
-
-	enemyManager_->Release();
-	delete enemyManager_;
-
 	player_->Release();
 	delete player_;
+
+
+	goblin_->Release();
+	delete goblin_;
+	blueDemon_->Release();
+	delete blueDemon_;
 
 }
 
@@ -295,7 +308,6 @@ void BattleScene::ChangeCommand(COMMAND command)
 	}
 
 }
-
 
 void BattleScene::CreateBox(int x, int y, int width, int height, int color)
 {
@@ -403,7 +415,6 @@ void BattleScene::ProcessSkill(SKILL skill)
 	case BattleScene::SKILL::PROTECT:
 		break;
 	case BattleScene::SKILL::HEAL:
-		Hell();
 		break;
 	case BattleScene::SKILL::LIMIT_BREAK:
 		damageAmount = 30;
@@ -439,13 +450,6 @@ void BattleScene::Damage(void)
 		isDamege_ = true;
 	}
 }
-
-void BattleScene::Hell(void)
-{
-	AudioManager::GetInstance()->PlaySE(SoundID::SKILL_SE_HELL);
-}
-
-
 
 void BattleScene::DrawCommand(COMMAND command)
 {
@@ -626,6 +630,16 @@ void BattleScene::HandleSkillSelectInput()
 		selectedSkills_.clear();
 		state_ = STATE::COMMAND_SELECT; // コマンド選択へ戻る
 	}
+}
+
+void BattleScene::GoblinDraw()
+{
+	goblin_->Draw();
+}
+
+void BattleScene::BlueDemonDraw()
+{
+	blueDemon_->Draw();
 }
 
 

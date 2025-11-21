@@ -1,3 +1,4 @@
+#include <DxLib.h>
 #include "Goblin.h"
 #include"../../../Common/AnimationController.h"
 #include "../../../Application.h"
@@ -10,44 +11,48 @@ Goblin::~Goblin(void)
 {
 }
 
-void Goblin::Update()
+void Goblin::Init(void)
 {
-	
-}
-
-void Goblin::Draw()
-{
-	
-}
-
-void Goblin::Release(void)
-{
-	
-}
-
-void Goblin::InitLoad()
-{
-}
-
-void Goblin::InitTransform()
-{
+	//ベースマネージャー忘れて一旦
 	/// @init transform 座標
 	pos_ = DEFAULT_ENEMY_POS;
 	/// @init transform 大きさ
 	scl_ = { 1.0f,1.0f,1.0f };
 	/// @init transform 角度
 	angles_ = { 0.0f,0.0f,0.0f };
+
+	modelId = MV1LoadModel((Application::PATH_MODEL + "Enemy/Goblin.mv1").c_str());
+
+	MV1SetScale(modelId, scl_);
+	MV1SetPosition(modelId, pos_);
+	MV1SetRotationXYZ(modelId, angles_);
+
+	//ステータス読みこみ
+	SetParam();
 }
 
-void Goblin::InitAnimation()
+void Goblin::Update()
 {
-	
-
+	MV1SetPosition(modelId, pos_);
 }
 
-void Goblin::InitPost()
+void Goblin::Draw()
 {
+	MV1DrawModel(modelId);
 }
+
+
+void Goblin::Release(void)
+{
+	MV1DeleteModel(modelId);
+}
+
+VECTOR Goblin::GetPos()
+{
+	return pos_;
+}
+
+
 
 void Goblin::SetParam()
 {

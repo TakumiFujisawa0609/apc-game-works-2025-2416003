@@ -21,10 +21,14 @@ void BlueDemon::Init(void)
 	/// @init transform 角度
 	angles_ = { 0.0f,0.0f,0.0f };
 
-
-	MV1LoadModel((Application::PATH_MODEL + "Enemy/Goblin.mv1").c_str());
-
+	//モデルのロード
+	modelId = MV1LoadModel((Application::PATH_MODEL + "Enemy/BlueDemon.mv1").c_str());
+	MV1SetScale(modelId, scl_);
 	MV1SetPosition(modelId, pos_);
+
+	//ステータス読みこみ
+	SetParam();
+	
 }
 
 void BlueDemon::Update(void)

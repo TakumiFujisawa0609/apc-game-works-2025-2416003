@@ -7,6 +7,7 @@
 #include "../../Sound/AudioManager.h"
 #include "TitleScene.h"
 
+
 TitleScene::TitleScene(void)
 {
 	imgTitle_ = -1;
@@ -19,6 +20,9 @@ TitleScene::~TitleScene(void)
 void TitleScene::Init(void)
 {
 	imgTitle_ = LoadGraph((Application::PATH_IMAGE + "Title.png").c_str());
+
+
+
 	
 	/*AudioManager::GetInstance()->LoadSceneSound(LoadScene::GAME);
 	AudioManager::GetInstance()->PlayBGM(SoundID::BGM_TITLE);*/
@@ -91,6 +95,8 @@ void TitleScene::Draw(void)
 	DrawString(0, 0, "TitleScene", 0xffffff);
 	DrawString(0, 80, "スペース：決定：→キーで：選択", 0xffffff);
 	
+
+
 
 	// 2. 「GAME START」の描画
 	if (cursorIndx_ == (int)STATE::GAME)
