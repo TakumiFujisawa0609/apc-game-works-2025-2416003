@@ -18,6 +18,8 @@ enum class SoundID
 	SE_WIN,					//勝利SE
 	SKILL_SE_SLASH,			//スラッシュSE
 	SKILL_SE_HELL,			//ヒールSE
+	SKILL_SE_DAMEGE,
+
 };
 
 // 読み込むシーン

@@ -27,7 +27,7 @@ public:
 	enum class SKILL //プレイヤーから持ってこないといけないんだけど一旦仮で
 	{
 		SLASH,//斬撃
-		PROTECT,//防御
+		FLAME,//炎
 		HEAL,//回復
 		LIMIT_BREAK,//リミットブレイク
 		MAX
@@ -83,7 +83,6 @@ public:
 
 	// コンストラクタ
 	BattleScene(void);
-
 	// デストラクタ
 	~BattleScene(void);
 
@@ -92,13 +91,10 @@ public:
 	void Draw(void) override;
 	void Release(void) override;
 
-	
-	
 	//コマンド選択
 	void ChangeCommand(COMMAND command);
-
 	void CreateBox(int x, int y, int width, int height, int color);
-
+	//ポーズ
 	void Pause(void);
 	void PauseDraw(void);
 
@@ -114,8 +110,6 @@ private:
 	EnemyBase* enemyBase_;
 	EnemyManager* enemyManager_;
 	SkillManager* skillManger_;
-	
-
 
 
 	//コマンド選択
@@ -125,6 +119,8 @@ private:
 	SKILL skill_;
 	
 	STATE state_;
+
+	int backImg;
 
 	int cursorIndx_; //選択しているコマンド
 	int actionTime_; //処理待機時間
@@ -136,6 +132,11 @@ private:
 	int enemyCount_ = 0;
 ;
 
+
+	// ダメージ時の画面揺れ用
+	int shakeDuration_ = 0;      // 揺れ継続フレーム数
+	int shakeMagnitude_ = 5;
+
 	bool firstcommand_ = true;
 	bool isEnd_ = false; //戦闘終了フラグ
 	bool isSelectingSkill_ = false;
@@ -144,9 +145,21 @@ private:
 	bool isPauseAlive_;
 
 
-	//αの仮攻撃
-	int enemyHp_;
-	// ダメージ量を格納する変数
+
+	//プレイヤーのHP
+	int playerHp_ = 200;
+	int playerHpMax_ = 200;
+
+	bool playerDead_ = false;
+
+	int currentHp;
+	int maxHp;
+
+	//enemyのHP
+	int enemyHp_ = 100;
+	int enemyHpMax_ = 100;
+
+	// ダメージ量を格納する変数(攻撃時）
 	int damageAmount = 0;
 
 	bool isDamege_ = false;
@@ -158,8 +171,15 @@ private:
 	void UseSkill(void);
 	void ProcessSkill(SKILL skill);
 
+	//攻撃系
 	void Damage(void);
 	void Hell(void);
+	void Flame(void);
+
+
+	//敵の処理系
+	void EnemyAttack(void);
+
 
 	void DrawCommand(COMMAND command);
 	void DrawEnd(END end);
@@ -171,4 +191,9 @@ private:
 	void HandleCommandSelectInput(void);
 	void ExecuteCommand(COMMAND command);
 	void HandleSkillSelectInput(void);
+
+	void DrawHpBar(int x, int y, int width, int height, int currentHp, int maxHp);
+
+	unsigned int GetHPColor(float rate);
+	
 };

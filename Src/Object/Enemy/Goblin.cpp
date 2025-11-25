@@ -46,7 +46,6 @@ void Goblin::InitAnimation()
 	animationController_ = new AnimationController(modelId_);
 
 	/// @add animation
-
 }
 
 void Goblin::InitPost()
