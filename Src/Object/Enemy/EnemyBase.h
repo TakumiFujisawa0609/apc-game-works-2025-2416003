@@ -14,8 +14,6 @@ public:
 		HIT_REACT,
 		IDLE,
 		JUMP,
-		RUN,
-		WALK,
 		MAX,
 	};
 

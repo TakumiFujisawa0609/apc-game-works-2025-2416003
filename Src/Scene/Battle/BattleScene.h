@@ -34,6 +34,9 @@ public:
 
 	};
 
+
+
+
 	//戦闘終了状態
 	enum class END
 	{
@@ -100,6 +103,8 @@ public:
 
 
 private:
+
+	
 
 	
 	const char* SkillName;//テスト

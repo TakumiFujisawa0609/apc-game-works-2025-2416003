@@ -35,7 +35,7 @@ namespace SoundTable_Game
 		{ SoundID::SE_ENCOUNT, Application::PATH_SOUND_SE + "EnCount.wav" },
 		{ SoundID::SE_WIN, Application::PATH_SOUND_SE + "Battle_Win.wav" },
 		{ SoundID::SKILL_SE_SLASH, Application::PATH_SOUND_SE + "Slash_Se.wav" },
-		{ SoundID::SKILL_SE_DAMEGE, Application::PATH_SOUND_SE + "Damage.wav.wav" },
+		{ SoundID::SKILL_SE_DAMEGE, Application::PATH_SOUND_SE + "Damage.wav" },
 
 		
 	};

@@ -14,8 +14,10 @@ void EnemyManager::Init(void)
 {
 	//“G‚Ìƒ‚ƒfƒ‹“Ç‚Ýž‚Ý
 	EnemyBase* enemy = new Goblin();
-
 	enemy->Init(EnemyBase::TYPE::GOBLIN);
+
+
+
 	enemys_.push_back(enemy);
 }
 
