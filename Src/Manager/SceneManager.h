@@ -14,7 +14,6 @@ public:
 	{
 		NONE,
 		TITLE,
-		GAME,
 		SEARCH,
 		BATTLE,
 		CLEAR

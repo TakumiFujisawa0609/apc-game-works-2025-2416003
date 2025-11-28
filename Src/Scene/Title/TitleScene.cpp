@@ -136,7 +136,7 @@ void TitleScene::ChangeExit(void)
 
 void TitleScene::ChangeGame(void)
 {
-	SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::GAME);
+	SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::SEARCH);
 }
 
 void TitleScene::ChagneState(STATE next)
@@ -148,7 +148,7 @@ void TitleScene::ChagneState(STATE next)
 	case TitleScene::STATE::GAME:
 
 		AudioManager::GetInstance()->StopBGM();
-		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::GAME);
+		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::SEARCH);
 
 		break;
 	case TitleScene::STATE::EXIT:

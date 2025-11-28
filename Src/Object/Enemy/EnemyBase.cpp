@@ -156,7 +156,7 @@ void EnemyBase::DelayRotate(void)
 void EnemyBase::ChangeStandby(void)
 {
 	// 歩くアニメーションを再生すること！(ループ再生有り)
-	animationController_->Play(static_cast<int>(ANIM_TYPE::WALK));
+	//animationController_->Play(static_cast<int>(ANIM_TYPE::WALK));
 }
 void EnemyBase::ChangeDeadReact(void)
 {

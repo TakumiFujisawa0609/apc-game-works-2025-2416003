@@ -76,12 +76,6 @@ void SearchScene::Update(void)
 
 	}
 
-	if (ins.IsTrgDown(KEY_INPUT_X))
-	{
-		AudioManager::GetInstance()->StopBGM();
-		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::GAME);
-
-	}
 
 	nowPos_ = player_->GetPos();
 	EnCount();

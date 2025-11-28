@@ -205,8 +205,6 @@ void SceneManager::DoChangeScene(SCENE_ID sceneId)
 	case SCENE_ID::TITLE:
 		scene_ = new TitleScene();
 		break;
-	case SCENE_ID::GAME:
-		scene_ = new GameScene();
 	case SCENE_ID::SEARCH:
 		scene_ = new SearchScene();
 		break;
