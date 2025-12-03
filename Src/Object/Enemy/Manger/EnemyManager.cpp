@@ -56,12 +56,29 @@ void EnemyManager::Draw(void)
 
 void EnemyManager::Release(void)
 {
-	
+	for (int id : enemyModelIds_)
+	{
+		MV1DeleteModel(id);
+	}
 }
 
 void EnemyManager::ChangeWave(WAVE wave)
 {
 	wave_ = wave;
+	
+	switch (wave)
+	{
+	case EnemyManager::WAVE::WAVE1:
+		break;
+	case EnemyManager::WAVE::WAVE2:
+		break;
+	case EnemyManager::WAVE::LASTWAVE:
+		break;
+	case EnemyManager::WAVE::END:
+		break;
+	default:
+		break;
+	}
 
 
 }
@@ -70,8 +87,17 @@ void EnemyManager::UpdateWave1(void)
 {
 	if (wave_ == WAVE::WAVE1)
 	{
+		EnemyBase* enemy = new Goblin();
+
+		enemy->Init(EnemyBase::TYPE::GOBLIN,
+			enemyModelIds_[static_cast<int>(EnemyBase::TYPE::GOBLIN)]);
+
+		enemys_.emplace_back(enemy);
 
 	}
+
+	 
+	
 }
 
 void EnemyManager::UpdateWave2(void)

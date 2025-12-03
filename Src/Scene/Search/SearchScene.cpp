@@ -11,7 +11,6 @@
 #include "../../Object/MapPlayer/MapPlayer.h"
 #include "../../Sound/AudioManager.h"
 #include "../../Object/Enemy/EnemyBase.h"
-#include "../../Object/Enemy/Manger/EnemyStatusManager.h"
 
 SearchScene::SearchScene(void)
 {
@@ -276,7 +275,7 @@ void SearchScene::EnCount(void)
 		{
 			EnemyBase::TYPE enemyType = EnemyBase::TYPE::GOBLIN;
 
-			EnemyStatusManager::Getinstance()->SetNextEncounterType(enemyType);
+			
 
 			// エンカウント発生！
 			AudioManager::GetInstance()->PlaySE(SoundID::SE_ENCOUNT);//エンカウントSE再生

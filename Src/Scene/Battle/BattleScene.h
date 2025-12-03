@@ -2,11 +2,7 @@
 #include <list>
 #include "../SceneBase.h"
 class SceneManager;
-class EnemyBase;
-class EnemyManager;
-class SkillManager;
-
-
+class AnimationController;
 
 class BattleScene : public SceneBase
 {
@@ -21,8 +17,24 @@ public:
 	static constexpr int PAUSE_SOUND_VOLUME = 50;
 	//通常BGMボリューム
 	static constexpr int BGM_SOUND_VOLUME = 150;
-	
+	//ボリュームゼロ
 	static constexpr int BGM_SOUND_VOLUME_ZERO = 0;
+
+	//敵のデフォルト座標
+	static constexpr VECTOR DEFAULT_ENEMY_POS = { 0.0f, 45.0f, 0.0f };
+	//デフォルトサイズ
+	static constexpr VECTOR DEFAULT_ENEMY_SCL = { 0.5f, 0.5f, 0.5f };
+
+	//アニメーション種別
+	enum class ANIM_TYPE
+	{
+		ATTACK,
+		DEATH,
+		HIT_REACT,
+		IDLE,
+		JUMP,
+		MAX,
+	};
 
 	enum class SKILL //プレイヤーから持ってこないといけないんだけど一旦仮で
 	{
@@ -31,10 +43,15 @@ public:
 		HEAL,//回復
 		LIMIT_BREAK,//リミットブレイク
 		MAX
-
 	};
 
-
+	enum class WAVE
+	{
+		WAVE1,
+		WAVE2,
+		LASTWAVE,
+		END
+	};
 
 
 	//戦闘終了状態
@@ -58,8 +75,6 @@ public:
 	enum class COMMAND
 	{
 		BATTLE, //たたかう
-		//SKILL,//スキル
-		//TOOl, //道具
 		ESCAPE, //逃げる
 		MAX
 	};
@@ -83,6 +98,8 @@ public:
 		// リザルト表示中
 		REWARD_VIEW,
 	};
+
+
 
 	// コンストラクタ
 	BattleScene(void);
@@ -112,20 +129,28 @@ private:
 
 	std::list<SKILL> selectedSkills_;
 
-	EnemyBase* enemyBase_;
-	EnemyManager* enemyManager_;
-	SkillManager* skillManger_;
-
+	// アニメーション制御
+	AnimationController* animationController_;
+	// アニメーション種別
+	int animType_;
 
 	//コマンド選択
 	COMMAND command_;
-
 	//スキル選択
 	SKILL skill_;
-	
+	//戦闘状態
 	STATE state_;
-
+	//敵のwave
+	WAVE wave_;
+	//背景
 	int backImg;
+
+	//ゴブリンモデルハンドル
+	int goblinModelId_;
+	//ブルーデーモンモデルハンドル
+	int blueDemonModellId_;
+	//
+	int yetiModelId_;
 
 	int cursorIndx_; //選択しているコマンド
 	int actionTime_; //処理待機時間
@@ -136,7 +161,6 @@ private:
 
 	int enemyCount_ = 0;
 ;
-
 
 	// ダメージ時の画面揺れ用
 	int shakeDuration_ = 0;      // 揺れ継続フレーム数
@@ -149,7 +173,9 @@ private:
 	//ポーズ判定
 	bool isPauseAlive_;
 
-
+	//敵のHP
+	int enemyHpMax_ = 50;
+	int enemyHp_;
 
 	//プレイヤーのHP
 	int playerHp_ = 200;
@@ -159,10 +185,6 @@ private:
 
 	int currentHp;
 	int maxHp;
-
-	//enemyのHP
-	int enemyHp_ = 100;
-	int enemyHpMax_ = 100;
 
 	// ダメージ量を格納する変数(攻撃時）
 	int damageAmount = 0;
@@ -181,10 +203,8 @@ private:
 	void Hell(void);
 	void Flame(void);
 
-
 	//敵の処理系
 	void EnemyAttack(void);
-
 
 	void DrawCommand(COMMAND command);
 	void DrawEnd(END end);
@@ -200,5 +220,9 @@ private:
 	void DrawHpBar(int x, int y, int width, int height, int currentHp, int maxHp);
 
 	unsigned int GetHPColor(float rate);
+	//waveの管理
+	void StartWave(WAVE wave);
+	//waveごとの敵の描画
+	void WaveDraw(WAVE wave);
 	
 };

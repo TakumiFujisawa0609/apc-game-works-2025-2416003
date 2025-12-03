@@ -45,7 +45,7 @@ public:
 	// 死亡時間
 	static constexpr int CNT_DEAD_REACT = 80;
 
-	void Init(TYPE type);
+	void Init(TYPE type, int baseModelId);
 	virtual void Update();
 	virtual void Draw();
 	virtual void Release();
@@ -53,6 +53,9 @@ public:
 	void ChangeState(STATE state);
 	// 座標取得
 	VECTOR GetPos(void);
+
+	// HPの取得
+	int GetHp(void);
 
 	void HitDamage(int damage);
 	
@@ -68,45 +71,21 @@ protected:
 	// モデル情報
 	int modelId_;
 
-	VECTOR pos_;
-	VECTOR angles_;
-	VECTOR scl_;
-	VECTOR localAngles_;
-
-	// 移動方向
-	VECTOR moveDir_;
-	VECTOR preInputDir_;
+	VECTOR pos_;		//座標
+	VECTOR angles_;		//角度
+	VECTOR scl_;		//大きさ
 
 	//エネミーステータス
-	virtual void SetParam()= 0 ;
-	// リソースロード
-	virtual void InitLoad(void) = 0;
-	// 大きさ、回転、座標の初期化
-	virtual void InitTransform(void) = 0;
-	// 大きさ、回転、座標のモデル設定
-	virtual void InitTransformPost(void);
-	// アニメーションの初期化
-	virtual void InitAnimation(void) = 0;
-	// 初期化後の個別処理
-	virtual void InitPost(void) = 0;
+	int hp_;  //体力
 
-	//エネミーの戦闘行動処理
-	virtual void ProcessAction(void) = 0;
 
-	// 移動処理
-	//virtual void Move(void);
-	// 遅延回転処理
-	void DelayRotate(void);
+	//エネミーステータス
+	virtual void SetParam(void) = 0;
+	
 
 private:
 
-	///param エネミーステータス
-
-	int hp_;  ///@param体力
-	int atk_; ///@param 攻撃力
-	int def_; ///@param 防御力
-	int speed_; ///@param すばやさ
-	int intel_; ///@param かしこさ
+	
 
 	//被ダメージカウンタ
 	int cntDamaged_;
@@ -119,18 +98,20 @@ private:
 	ANIM_TYPE animationType_;
 
 	
-	// 状態遷移
+	//状態遷移
 	void ChangeStandby(void);
-	 void ChangeDeadReact(void);
-	 void ChangeEnd(void);
-	// 状態別更新
-	 void UpdateStandby(void);
-	 void UpdateDeadReact(void);
-	 void UpdateEnd(void);
-	// 状態別描画
-	 void DrawStandby(void);
-	 void DrawDeadReact(void);
-	 void DrawEnd(void);
+	void ChangeDeadReact(void);
+	void ChangeEnd(void);
+
+	//状態別更新
+	void UpdateStandby(void);
+	void UpdateDeadReact(void);
+	void UpdateEnd(void);
+
+	//状態別描画
+	void DrawStandby(void);
+	void DrawDeadReact(void);
+	void DrawEnd(void);
 	
 };
 

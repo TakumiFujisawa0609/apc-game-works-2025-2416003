@@ -11,6 +11,7 @@ public:
 		WAVE1,
 		WAVE2,
 		LASTWAVE,
+		END
 	};
 	// コンストラクタ
 	EnemyManager(void);
@@ -44,7 +45,7 @@ private:
 
 	WAVE wave_;
 	
-
+	EnemyBase* enemy_;
 
 };
 

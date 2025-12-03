@@ -5,42 +5,20 @@
 #include "../../Manager/SceneManager.h"
 #include "../../Manager/InputManager.h"
 #include "../Game/GameScene.h"
-#include "../../Object/Enemy/EnemyBase.h"
 #include "BattleScene.h"
-#include "../../Object/Enemy/Manger/EnemyManager.h"
-#include "../../Object/Enemy/Manger/EnemyStatusManager.h"
-#include "../../Object/Skill/SkillManager.h"
 #include "../../Manager/Camera.h"
 #include "../../Sound/AudioManager.h"
 
 
-
-
 BattleScene::BattleScene(void)
-{
-
-}
+{}
 
 BattleScene::~BattleScene(void)
-{
-}
+{}
 
 void BattleScene::Init(void)
-{	
+{
 
-	
-
-	//シングルトンからインスタンスを取得
-	EnemyStatusManager* statusManager = EnemyStatusManager::Getinstance();
-	//敵の種類を取得
-	EnemyBase::TYPE enemyType = statusManager->GetNextEncounterType();
-	//敵のデータ取得
-	const EnemyData& baseData = statusManager->GetEnemyData(enemyType);
-
-	enemyHp_ = baseData.hp_;
-
-	enemyManager_ = new EnemyManager();
-	enemyManager_->Init();
 
 	SceneManager::GetInstance().GetCamera()->ChangeMode(Camera::MODE::FIXED_POINT);
 
@@ -50,12 +28,31 @@ void BattleScene::Init(void)
 	AudioManager::GetInstance()->LoadSceneSound(LoadScene::SKILL);
 	AudioManager::GetInstance()->PlayBGM(SoundID::BGM_BATTLE);
 	AudioManager::GetInstance()->SetBgmVolume(150);
-	
 
-	skillManger_ = new SkillManager();
-	skillManger_->Init();
-	
+
 	backImg = LoadGraph((Application::PATH_IMAGE + "BackStage.jpg").c_str());
+
+	//モデル読み込み
+
+	////ゴブリン
+	goblinModelId_ = MV1LoadModel((Application::PATH_MODEL + "Enemy/Goblin.mv1").c_str());
+	MV1SetPosition(goblinModelId_, DEFAULT_ENEMY_POS);
+	MV1SetScale(goblinModelId_, DEFAULT_ENEMY_SCL);
+
+	////ブルーデーモン
+	blueDemonModellId_ = MV1LoadModel((Application::PATH_MODEL + "Enemy/BlueDemon.mv1").c_str());
+	MV1SetPosition(blueDemonModellId_, DEFAULT_ENEMY_POS);
+	MV1SetScale(blueDemonModellId_, DEFAULT_ENEMY_SCL);
+
+	yetiModelId_ = MV1LoadModel((Application::PATH_MODEL + "Enemy/Yeti.mv1").c_str());
+	MV1SetPosition(yetiModelId_, DEFAULT_ENEMY_POS);
+	MV1SetScale(yetiModelId_, DEFAULT_ENEMY_SCL);
+
+
+	//初期WAVE設定
+	wave_ = WAVE::WAVE1;
+	enemyHpMax_ = 50;
+	enemyHp_ = enemyHpMax_;
 
 }
 
@@ -68,38 +65,14 @@ void BattleScene::Update(void)
 	//ポーズがオンの状態
 	if (isPauseAlive_)
 	{
-		//AudioManager::GetInstance()->StopBGM();
 		return;
 	}
 
-	enemyManager_->Update();
+
 
 	//シーン遷移
 	InputManager& ins = InputManager::GetInstance();
 
-	//テスト
-	if (ins.IsTrgDown(KEY_INPUT_2))
-	{
-		test++;
-	}
-	if (ins.IsTrgDown(KEY_INPUT_3))
-	{
-		test--;
-	}
-	if (ins.IsTrgDown(KEY_INPUT_4))
-	{
-		
-	}
-	
-
-
-
-
-	skillManger_->Update();
-	
-
-	// シーン遷移
-	//InputManager& ins = InputManager::GetInstance();
 
 	if (endIndx_ == (int)END::WIN)
 	{
@@ -107,14 +80,7 @@ void BattleScene::Update(void)
 		state_ = STATE::BATTLE_END;
 		actionTime_ = 0;
 	}
-	// Nキーでの強制終了（デバッグ用）
-	if (ins.IsTrgDown(KEY_INPUT_N))
-	{
-		AudioManager::GetInstance()->StopBGM();
-		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::SEARCH);
-		firstcommand_ = false;
-		return; // シーン遷移後は以降の処理をスキップ
-	}
+
 	switch (state_)
 	{
 	case BattleScene::STATE::TURN_START:
@@ -147,7 +113,6 @@ void BattleScene::Update(void)
 
 			if (isDamege_)
 			{
-				//endIndx_ = (int)END::WIN
 				// 敵を倒した場合は、この後 BATTLE_END に移行（共通ロジックで処理）
 				state_ = STATE::BATTLE_END;
 			}
@@ -191,7 +156,7 @@ void BattleScene::Update(void)
 	case BattleScene::STATE::BATTLE_END:
 		// 戦闘終了後の待機時間処理
 		// endIndx_ == (int)END::WIN の判定でここに到達している
-		
+
 		actionTime_++;
 		if (actionTime_ > ONE_SECOND) // 1秒待機
 		{
@@ -203,33 +168,43 @@ void BattleScene::Update(void)
 			actionTime_ = 0; // actionTime_を再利用するためにリセット
 		}
 
-	
+
 		break;
 	case BattleScene::STATE::REWARD_VIEW:
-		
+
 		rewordIndx++;
 
 		if (rewordIndx >= (int)END_REWARD::MAX)
 		{
 			int count = SceneManager::GetInstance().GetDefeatedEnemyCount();
 
-			if (count >= CLEAR_ENEMY_COUNT)
+	
+			//次のWAVEへ
+			// 現在のWAVEを更新（次のWAVEへ）
+			if (wave_ != WAVE::END)
 			{
-				AudioManager::GetInstance()->StopBGM();
-				SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::CLEAR);
-				return;
+				wave_ = static_cast<WAVE>((int)wave_ + 1); // 次のWAVEのインデックスにキャスト
+
+				// 次のWAVEが終了でなければ、新しいWAVEを開始
+				if (wave_ != WAVE::END)
+				{
+					StartWave(wave_);
+				}
+				else
+				{
+					// 全WAVE終了（ゲームクリアや次のシーン遷移など）
+					// 例: SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::RESULT);
+				}
 			}
-		
-			AudioManager::GetInstance()->StopBGM();
-			SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::SEARCH);
-			firstcommand_ = false;
-			return;
-			
+
+			//リセット
+			actionTime_ = 0;
+			rewordIndx = 0;
 		}
 
 	}
-	
-	
+
+
 
 }
 
@@ -237,9 +212,7 @@ void BattleScene::Update(void)
 void BattleScene::Draw(void)
 {
 
- 	//DrawGraph(Application::SCREEN_SIZE_X, Application::SCREEN_SIZE_Y, backImg,false);
-	//DrawRotaGraph(400 ,300,1.0f, 0.0, backImg, true);
-	DrawExtendGraph(0,0, Application::SCREEN_SIZE_X, Application::SCREEN_SIZE_Y, backImg, true);
+	DrawExtendGraph(0, 0, Application::SCREEN_SIZE_X, Application::SCREEN_SIZE_Y, backImg, true);
 
 	DrawFormatString(900, 140, 0xffffff, "PlayerHp:%d", playerHp_);
 	DrawFormatString(900, 100, 0xffffff, "EnemyHp:%d", enemyHp_);
@@ -263,12 +236,12 @@ void BattleScene::Draw(void)
 		Application::SCREEN_SIZE_Y + offsetY,
 		backImg, true);
 
-	
-	
+
+
 	//敵の描画
 	if (isDamege_ == false)
 	{
-		enemyManager_->Draw();
+		WaveDraw(wave_);
 
 
 		DrawHpBar(700, 100, 100, 15, enemyHp_, enemyHpMax_);
@@ -280,17 +253,6 @@ void BattleScene::Draw(void)
 	//HPUIの描画
 	DrawHpBar(100, 400, 120, 20, playerHp_, playerHpMax_);
 	DrawFormatString(100, 380, 0xffffff, "HP: %d / %d", playerHp_, playerHpMax_);
-
-
-	//コマンド描画
-	//DrawCommand((COMMAND)cursorIndx_);
-
-	//DrawStates((STATE)state_);
-	//((END)endIndx_);
-	/*if (state_ == STATE::REWARD_VIEW)
-	{
-		DrawReword((END_REWARD)rewordIndx);
-	}*/
 
 
 
@@ -320,17 +282,16 @@ void BattleScene::Draw(void)
 		//ポーズ画面の描画
 		PauseDraw();
 	}
-	
-	
+
+
 }
-	
+
 
 void BattleScene::Release(void)
 {
+	DeleteGraph(backImg, true);
 
-	skillManger_->Release();
-	enemyManager_->Release();
-	delete enemyManager_;
+	MV1DeleteModel(goblinModelId_);
 }
 
 
@@ -343,10 +304,10 @@ void BattleScene::ChangeCommand(COMMAND command)
 		//コマンド選択						
 	case BattleScene::COMMAND::BATTLE: //戦う
 		break;
-	
+
 	case BattleScene::COMMAND::ESCAPE:  //逃げる
-		
-		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::SEARCH);
+
+		//SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::SEARCH);
 		break;
 	}
 
@@ -444,9 +405,7 @@ void BattleScene::UseSkill(void)
 
 void BattleScene::ProcessSkill(SKILL skill)
 {
-	
 	damageAmount = 0;
-
 
 	//各スキルの処理をここで入力
 	switch (skill)
@@ -463,13 +422,13 @@ void BattleScene::ProcessSkill(SKILL skill)
 		Hell();
 		break;
 	case BattleScene::SKILL::LIMIT_BREAK:
-		damageAmount = 30;
+		damageAmount = 1000;
 		Damage();
 		break;
 
 	}
 
-	
+
 
 	// 敵HPが0以下になったかチェック
 	if (enemyHp_ <= 0)
@@ -532,7 +491,7 @@ void BattleScene::EnemyAttack(void)
 
 	AudioManager::GetInstance()->PlaySE(SoundID::SKILL_SE_DAMEGE);
 
-	 // 画面揺れ開始
+	// 画面揺れ開始
 	shakeDuration_ = 15; // 15フレーム揺れる
 
 	if (playerHp_ <= 0)
@@ -600,7 +559,6 @@ void BattleScene::DrawSkill(void)
 		DrawString(380, 390 + i * 30, skillNames[i], color);
 	}
 
-	//DrawFormatString(380, 570, GetColor(200, 200, 200), "選択中：%d / 2", (int)selectedSkills_.size());
 }
 
 void BattleScene::DrawStates(STATE state)
@@ -657,10 +615,10 @@ void BattleScene::ExecuteCommand(COMMAND command)
 		selectedSkills_.clear();
 		// スキル選択画面への遷移時に入力スキップは不要になることが多い
 		break;
-	//case COMMAND::TOOl:
-	//	// 道具使用処理。終了後 PLAYER_ACTION または ENEMY_ACTION へ
-	//	state_ = STATE::PLAYER_ACTION;
-	//	break;
+		//case COMMAND::TOOl:
+		//	// 道具使用処理。終了後 PLAYER_ACTION または ENEMY_ACTION へ
+		//	state_ = STATE::PLAYER_ACTION;
+		//	break;
 	case COMMAND::ESCAPE:
 		// 逃走成功判定などを経てシーン遷移
 		AudioManager::GetInstance()->StopBGM();
@@ -788,6 +746,65 @@ unsigned int BattleScene::GetHPColor(float rate)
 
 	return GetColor(r, g, b);
 }
+
+void BattleScene::StartWave(WAVE wave)
+{
+
+	switch (wave)
+	{
+	case BattleScene::WAVE::WAVE1:
+		enemyHpMax_ = 50;
+		enemyHp_ = enemyHpMax_;
+		break;
+	case BattleScene::WAVE::WAVE2:
+		enemyHpMax_ = 80;
+		enemyHp_ = enemyHpMax_;
+		break;
+	case BattleScene::WAVE::LASTWAVE:
+		enemyHpMax_ = 120;
+		enemyHp_ = enemyHpMax_;
+		break;
+	case BattleScene::WAVE::END:
+		break;
+	default:
+		break;
+	}
+
+
+	if (wave != WAVE::END)
+	{
+		isDamege_ = false;  // 敵撃破フラグ解除
+		playerDead_ = false;
+		actionTime_ = 0;
+
+		state_ = STATE::TURN_START;
+	}
+}
+
+void BattleScene::WaveDraw(WAVE wave)
+{
+
+
+	switch (wave)
+	{
+	case BattleScene::WAVE::WAVE1:
+
+		MV1DrawModel(goblinModelId_);
+		break;
+	case BattleScene::WAVE::WAVE2:
+		MV1DrawModel(blueDemonModellId_);
+		break;
+	case BattleScene::WAVE::LASTWAVE:
+		MV1DrawModel(yetiModelId_);
+		break;
+	case BattleScene::WAVE::END:
+		break;
+	default:
+		break;
+	}
+}
+
+
 
 
 

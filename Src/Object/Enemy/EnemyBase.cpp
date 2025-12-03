@@ -1,43 +1,43 @@
 #include "EnemyBase.h"
-#include "../Enemy/Manger/EnemyStatusManager.h"
 #include "../../Common/AnimationController.h"
 #include "../../Utility/MatrixUtility.h"
 #include "../../Utility/AsoUtility.h"
 
 
 
-
-void EnemyBase::Init(TYPE type)
+void EnemyBase::Init(TYPE type, int baseModelId)
 {
-	
-	//モデル等の読み込み
-	InitLoad();
-	// Transform初期化
-	InitTransform();
-	// 大きさ、回転、座標のモデル設定
-	InitTransformPost();
-	// アニメーションの初期化
-	InitAnimation();
-	// 初期化後の個別処理
-	InitPost();
-
-	SetParam();
-	/// @Init エネミー種別
+	//エネミーの種別
 	type_ = type;
+	
+	//modelId_ = MV1LoadModel(baseModelId);
+	
+	//座標の設定
+	pos_ = DEFAULT_ENEMY_POS;
+	//モデルの角度設定
+	angles_ = { 0.0f, AsoUtility::Deg2RadF(180.0f), 0.0f };
 
+	//パラメーター設定
+	SetParam();
+	//モデルの大きさ
+	MV1SetScale(modelId_, scl_);
+	// 角度
+	MV1SetRotationXYZ(modelId_, angles_);
+
+	
+	
+	// モデルアニメーション制御の初期化
+	animationController_ = new AnimationController(modelId_);
+
+	for (int i = 0; i < static_cast<int>(ANIM_TYPE::MAX); i++)
+	{
+		animationController_->AddInFbx(i, 30.0f, i);
+	}
+	// 初期アニメーション再生
+	animationController_->Play(static_cast<int>(ANIM_TYPE::IDLE));
+
+	//初期状態
 	ChangeState(STATE::STANBY);
-	EnemyStatusManager::Getinstance();
-	
-	//
-	const EnemyData& baseData = EnemyStatusManager::Getinstance()->GetEnemyData(type_);
-
-	//数値変化可能なパラメータ
-	hp_ =  baseData.hp_;
-	atk_ = baseData.atk_;
-	def_= baseData.def_;
-	speed_ = baseData.speed_ ;
-	intel_ = baseData.intel_ ;
-	
 }
 
 void EnemyBase::Update()
@@ -114,6 +114,10 @@ VECTOR EnemyBase::GetPos(void)
 }
 
 
+int EnemyBase::GetHp(void)
+{
+	return hp_;
+}
 
 void EnemyBase::HitDamage(int damage)
 {
@@ -124,39 +128,11 @@ void EnemyBase::HitDamage(int damage)
 	}
 }
 
-
-
-void EnemyBase::InitTransformPost(void)
-{
-	// 大きさをモデルに反映
-	MV1SetScale(modelId_, scl_);
-
-	// 角度から方向に変換する
-	moveDir_ = { sinf(angles_.y), 0.0f, cosf(angles_.y) };
-	preInputDir_ = moveDir_;
-
-	// 行列の合成(子, 親と指定すると親⇒子の順に適用される)
-	MATRIX mat = MatrixUtility::Multiplication(localAngles_, angles_);
-	// 回転行列をモデルに反映
-	MV1SetRotationMatrix(modelId_, mat);
-
-	// 座標をモデルに反映
-	MV1SetPosition(modelId_, pos_);
-}
-
-void EnemyBase::DelayRotate(void)
-{
-	// 移動方向から角度に変換する
-	float goal = atan2f(moveDir_.x, moveDir_.z);
-
-	// 常に最短経路で補間
-	angles_.y = AsoUtility::LerpAngle(angles_.y, goal, 0.2f);
-}
-
 void EnemyBase::ChangeStandby(void)
-{
-	// 歩くアニメーションを再生すること！(ループ再生有り)
-	//animationController_->Play(static_cast<int>(ANIM_TYPE::WALK));
+{	
+	//拡散光を標準に戻す
+	MV1SetMaterialDifColor(modelId_, 0, COLOR_DIF_DEFAULT);
+	animationController_->Play(static_cast<int>(ANIM_TYPE::IDLE));
 }
 void EnemyBase::ChangeDeadReact(void)
 {
@@ -172,21 +148,32 @@ void EnemyBase::UpdateStandby(void)
 }
 void EnemyBase::UpdateDeadReact(void)
 {
-	if (animationController_->IsEnd())
+	cntDamaged_--;
+	if (cntDamaged_ < 0 && animationController_->IsEnd())
 	{
 		ChangeState(STATE::END);
 	}
 }
+
 void EnemyBase::UpdateEnd(void)
 {
 }
 void EnemyBase::DrawStandby(void)
 {
-	
+	MV1DrawModel(modelId_);
 }
 void EnemyBase::DrawDeadReact(void)
 {
-	
+	if (cntDamaged_ % TERM_BLINK == 0)
+	{
+		MV1SetMaterialDifColor(modelId_, 0, COLOR_DIF_DEFAULT);
+	}
+	else
+	{
+		MV1SetMaterialDifColor(modelId_, 0, COLOR_DIF_BLINK);
+	}
+	//モデルの描画
+	MV1DrawModel(modelId_);
 }
 void EnemyBase::DrawEnd(void)
 {

@@ -20,7 +20,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Object\Enemy\Manger\EnemyManager.cpp" />
-    <ClCompile Include="Src\Object\Enemy\Manger\EnemyStatusManager.cpp" />
     <ClCompile Include="Src\Object\MapPlayer\MapPlayer.cpp" />
     <ClCompile Include="Src\Object\MapPlayer\MapPlayerBase.cpp" />
     <ClCompile Include="Src\Object\Player\Manger\PlayerManager.cpp" />
@@ -54,7 +53,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Src\Object\Enemy\Manger\EnemyManager.h" />
-    <ClInclude Include="Src\Object\Enemy\Manger\EnemyStatusManager.h" />
     <ClInclude Include="Src\Object\MapPlayer\MapPlayer.h" />
     <ClInclude Include="Src\Object\MapPlayer\MapPlayerBase.h" />
     <ClInclude Include="Src\Object\Player\Manger\PlayerManager.h" />
