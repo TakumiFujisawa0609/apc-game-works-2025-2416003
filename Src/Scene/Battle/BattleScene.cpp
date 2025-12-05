@@ -44,10 +44,13 @@ void BattleScene::Init(void)
 	MV1SetPosition(blueDemonModellId_, DEFAULT_ENEMY_POS);
 	MV1SetScale(blueDemonModellId_, DEFAULT_ENEMY_SCL);
 
+	//イェティ
 	yetiModelId_ = MV1LoadModel((Application::PATH_MODEL + "Enemy/Yeti.mv1").c_str());
 	MV1SetPosition(yetiModelId_, DEFAULT_ENEMY_POS);
 	MV1SetScale(yetiModelId_, DEFAULT_ENEMY_SCL);
 
+
+	selectImg_ = LoadGraph((Application::PATH_IMAGE + "Command/Select.png").c_str());
 
 	//初期WAVE設定
 	wave_ = WAVE::WAVE1;
@@ -155,19 +158,25 @@ void BattleScene::Update(void)
 		break;
 	case BattleScene::STATE::BATTLE_END:
 		// 戦闘終了後の待機時間処理
-		// endIndx_ == (int)END::WIN の判定でここに到達している
-
-		actionTime_++;
-		if (actionTime_ > ONE_SECOND) // 1秒待機
+		
+		
+		if (actionTime_ == 0 && endIndx_ == (int)END::WIN) // 1秒待機
 		{
 			AudioManager::GetInstance()->SetSeVolume(300);
 			AudioManager::GetInstance()->PlaySE(SoundID::SE_WIN);
-
-			// 報酬表示フェーズへ移行（現在のコードの DrawReword へ繋ぐ）
-			state_ = STATE::REWARD_VIEW;
-			actionTime_ = 0; // actionTime_を再利用するためにリセット
 		}
 
+		actionTime_++;
+
+		// 勝利SEの再生時間
+		const int WIN_WAIT_TIME = ONE_SECOND + (ONE_SECOND / 2); // 90フレーム
+
+		if (actionTime_ > WIN_WAIT_TIME) 
+		{
+			// 報酬表示フェーズへ移行
+			state_ = STATE::REWARD_VIEW;
+			actionTime_ = 0; //リセット
+		}
 
 		break;
 	case BattleScene::STATE::REWARD_VIEW:
@@ -188,7 +197,10 @@ void BattleScene::Update(void)
 				// 次のWAVEが終了でなければ、新しいWAVEを開始
 				if (wave_ != WAVE::END)
 				{
+					
+					
 					StartWave(wave_);
+					
 				}
 				else
 				{
@@ -201,6 +213,8 @@ void BattleScene::Update(void)
 			actionTime_ = 0;
 			rewordIndx = 0;
 		}
+
+		break;
 
 	}
 
@@ -230,7 +244,7 @@ void BattleScene::Draw(void)
 		shakeDuration_--;
 	}
 
-	// 例えば背景描画
+	// 背景描画
 	DrawExtendGraph(0 + offsetX, 0 + offsetY,
 		Application::SCREEN_SIZE_X + offsetX,
 		Application::SCREEN_SIZE_Y + offsetY,
@@ -255,8 +269,6 @@ void BattleScene::Draw(void)
 	DrawFormatString(100, 380, 0xffffff, "HP: %d / %d", playerHp_, playerHpMax_);
 
 
-
-
 	if (firstcommand_ == true)
 	{
 		const char* commands[] =
@@ -267,15 +279,43 @@ void BattleScene::Draw(void)
 
 		CreateBox(90, 450, 150, 150, GetColor(0, 0, 128));
 
+
+
 		for (int i = 0; i < (int)COMMAND::MAX; i++)
 		{
 			int color = (i == cursorIndx_) ? GetColor(255, 255, 0) : GetColor(255, 255, 255);
-			DrawString(100, 470 + i * 30, commands[i], color);
+
+
+			if (i == cursorIndx_)
+			{
+				//左端合わせる
+				int cursorX = 90;
+
+				//上端に合わせる
+				int cursorY = BASE_COMMAND_Y + i * COMMAND_LINE_HEIGHT;
+
+				
+				DrawExtendGraph(
+					cursorX,
+					cursorY,
+					cursorX + DRAW_CURSOR_W, // 終点X座標
+					cursorY + DRAW_CURSOR_H, // 終点Y座標
+					selectImg_,
+					true 
+				);
+			}
+
+			
+			DrawString(COMMAND_TEXT_X, BASE_COMMAND_Y + i * COMMAND_LINE_HEIGHT, commands[i], color);
 
 		}
-
-		DrawSkill();
+		if (state_ == STATE::SKILL_SELECT)
+		{
+			DrawSkill();
+		}
 	}
+
+	
 
 	if (isPauseAlive_)
 	{
@@ -283,15 +323,17 @@ void BattleScene::Draw(void)
 		PauseDraw();
 	}
 
-
 }
 
 
 void BattleScene::Release(void)
 {
 	DeleteGraph(backImg, true);
+	DeleteGraph(selectImg_, true);
 
 	MV1DeleteModel(goblinModelId_);
+	MV1DeleteModel(yetiModelId_);
+	MV1DeleteModel(blueDemonModellId_);
 }
 
 
@@ -615,10 +657,6 @@ void BattleScene::ExecuteCommand(COMMAND command)
 		selectedSkills_.clear();
 		// スキル選択画面への遷移時に入力スキップは不要になることが多い
 		break;
-		//case COMMAND::TOOl:
-		//	// 道具使用処理。終了後 PLAYER_ACTION または ENEMY_ACTION へ
-		//	state_ = STATE::PLAYER_ACTION;
-		//	break;
 	case COMMAND::ESCAPE:
 		// 逃走成功判定などを経てシーン遷移
 		AudioManager::GetInstance()->StopBGM();

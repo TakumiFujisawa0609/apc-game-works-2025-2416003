@@ -121,7 +121,11 @@ public:
 
 private:
 
-	
+	static constexpr int DRAW_CURSOR_W = 40; // 縮小後の横幅
+	static constexpr int DRAW_CURSOR_H = 30; // 縮小後の縦幅
+	static constexpr int BASE_COMMAND_Y = 470;
+	static constexpr int COMMAND_LINE_HEIGHT = 30;
+	static constexpr int COMMAND_TEXT_X = 140;
 
 	
 	const char* SkillName;//テスト
@@ -151,6 +155,8 @@ private:
 	int blueDemonModellId_;
 	//
 	int yetiModelId_;
+	//セレクト画像ハンドル
+	int selectImg_;
 
 	int cursorIndx_; //選択しているコマンド
 	int actionTime_; //処理待機時間
