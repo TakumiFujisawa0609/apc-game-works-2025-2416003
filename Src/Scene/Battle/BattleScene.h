@@ -25,6 +25,9 @@ public:
 	//デフォルトサイズ
 	static constexpr VECTOR DEFAULT_ENEMY_SCL = { 0.5f, 0.5f, 0.5f };
 
+
+
+
 	//アニメーション種別
 	enum class ANIM_TYPE
 	{
@@ -65,9 +68,8 @@ public:
 
 	enum class END_REWARD
 	{
-		EXP,//経験値
-		ITEM,//アイテム
-		MONEY,//お金
+		HP,//HP
+		SKILL,//アイテム
 		MAX
 	};
 
@@ -127,11 +129,15 @@ private:
 	static constexpr int COMMAND_LINE_HEIGHT = 30;
 	static constexpr int COMMAND_TEXT_X = 140;
 
+	static constexpr int REWARD_SKILL_COUNT = 3;
+
 	
 	const char* SkillName;//テスト
 	int test = 1;
 
 	std::list<SKILL> selectedSkills_;
+	//スキルリスト
+	std::vector<SKILL> rewardSkillCandidates_;
 
 	// アニメーション制御
 	AnimationController* animationController_;
@@ -153,7 +159,7 @@ private:
 	int goblinModelId_;
 	//ブルーデーモンモデルハンドル
 	int blueDemonModellId_;
-	//
+	//イエティモデルハンドル
 	int yetiModelId_;
 	//セレクト画像ハンドル
 	int selectImg_;
@@ -166,36 +172,43 @@ private:
 	int skillIndx_ = 0; //選択しているスキル
 
 	int enemyCount_ = 0;
-;
 
 	// ダメージ時の画面揺れ用
 	int shakeDuration_ = 0;      // 揺れ継続フレーム数
 	int shakeMagnitude_ = 5;
-
-	bool firstcommand_ = true;
-	bool isEnd_ = false; //戦闘終了フラグ
-	bool isSelectingSkill_ = false;
-	bool skipSkillInput_ = false; //
-	//ポーズ判定
-	bool isPauseAlive_;
-
 	//敵のHP
 	int enemyHpMax_ = 50;
 	int enemyHp_;
-
 	//プレイヤーのHP
 	int playerHp_ = 200;
 	int playerHpMax_ = 200;
 
-	bool playerDead_ = false;
-
 	int currentHp;
+	//最大HP
 	int maxHp;
-
 	// ダメージ量を格納する変数(攻撃時）
 	int damageAmount = 0;
+	//BATTLE_ENDの待機時間
+	int winWaitTime_  = 90;
+
+	///int count;
+
+	//プレイヤー死亡判定
+	bool playerDead_ = false;
 
 	bool isDamege_ = false;
+
+	bool firstcommand_ = true;
+	bool isEnd_ = false; //戦闘終了フラグ
+	bool isSelectingSkill_ = false;
+	bool skipSkillInput_ = false; 
+	//ポーズ判定
+	bool isPauseAlive_;
+	// SEが一度だけ再生されたか
+	bool isWinSePlayed_ = false;
+
+
+
 
 	void BattleInit(void);
 
@@ -214,7 +227,7 @@ private:
 
 	void DrawCommand(COMMAND command);
 	void DrawEnd(END end);
-	void DrawReword(END_REWARD endreward);
+
 
 	void DrawSkill(void);
 	void DrawStates(STATE state);
@@ -230,5 +243,14 @@ private:
 	void StartWave(WAVE wave);
 	//waveごとの敵の描画
 	void WaveDraw(WAVE wave);
+
+	void WaveReword(WAVE wave);
+
+	void HandleRewardSelectInput();
+
+	void ApplyReward(END_REWARD reward);
+
+	void DrawRewardSelect();
+
 	
 };
