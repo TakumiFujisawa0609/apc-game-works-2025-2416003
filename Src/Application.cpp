@@ -57,6 +57,11 @@ void Application::Init(void)
 	// 設定する数値によって、ランダムの出方が変わる
 	SRand(date.Year + date.Mon + date.Day + date.Hour + date.Min + date.Sec);
 
+
+	//サウンド管理初期化
+	AudioManager::CreateInstance();
+	AudioManager::GetInstance()->Init();
+
 	// 入力制御初期化
 	SetUseDirectInputFlag(true);
 	InputManager::CreateInstance();
@@ -64,12 +69,6 @@ void Application::Init(void)
 	
 	// シーン管理初期化
 	SceneManager::CreateInstance();
-	
-	//サウンド管理初期化
-	AudioManager::CreateInstance();
-	AudioManager::GetInstance()->Init();
-
-
 
 }
 

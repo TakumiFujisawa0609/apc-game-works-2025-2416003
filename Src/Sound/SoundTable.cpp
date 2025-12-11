@@ -18,8 +18,12 @@ namespace SoundTable_Title
 {
 	static const std::unordered_map<SoundID, std::string> Table =
 	{
-		{ SoundID::BGM_TITLE, Application::PATH_SOUND_SE + "TitleBgm.wav" },
+		{ SoundID::BGM_TITLE, Application::PATH_SOUND_BGM + "GameBgm.wav" },
+		{ SoundID::BGM, Application::PATH_SOUND_BGM + "TitleBgm.wav" },
 		{ SoundID::SE_TITLE_DECISION, Application::PATH_SOUND_SE + "Title_Decision.wav" },
+		{ SoundID::SE_TITLE_DECISION, Application::PATH_SOUND_SE + "Title_Decision.wav" },
+		{ SoundID::SE_TITLE_COMMAND, Application::PATH_SOUND_SE + "Command_Select.wav" },
+
 	};
 }
 
@@ -29,13 +33,12 @@ namespace SoundTable_Game
 	static const std::unordered_map<SoundID, std::string> Table = 
 	{
 		{ SoundID::BGM_BATTLE, Application::PATH_SOUND_BGM + "GameBgm.wav" },
-		{ SoundID::BGM_SEARCH, Application::PATH_SOUND_BGM + "SearchScene.wav" },
-		{ SoundID::SE_COMMAND_SELECT,	Application::PATH_SOUND_SE + "Command_Select.wav" },
+		{ SoundID::SE_COMMAND_SELECT,	Application::PATH_SOUND_SE + "Select.wav" },
 		{ SoundID::SE_COMMAND_DECISION, Application::PATH_SOUND_SE + "Command_Decision.wav" },
 		{ SoundID::SE_ENCOUNT, Application::PATH_SOUND_SE + "EnCount.wav" },
 		{ SoundID::SE_WIN, Application::PATH_SOUND_SE + "Battle_Win.wav" },
 		{ SoundID::SKILL_SE_SLASH, Application::PATH_SOUND_SE + "Slash_Se.wav" },
-		{ SoundID::SKILL_SE_DAMEGE, Application::PATH_SOUND_SE + "Damage.wav" },
+		{ SoundID::SE_DAMEGE, Application::PATH_SOUND_SE + "Damage.wav" },
 
 		
 	};
@@ -47,11 +50,7 @@ namespace SoundTable_Skill
 	static const std::unordered_map<SoundID, std::string> Table =
 	{
 	
-		//{ SoundID::SKILL_SE_SLASH, Application::PATH_SOUND_SKILL_SE + "Slash_Se.wav" },
-		{ SoundID::SKILL_SE_HELL, Application::PATH_SOUND_SKILL_SE + "Skill_Hell.wav" },
-
-		/*{ SoundID::SKILL_SE_SLASH, Application::PATH_SOUND_SKILL_SE + "Slash_Se.wav" },
-		{ SoundID::SKILL_SE_HELL, Application::PATH_SOUND_SKILL_SE + "Skill_Hell.wav" },*/
+		
 		
 	};
 }

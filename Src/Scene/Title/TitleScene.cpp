@@ -20,8 +20,9 @@ void TitleScene::Init(void)
 {
 	imgTitle_ = LoadGraph((Application::PATH_IMAGE + "Title.png").c_str());
 	
-	/*AudioManager::GetInstance()->LoadSceneSound(LoadScene::GAME);
-	AudioManager::GetInstance()->PlayBGM(SoundID::BGM_TITLE);*/
+	AudioManager::GetInstance()->LoadSceneSound(LoadScene::TITLE);
+	AudioManager::GetInstance()->PlayBGM(SoundID::BGM);
+	AudioManager::GetInstance()->SetBgmVolume(150);
 }
 
 
@@ -35,7 +36,8 @@ void TitleScene::Update(void)
 
 	if (ins.IsTrgDown(KEY_INPUT_UP))
 	{
-		AudioManager::GetInstance()->PlaySE(SoundID::SE_COMMAND_SELECT);
+		AudioManager::GetInstance()->SetSeVolume(150);
+		AudioManager::GetInstance()->PlaySE(SoundID::SE_TITLE_COMMAND);
 		cursorIndx_--;
 
 		if (cursorIndx_ < 0)
@@ -46,7 +48,8 @@ void TitleScene::Update(void)
 	}
 	if (ins.IsTrgDown(KEY_INPUT_DOWN))
 	{
-		AudioManager::GetInstance()->PlaySE(SoundID::SE_COMMAND_SELECT);
+		AudioManager::GetInstance()->SetSeVolume(150);
+		AudioManager::GetInstance()->PlaySE(SoundID::SE_TITLE_COMMAND);
 		cursorIndx_++;
 
 		if (cursorIndx_ > (int)STATE::MAX - 1)
@@ -57,6 +60,7 @@ void TitleScene::Update(void)
 
 	if (ins.IsTrgDown(KEY_INPUT_SPACE))
 	{
+		AudioManager::GetInstance()->SetBgmVolume(100);
 		AudioManager::GetInstance()->PlaySE(SoundID::SE_TITLE_DECISION);
 		ChagneState((STATE)cursorIndx_);
 

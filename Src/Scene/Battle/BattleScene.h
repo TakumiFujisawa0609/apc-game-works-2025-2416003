@@ -20,6 +20,8 @@ public:
 	//ボリュームゼロ
 	static constexpr int BGM_SOUND_VOLUME_ZERO = 0;
 
+	static constexpr int SE_SOUND_VOLUME = 250;
+
 	//敵のデフォルト座標
 	static constexpr VECTOR DEFAULT_ENEMY_POS = { 0.0f, 45.0f, 0.0f };
 	//デフォルトサイズ
@@ -99,6 +101,7 @@ public:
 		BATTLE_END,
 		// リザルト表示中
 		REWARD_VIEW,
+
 	};
 
 
@@ -136,8 +139,10 @@ private:
 	int test = 1;
 
 	std::list<SKILL> selectedSkills_;
-	//スキルリスト
-	std::vector<SKILL> rewardSkillCandidates_;
+
+	// プレイヤーが習得済みのスキルリストを管理するための変数
+	std::vector<SKILL> acquiredSkills_;
+;
 
 	// アニメーション制御
 	AnimationController* animationController_;
@@ -244,13 +249,15 @@ private:
 	//waveごとの敵の描画
 	void WaveDraw(WAVE wave);
 
-	void WaveReword(WAVE wave);
 
 	void HandleRewardSelectInput();
 
 	void ApplyReward(END_REWARD reward);
 
 	void DrawRewardSelect();
+
+	void DrawRewardSkills();
+	void HandleSkillChooseInput();
 
 	
 };

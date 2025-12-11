@@ -5,7 +5,9 @@
 // サウンドID
 enum class SoundID
 {
+
 	BGM_TITLE,		//タイトルBGM
+	BGM,
 	BGM_BATTLE,		//バトルBGM
 	BGM_SEARCH,		//サーチシーンBGM
 	SE_BUTTON,		//ボタンSE
@@ -14,11 +16,13 @@ enum class SoundID
 	SE_COMMAND_SELECT,		//コマンド選択SE
 	SE_COMMAND_DECISION,	//コマンド決定SE
 	SE_TITLE_DECISION,		//タイトルコマンド決定SE
+	SE_TITLE_COMMAND,
 	SE_ENCOUNT,				//エンカウントSE
 	SE_WIN,					//勝利SE
 	SKILL_SE_SLASH,			//スラッシュSE
 	SKILL_SE_HELL,			//ヒールSE
-	SKILL_SE_DAMEGE,
+	SE_DAMEGE,
+	MAX
 
 };
 

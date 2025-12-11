@@ -1,194 +1,100 @@
 #include <string>
-
 #include <DxLib.h>
-
 #include "../../Application.h"
-
 #include "../../Utility/AsoUtility.h"
-
 #include "../../Manager/SceneManager.h"
-
 #include "../../Manager/InputManager.h"
-
 #include "../Game/GameScene.h"
-
 #include "BattleScene.h"
-
 #include "../../Manager/Camera.h"
-
 #include "../../Sound/AudioManager.h"
-
-
-
-
 
 BattleScene::BattleScene(void)
 
 {
 }
-
-
-
 BattleScene::~BattleScene(void)
 
 {
 }
 
-
-
 void BattleScene::Init(void)
 
 {
 
-
-
-
-
 	SceneManager::GetInstance().GetCamera()->ChangeMode(Camera::MODE::FIXED_POINT);
-
-
-
 	BattleInit();
 
-
-
 	AudioManager::GetInstance()->LoadSceneSound(LoadScene::GAME);
-
-	AudioManager::GetInstance()->LoadSceneSound(LoadScene::SKILL);
-
 	AudioManager::GetInstance()->PlayBGM(SoundID::BGM_BATTLE);
-
 	AudioManager::GetInstance()->SetBgmVolume(150);
-
-
-
 
 
 	backImg = LoadGraph((Application::PATH_IMAGE + "BackStage.jpg").c_str());
 
 
-
 	//モデル読み込み
 
-
-
 	////ゴブリン
-
 	goblinModelId_ = MV1LoadModel((Application::PATH_MODEL + "Enemy/Goblin.mv1").c_str());
-
 	MV1SetPosition(goblinModelId_, DEFAULT_ENEMY_POS);
-
 	MV1SetScale(goblinModelId_, DEFAULT_ENEMY_SCL);
 
-
-
 	////ブルーデーモン
-
 	blueDemonModellId_ = MV1LoadModel((Application::PATH_MODEL + "Enemy/BlueDemon.mv1").c_str());
-
 	MV1SetPosition(blueDemonModellId_, DEFAULT_ENEMY_POS);
-
 	MV1SetScale(blueDemonModellId_, DEFAULT_ENEMY_SCL);
 
-
-
 	//イェティ
-
 	yetiModelId_ = MV1LoadModel((Application::PATH_MODEL + "Enemy/Yeti.mv1").c_str());
-
 	MV1SetPosition(yetiModelId_, DEFAULT_ENEMY_POS);
-
 	MV1SetScale(yetiModelId_, DEFAULT_ENEMY_SCL);
-
-
-
-
 
 	selectImg_ = LoadGraph((Application::PATH_IMAGE + "Command/Select.png").c_str());
 
 
-
 	//初期WAVE設定
-
 	wave_ = WAVE::WAVE1;
-
 	enemyHpMax_ = 50;
-
 	enemyHp_ = enemyHpMax_;
-
-
 
 }
 
 
 
 void BattleScene::Update(void)
-
 {
-
-
 
 	//ポーズ処理を行う
 
 	Pause();
 
-
-
 	//ポーズがオンの状態
 
 	if (isPauseAlive_)
-
 	{
-
 		return;
-
 	}
-
-
-
-
-
-
-
 	//シーン遷移
-
 	InputManager& ins = InputManager::GetInstance();
 
-
-
-
-
 	if (endIndx_ == (int)END::WIN)
-
 	{
 
 		//勝利判定が取れたら、戦闘終了
-
 		state_ = STATE::BATTLE_END;
-
 		actionTime_ = 0;
-
 	}
 
-
-
 	switch (state_)
-
 	{
-
 	case BattleScene::STATE::TURN_START:
-
-
-
 		state_ = STATE::COMMAND_SELECT;
-
 		break;
 
 	case BattleScene::STATE::COMMAND_SELECT:
 
 		HandleCommandSelectInput();
-
-
 
 		//決定処理
 
@@ -196,8 +102,7 @@ void BattleScene::Update(void)
 
 		{
 
-			AudioManager::GetInstance()->SetSeVolume(100);
-
+			AudioManager::GetInstance()->SetSeVolume(SE_SOUND_VOLUME);
 			AudioManager::GetInstance()->PlaySE(SoundID::SE_COMMAND_DECISION);
 
 			ExecuteCommand(static_cast<COMMAND>(cursorIndx_));
@@ -207,11 +112,7 @@ void BattleScene::Update(void)
 		break;
 
 	case BattleScene::STATE::SKILL_SELECT:
-
-
-
 		// 現在の isSelectingSkill_ のブロック
-
 		HandleSkillSelectInput();
 
 		break;
@@ -225,29 +126,19 @@ void BattleScene::Update(void)
 		actionTime_++;
 
 		if (actionTime_ > ONE_SECOND) // 1秒(60フレーム)待機
-
 		{
-
 			actionTime_ = 0;
-
-
-
 			if (isDamege_)
 
 			{
-
 				// 敵を倒した場合は、この後 BATTLE_END に移行（共通ロジックで処理）
-
 				state_ = STATE::BATTLE_END;
-
 			}
 
 			else
 
 			{
-
 				// 敵が生きている場合は、敵のターンへ
-
 				state_ = STATE::ENEMY_ACTION;
 
 			}
@@ -267,43 +158,25 @@ void BattleScene::Update(void)
 		// 敵の攻撃計算（1回だけ）
 
 		if (actionTime_ == 0)
-
 		{
-
+			AudioManager::GetInstance()->SetSeVolume(SE_SOUND_VOLUME);
+			AudioManager::GetInstance()->PlaySE(SoundID::SE_DAMEGE);
 			EnemyAttack();
-
 		}
-
-
-
 		actionTime_++;
 
-
-
 		if (actionTime_ > ONE_SECOND)
-
 		{
-
 			actionTime_ = 0;
 
-
-
 			if (playerDead_)
-
 			{
-
 				state_ = STATE::BATTLE_END;
-
 			}
-
 			else
-
 			{
-
 				state_ = STATE::TURN_END;
-
 			}
-
 		}
 
 		break;
@@ -319,73 +192,38 @@ void BattleScene::Update(void)
 	case BattleScene::STATE::BATTLE_END:
 
 
-
-
-
-
-
 		// 戦闘終了後の待機時間処理
-
 		if (isWinSePlayed_ == false)
-
 		{
-
 			AudioManager::GetInstance()->SetSeVolume(300);
-
 			AudioManager::GetInstance()->PlaySE(SoundID::SE_WIN);
-
 			isWinSePlayed_ = true; // 再生済み
 
 		}
 
-
 		actionTime_++;
 
-
-
-
-
 		if (actionTime_ > winWaitTime_)
-
 		{
-
 			// 報酬表示フェーズへ移行
-
 			state_ = STATE::REWARD_VIEW;
-
 			actionTime_ = 0; //リセット
-
 			isWinSePlayed_ = false;
-
 
 		}
 
 		break;
 
 	case BattleScene::STATE::REWARD_VIEW:
-
-
-
 		if (wave_ != WAVE::LASTWAVE)
 
 		{
-
 			HandleRewardSelectInput();
 
 		}
-
-
-
 		break;
 
-
-
 	}
-
-
-
-
-
 
 
 }
@@ -395,129 +233,64 @@ void BattleScene::Update(void)
 
 
 void BattleScene::Draw(void)
-
 {
-
-
 
 	DrawExtendGraph(0, 0, Application::SCREEN_SIZE_X, Application::SCREEN_SIZE_Y, backImg, true);
 
-
-
-	DrawFormatString(900, 140, 0xffffff, "PlayerHp:%d", playerHp_);
-
-	DrawFormatString(900, 100, 0xffffff, "EnemyHp:%d", enemyHp_);
-
-
-
-	//DrawString(0, 80, "Nキーまたは逃げるコマンドでサーチシーン　コマンドは→キーで決定はエンターキー", 0xffffff);
-
-
-
-	int offsetX = 0;
-
-	int offsetY = 0;
-
-
+	int offsetX = 0;//縦揺れ
+	int offsetY = 0;//横揺れ
 
 	// 揺れ中ならランダムでオフセットを作る
 
 	if (shakeDuration_ > 0)
 
 	{
-
 		offsetX = rand() % (shakeMagnitude_ * 2 + 1) - shakeMagnitude_;
-
 		offsetY = rand() % (shakeMagnitude_ * 2 + 1) - shakeMagnitude_;
-
 		shakeDuration_--;
 
 	}
 
-
-
 	// 背景描画
-
 	DrawExtendGraph(0 + offsetX, 0 + offsetY,
-
 		Application::SCREEN_SIZE_X + offsetX,
-
 		Application::SCREEN_SIZE_Y + offsetY,
-
 		backImg, true);
 
-
-
-
-
-
-
 	//敵の描画
-
 	if (isDamege_ == false)
 
 	{
 
 		WaveDraw(wave_);
-
-
-
-
-
 		DrawHpBar(700, 100, 100, 15, enemyHp_, enemyHpMax_);
-
 		SetFontSize(10);
-
 		DrawString(700, 80, "HP", GetColor(255, 255, 255));
-
 		SetFontSize(15);
 
 	}
 
-
-
 	//HPUIの描画
-
 	DrawHpBar(100, 400, 120, 20, playerHp_, playerHpMax_);
-
 	DrawFormatString(100, 380, 0xffffff, "HP: %d / %d", playerHp_, playerHpMax_);
 
 
-
-
-
 	if (firstcommand_ == true)
-
 	{
-
 		const char* commands[] =
 
 		{
 
 		"たたかう",
-
 		"にげる"
-
 		};
 
-
-
 		CreateBox(90, 450, 150, 150, GetColor(0, 0, 128));
-
-
-
-
-
-
 
 		for (int i = 0; i < (int)COMMAND::MAX; i++)
 
 		{
-
 			int color = (i == cursorIndx_) ? GetColor(255, 255, 0) : GetColor(255, 255, 255);
-
-
-
 
 
 			if (i == cursorIndx_)
@@ -525,145 +298,77 @@ void BattleScene::Draw(void)
 			{
 
 				//左端合わせる
-
 				int cursorX = 90;
-
-
-
 				//上端に合わせる
-
 				int cursorY = BASE_COMMAND_Y + i * COMMAND_LINE_HEIGHT;
 
 
-
-
-				DrawExtendGraph(
-
-					cursorX,
-
-					cursorY,
-
-					cursorX + DRAW_CURSOR_W, // 終点X座標
-
+				DrawExtendGraph(cursorX,cursorY,cursorX + 
+					DRAW_CURSOR_W, // 終点X座標
 					cursorY + DRAW_CURSOR_H, // 終点Y座標
-
-					selectImg_,
-
-					true
-
-				);
+					selectImg_,true);
 
 			}
 
-
-
-
 			DrawString(COMMAND_TEXT_X, BASE_COMMAND_Y + i * COMMAND_LINE_HEIGHT, commands[i], color);
-
 
 
 		}
 
 		if (state_ == STATE::SKILL_SELECT)
-
 		{
-
 			DrawSkill();
-
 		}
 
 	}
 
-
-
 	if (state_ == STATE::REWARD_VIEW && wave_ != WAVE::LASTWAVE)
-
 	{
-
 		DrawRewardSelect();
-
 	}
 
 
-
-
 	if (isPauseAlive_)
-
 	{
-
 		//ポーズ画面の描画
-
 		PauseDraw();
-
 	}
 
 
 
 }
-
-
-
-
 
 void BattleScene::Release(void)
 
 {
-
+	//画像解放
 	DeleteGraph(backImg, true);
-
 	DeleteGraph(selectImg_, true);
 
-
-
+	//モデル解放
 	MV1DeleteModel(goblinModelId_);
-
 	MV1DeleteModel(yetiModelId_);
-
 	MV1DeleteModel(blueDemonModellId_);
-
 }
 
 
-
-
-
 void BattleScene::ChangeCommand(COMMAND command)
-
 {
-
 	command_ = command;
 
-
-
 	switch (command_)
-
 	{
-
 		//コマンド選択
 
 	case BattleScene::COMMAND::BATTLE: //戦う
 
 		break;
-
-
-
 	case BattleScene::COMMAND::ESCAPE:  //逃げる
-
-
-
 		//SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::SEARCH);
-
 		break;
 
 	}
-
-
-
 }
-
-
-
-
 
 void BattleScene::CreateBox(int x, int y, int width, int height, int color)
 
@@ -679,20 +384,13 @@ void BattleScene::Pause(void)
 
 {
 
-
-
 	// Nキーでの強制終了（デバッグ用）
-
 	if (InputManager::GetInstance().IsTrgDown(KEY_INPUT_N))
-
 	{
-
 		AudioManager::GetInstance()->StopBGM();
-
 		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::SEARCH);
 
 		firstcommand_ = false;
-
 		return; // シーン遷移後は以降の処理をスキップ
 
 	}
@@ -700,35 +398,22 @@ void BattleScene::Pause(void)
 
 
 	//ESCキーが押されたらポーズ状態を切り替え
-
 	if (InputManager::GetInstance().IsTrgDown(KEY_INPUT_ESCAPE))
-
 	{
-
-
-
 		isPauseAlive_ = !isPauseAlive_;
-
-
 
 		if (isPauseAlive_ == false)
 
 		{
-
 			AudioManager::GetInstance()->SetBgmVolume(BGM_SOUND_VOLUME);
-
 		}
-
-
 
 		if (isPauseAlive_)
 
 		{
-
 			AudioManager::GetInstance()->SetBgmVolume(BGM_SOUND_VOLUME_ZERO);
 
 		}
-
 
 
 	}
@@ -758,7 +443,6 @@ void BattleScene::PauseDraw(void)
 	// ポーズ画面のテキスト描画
 
 	const char* pauseMessage = "PAUSE";
-
 	const char* resumeMessage = "Press ESC to Resume";
 
 	int white = GetColor(255, 255, 255);
@@ -784,67 +468,42 @@ void BattleScene::BattleInit(void)
 {
 
 	cursorIndx_ = 0;//選択コマンド初期状態
-
 	turnIndx_ = 0;//ターン最初の状態
-
 	endIndx_ = 0;//戦闘終了状態
-
 	rewordIndx = 0;//戦闘報酬状態
-
-
-
 	actionTime_ = 0;
 
-
-
 	//SE再生フラグをリセット
-
 	isWinSePlayed_ = false;
-
-
 
 	command_ = COMMAND::BATTLE;
 
+	acquiredSkills_.clear();
+	acquiredSkills_.push_back(SKILL::SLASH);
+	acquiredSkills_.push_back(SKILL::FLAME);
+	acquiredSkills_.push_back(SKILL::HEAL);
 }
 
 
 
 void BattleScene::SelectSkill(SKILL skill)
-
 {
-
 	if (selectedSkills_.size() < 1)
-
 	{
-
 		selectedSkills_.push_back(skill);
-
-
-
 	}
-
 }
 
 
-
 void BattleScene::UseSkill(void)
-
 {
-
 	for (auto skill : selectedSkills_)
-
 	{
-
 		ProcessSkill(skill);
-
 	}
 
-
-
 	// 実行後にリセット
-
 	selectedSkills_.clear();
-
 }
 
 
@@ -980,25 +639,14 @@ void BattleScene::Hell(void)
 
 
 void BattleScene::Flame(void)
-
 {
-
 	// ダメージ適用
-
 	AudioManager::GetInstance()->PlaySE(SoundID::SKILL_SE_SLASH);
-
-
-
 	enemyHp_ -= damageAmount;
 
-
-
 	if (enemyHp_ <= 0)
-
 	{
-
 		isDamege_ = true;
-
 	}
 
 }
@@ -1014,35 +662,18 @@ void BattleScene::EnemyAttack(void)
 {
 
 	int enemyDamage = 10;
-
-
-
 	playerHp_ -= enemyDamage;
 
 
-
-	AudioManager::GetInstance()->PlaySE(SoundID::SKILL_SE_DAMEGE);
-
-
-
 	// 画面揺れ開始
-
 	shakeDuration_ = 15; // 15フレーム揺れる
 
-
-
 	if (playerHp_ <= 0)
-
 	{
-
 		playerHp_ = 0;
-
 		playerDead_ = true;
-
 		endIndx_ = (int)END::LOSE;
-
 		state_ = STATE::BATTLE_END;
-
 	}
 
 }
@@ -1104,42 +735,38 @@ void BattleScene::DrawEnd(END end)
 
 
 void BattleScene::DrawSkill(void)
-
 {
-
 	const char* skillNames[] =
-
 	{
 
-	"斬撃",
-
-	"炎",
-
-	"回復",
-
-	"リミットブレイク",
+		"斬撃",
+		"炎",
+		"回復",
+		"リミットブレイク",
 
 	};
 
-
-
 	CreateBox(350, 350, 250, 220, GetColor(0, 0, 128));
-
 	DrawString(360, 360, "スキルを選んでください", GetColor(255, 255, 0));
 
 
-
-	for (int i = 0; i < 4; i++)
-
+	for (size_t i = 0; i < acquiredSkills_.size(); i++)
 	{
+		// 習得済みスキルリストからSKILL::XXXの値を取得
+		int skillEnumIndex = (int)acquiredSkills_[i];
 
 		int color = (i == skillIndx_) ? GetColor(255, 255, 0) : GetColor(255, 255, 255);
 
-		DrawString(380, 390 + i * 30, skillNames[i], color);
+		// i番目の習得スキル名を描画
+		DrawString(400, 390 + i * 30, skillNames[skillEnumIndex], color);
 
+		if ((int)i == skillIndx_) // カーソル描画も i でチェック
+		{
+			int cursorX = 350;
+			int cursorY = 390 + i * 30;
+			DrawExtendGraph(cursorX, cursorY, cursorX + DRAW_CURSOR_W, cursorY + DRAW_CURSOR_H, selectImg_, true);
+		}
 	}
-
-
 
 }
 
@@ -1187,7 +814,7 @@ void BattleScene::HandleCommandSelectInput()
 
 	{
 
-		AudioManager::GetInstance()->SetSeVolume(100);
+		AudioManager::GetInstance()->SetSeVolume(SE_SOUND_VOLUME);
 
 		AudioManager::GetInstance()->PlaySE(SoundID::SE_COMMAND_SELECT);
 
@@ -1207,7 +834,7 @@ void BattleScene::HandleCommandSelectInput()
 
 	{
 
-		AudioManager::GetInstance()->SetSeVolume(100);
+		AudioManager::GetInstance()->SetSeVolume(SE_SOUND_VOLUME);
 
 		AudioManager::GetInstance()->PlaySE(SoundID::SE_COMMAND_SELECT);
 
@@ -1259,7 +886,7 @@ void BattleScene::ExecuteCommand(COMMAND command)
 
 		AudioManager::GetInstance()->StopBGM();
 
-		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::SEARCH);
+		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::TITLE);
 
 		firstcommand_ = false;
 
@@ -1280,151 +907,84 @@ void BattleScene::HandleSkillSelectInput()
 {
 
 	// シーン遷移
-
 	InputManager& ins = InputManager::GetInstance();
-
-
-
-	const int skillCount = (int)SKILL::MAX; // SKILL::MAXに置き換えるのが望ましい
-
-
+	const int skillCount = (int)acquiredSkills_.size();
 
 	// カーソル移動
-
 	if (ins.IsTrgDown(KEY_INPUT_UP))
-
 	{
-
-		AudioManager::GetInstance()->SetSeVolume(100);
-
+		AudioManager::GetInstance()->SetSeVolume(SE_SOUND_VOLUME);
 		AudioManager::GetInstance()->PlaySE(SoundID::SE_COMMAND_SELECT);
 
 		skillIndx_--;
-
 		if (skillIndx_ < 0)
-
 		{
-
 			skillIndx_ = skillCount - 1;
-
 		}
-
 	}
 
 	if (ins.IsTrgDown(KEY_INPUT_DOWN))
-
 	{
-
-		AudioManager::GetInstance()->SetSeVolume(100);
-
+		AudioManager::GetInstance()->SetSeVolume(SE_SOUND_VOLUME);
 		AudioManager::GetInstance()->PlaySE(SoundID::SE_COMMAND_SELECT);
 
 		skillIndx_++;
-
 		if (skillIndx_ >= skillCount)
-
 		{
-
 			skillIndx_ = 0;
 
 		}
-
 	}
-
-
-
 	// スキル決定
-
 	if (ins.IsTrgDown(KEY_INPUT_SPACE))
-
 	{
-
-
-
-		AudioManager::GetInstance()->SetSeVolume(100);
-
+		AudioManager::GetInstance()->SetSeVolume(SE_SOUND_VOLUME);
 		AudioManager::GetInstance()->PlaySE(SoundID::SE_COMMAND_DECISION);
 
-		SelectSkill(static_cast<SKILL>(skillIndx_));
-
-
+		SelectSkill(acquiredSkills_[skillIndx_]);
 
 		//行動回数処理
-
 		if (selectedSkills_.size() >= 1)
-
 		{
 
 			UseSkill();
-
 			state_ = STATE::PLAYER_ACTION; // 行動処理フェーズへ
 
 		}
 
 	}
-
-
-
-	// キャンセル処理
-
+		// キャンセル処理
 	if (ins.IsTrgDown(KEY_INPUT_X))
-
 	{
-
 		selectedSkills_.clear();
-
 		state_ = STATE::COMMAND_SELECT; // コマンド選択へ戻る
-
+		
 	}
 
 }
-
-
 
 void BattleScene::DrawHpBar(int x, int y, int width, int height, int currentHp, int maxHp)
 
 {
 
 
-
-
-
 	float rate = (float)currentHp / maxHp;
-
 	int barW = (int)(width * rate);
 
-
-
 	// 背景枠（少し大きめ）
-
 	int outerMargin = 3; // 外側の余白
-
 	// 外側白
-
 	DrawBox(x - outerMargin, y - outerMargin, x + width + outerMargin, y + height + outerMargin, GetColor(255, 255, 255), TRUE);
-
 	// 内側黒
-
 	DrawBox(x - outerMargin + 1, y - outerMargin + 1, x + width + outerMargin - 1, y + height + outerMargin - 1, GetColor(0, 0, 0), TRUE);
 
-
-
 	for (int i = 0; i < barW; i++)
-
 	{
-
 		float t = (float)i / barW; // 0.0~1.0 横位置割合
-
-
-
 		int r, g, b;
 
-
-
 		// 緑→黄→赤
-
 		if (rate > 0.5f)
-
 		{
 
 			// 緑→黄
@@ -1578,11 +1138,7 @@ void BattleScene::StartWave(WAVE wave)
 
 
 void BattleScene::WaveDraw(WAVE wave)
-
 {
-
-
-
 
 
 	switch (wave)
@@ -1645,7 +1201,7 @@ void BattleScene::HandleRewardSelectInput()
 
 	{
 
-		AudioManager::GetInstance()->SetSeVolume(100);
+		AudioManager::GetInstance()->SetSeVolume(SE_SOUND_VOLUME);
 
 		AudioManager::GetInstance()->PlaySE(SoundID::SE_COMMAND_SELECT);
 
@@ -1665,7 +1221,7 @@ void BattleScene::HandleRewardSelectInput()
 
 	{
 
-		AudioManager::GetInstance()->SetSeVolume(100);
+		AudioManager::GetInstance()->SetSeVolume(SE_SOUND_VOLUME);
 
 		AudioManager::GetInstance()->PlaySE(SoundID::SE_COMMAND_SELECT);
 
@@ -1689,7 +1245,7 @@ void BattleScene::HandleRewardSelectInput()
 
 	{
 
-		AudioManager::GetInstance()->SetSeVolume(100);
+		AudioManager::GetInstance()->SetSeVolume(SE_SOUND_VOLUME);
 
 		AudioManager::GetInstance()->PlaySE(SoundID::SE_COMMAND_DECISION);
 
@@ -1720,152 +1276,114 @@ void BattleScene::HandleRewardSelectInput()
 		if (wave_ != WAVE::END)
 
 		{
-
 			wave_ = static_cast<WAVE>((int)wave_ + 1); // 次のWAVEのインデックスにキャスト
-
-
 
 			// 次のWAVEが終了でなければ、新しいWAVEを開始
 
 			if (wave_ != WAVE::END)
-
 			{
-
 				StartWave(wave_);
-
 			}
-
 			else
-
 			{
-
 				// 全WAVE終了（ゲームクリアや次のシーン遷移など）
 
-				// 必要に応じて SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::RESULT); などを実行
-
 			}
-
 		}
-
 	}
-
 }
-
-
 
 
 
 void BattleScene::ApplyReward(END_REWARD reward)
-
 {
-
 	// 選択された報酬に応じた処理をここに記述します。
-
 	switch (reward)
-
 	{
-
 	case END_REWARD::HP:
 
-
-		playerHpMax_ += 20;
-
+		switch (wave_)
+		{
+		case BattleScene::WAVE::WAVE1:
+			playerHpMax_ += 20;
+			break;
+		case BattleScene::WAVE::WAVE2:
+			playerHpMax_ += 40;
+			break;
+		case BattleScene::WAVE::LASTWAVE:
+			break;
+		case BattleScene::WAVE::END:
+			break;
+		}
 		break;
-
 	case END_REWARD::SKILL:
+	{ 
+		// スキル獲得の処理
+		// ここにランダムで取得させたいスキルをリストアップ
+		const SKILL skillPool[] = {
+			SKILL::SLASH,        // 既存スキルも報酬対象にする場合
+			SKILL::FLAME,        // 既存スキルも報酬対象にする場合
+			SKILL::HEAL,         // 既存スキルも報酬対象にする場合
 
-		// 例: アイテム付与の処理
+			SKILL::LIMIT_BREAK,  // 報酬専用スキル
+			// SKILL::GUARD,     // 新しいスキルを追加する場合
+		};
+		const int poolSize = sizeof(skillPool) / sizeof(skillPool[0]);
 
-		// SceneManager::GetInstance().GetPlayer()->AddItem(ItemID::POTION);
+		// スキルを一つ選択
+		int randomIndex = rand() % poolSize;
+		SKILL acquiredSkill = skillPool[randomIndex];
 
-		break;
+		//習得済みスキルリストに追加
+		acquiredSkills_.push_back(acquiredSkill);
 
-	default:
-
-		break;
-
+		// state_ = STATE::SKILL_CHOOSE; は、自動習得により不要なため削除します。
+		// state_の変更は行わず、HandleRewardSelectInputの処理に戻ります。
 	}
-
+	
+		break;
+	default:
+		break;
+	}
 }
 
-
-
 void BattleScene::DrawRewardSelect()
-
 {
-
 	const char* rewardNames[] =
 
 	{
-
 	"最大HPを増加する",
-
 	"スキルを一つ獲得する",
-
 	};
 
-
-
 	// 報酬選択ボックスの描画（スキル選択と同じような位置・サイズで仮定）
-
 	CreateBox(350, 350, 300, 200, GetColor(0, 0, 128));
-
 	DrawString(360, 360, "報酬を選んでください", GetColor(255, 255, 0));
 
-
-
-	const int REWARD_TEXT_X = 400;
-
+	const int REWARD_TEXT_X = 430;
 	const int REWARD_BASE_Y = 390;
-
 	const int REWARD_LINE_HEIGHT = 50;
-
-
 
 	for (int i = 0; i < (int)END_REWARD::MAX; i++)
 
 	{
 
 		int color = (i == rewordIndx) ? GetColor(255, 255, 0) : GetColor(255, 255, 255);
-
 		int yPos = REWARD_BASE_Y + i * REWARD_LINE_HEIGHT;
-
-
-
 		// カーソルの描画
 
 		if (i == rewordIndx)
 
 		{
-
 			// カーソルはコマンド選択と同じselectImg_を使用
-
 			int cursorX = 360;
-
-
-
-			DrawExtendGraph(
-
-				cursorX,
-
-				yPos,
-
-				cursorX + DRAW_CURSOR_W,
-
-				yPos + DRAW_CURSOR_H,
-
-				selectImg_,
-
-				true
-
-			);
+			DrawExtendGraph(cursorX,yPos,cursorX + DRAW_CURSOR_W,yPos + DRAW_CURSOR_H,selectImg_,true);
 
 		}
-
-
 
 		DrawString(REWARD_TEXT_X, yPos, rewardNames[i], color);
 
 	}
 
 }
+
