@@ -30,6 +30,10 @@ public:
 
 
 
+
+
+
+
 	//アニメーション種別
 	enum class ANIM_TYPE
 	{
@@ -134,6 +138,25 @@ private:
 
 	static constexpr int REWARD_SKILL_COUNT = 3;
 
+	//画像サイズ
+	static constexpr int IMG_SIZE_X = 16;
+	static constexpr int IMG_SIZE_Y = 16;
+
+	//方向分割サイズ
+	static constexpr int IMG_NUM_X = 36;
+	static constexpr int IMG_NUM_Y = 16;
+	//総分割数
+	static constexpr int IMG_ALL_NUM = 576;
+	
+	//開始行
+	static constexpr int FIRE_START_LINE_IDX = 10;
+	static constexpr int FIRE_END_LINE_IDX = 14;
+
+	//開始列
+	static constexpr int FIRE_START_COL_IDX = 1;
+
+
+
 	
 	const char* SkillName;//テスト
 	int test = 1;
@@ -169,6 +192,8 @@ private:
 	//セレクト画像ハンドル
 	int selectImg_;
 
+	int flameSkillImg_[IMG_ALL_NUM];//スキル画像ハンドル
+
 	int cursorIndx_; //選択しているコマンド
 	int actionTime_; //処理待機時間
 	int endIndx_; // 戦闘終了状態
@@ -196,7 +221,8 @@ private:
 	//BATTLE_ENDの待機時間
 	int winWaitTime_  = 90;
 
-	///int count;
+	int skillAnimCnt_ =  0;
+	int skillSpeed_ = 4;
 
 	//プレイヤー死亡判定
 	bool playerDead_ = false;
@@ -211,6 +237,9 @@ private:
 	bool isPauseAlive_;
 	// SEが一度だけ再生されたか
 	bool isWinSePlayed_ = false;
+
+	bool isFirePlay_ = false;
+
 
 
 
@@ -256,8 +285,8 @@ private:
 
 	void DrawRewardSelect();
 
-	void DrawRewardSkills();
-	void HandleSkillChooseInput();
+	//炎の描画
+	void FlameDraw();
 
 	
 };

@@ -58,6 +58,11 @@ void BattleScene::Init(void)
 	enemyHpMax_ = 50;
 	enemyHp_ = enemyHpMax_;
 
+	
+
+	LoadDivGraph((Application::PATH_IMAGE + "Fire.png").c_str(), IMG_ALL_NUM, IMG_NUM_X, IMG_NUM_Y,
+		IMG_SIZE_X, IMG_SIZE_Y, flameSkillImg_);
+
 }
 
 
@@ -270,6 +275,10 @@ void BattleScene::Draw(void)
 
 	}
 
+
+	//スキル描画
+	FlameDraw();
+
 	//HPUIの描画
 	DrawHpBar(100, 400, 120, 20, playerHp_, playerHpMax_);
 	DrawFormatString(100, 380, 0xffffff, "HP: %d / %d", playerHp_, playerHpMax_);
@@ -349,6 +358,11 @@ void BattleScene::Release(void)
 	MV1DeleteModel(goblinModelId_);
 	MV1DeleteModel(yetiModelId_);
 	MV1DeleteModel(blueDemonModellId_);
+
+	for (int i = 0; i < IMG_ALL_NUM; i++)
+	{
+		DeleteGraph(flameSkillImg_[i]);
+	}
 }
 
 
@@ -532,6 +546,8 @@ void BattleScene::ProcessSkill(SKILL skill)
 
 	case BattleScene::SKILL::FLAME:
 
+
+
 		damageAmount = 20;
 
 		Flame();
@@ -643,6 +659,9 @@ void BattleScene::Flame(void)
 	// ダメージ適用
 	AudioManager::GetInstance()->PlaySE(SoundID::SKILL_SE_SLASH);
 	enemyHp_ -= damageAmount;
+
+	isFirePlay_ = true;
+
 
 	if (enemyHp_ <= 0)
 	{
@@ -1385,5 +1404,33 @@ void BattleScene::DrawRewardSelect()
 
 	}
 
+}
+
+void BattleScene::FlameDraw()
+{
+	if (isFirePlay_)
+	{
+		//アニメーションを進める
+		skillAnimCnt_++;
+		if (skillAnimCnt_ < 16)
+		{
+			int frameCnt = (FIRE_END_LINE_IDX - FIRE_START_LINE_IDX + 1);
+
+			int now = (skillAnimCnt_ / skillSpeed_) % frameCnt;
+
+			int row = FIRE_START_LINE_IDX + now;
+
+			int index = row * IMG_NUM_X + FIRE_START_COL_IDX;
+
+			DrawGraph(Application::SCREEN_SIZE_X / 2, Application::SCREEN_SIZE_Y / 2, flameSkillImg_[index], true);
+
+		}
+		else
+		{
+			skillAnimCnt_ = 0;
+			isFirePlay_ = false;
+		}
+	}
+	
 }
 
