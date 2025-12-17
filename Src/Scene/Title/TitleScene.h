@@ -53,4 +53,20 @@ private:
 	int cursorIndx_ = 0; //選択しているコマンド
 
 	int titleHundle_;
+	int exitImg_;
+	int gameImg_;
+
+	int exitOffImg_;
+	int gameOffImg_; 
+
+	int selectImg_;
+
+	int selectImgPos_X;
+
+	//ゲーム画像座標
+	int gameImgPos_X;
+	int gameImgpos_Y;
+	//終了画像座標
+	int exitImgPos_X;
+	int exitImgPos_Y;
 };

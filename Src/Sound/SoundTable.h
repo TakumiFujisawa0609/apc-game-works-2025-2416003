@@ -10,6 +10,7 @@ enum class SoundID
 	BGM,
 	BGM_BATTLE,		//バトルBGM
 	BGM_SEARCH,		//サーチシーンBGM
+	BGM_BOSS,
 	SE_BUTTON,		//ボタンSE
 	SE_RUN,			//走り状態SE
 	SE_ATTACK,		
@@ -19,8 +20,10 @@ enum class SoundID
 	SE_TITLE_COMMAND,
 	SE_ENCOUNT,				//エンカウントSE
 	SE_WIN,					//勝利SE
+	SE_LOSE,
 	SKILL_SE_SLASH,			//スラッシュSE
 	SKILL_SE_HELL,			//ヒールSE
+	SKILL_SE_FIRE,
 	SE_DAMEGE,
 	MAX
 

@@ -1,4 +1,4 @@
-#include <string>
+ï»¿#include <string>
 #include <DxLib.h>
 #include "../../Application.h"
 #include "../../Utility/AsoUtility.h"
@@ -26,6 +26,7 @@ void BattleScene::Init(void)
 	BattleInit();
 
 	AudioManager::GetInstance()->LoadSceneSound(LoadScene::GAME);
+	AudioManager::GetInstance()->LoadSceneSound(LoadScene::SKILL);
 	AudioManager::GetInstance()->PlayBGM(SoundID::BGM_BATTLE);
 	AudioManager::GetInstance()->SetBgmVolume(150);
 
@@ -33,27 +34,31 @@ void BattleScene::Init(void)
 	backImg = LoadGraph((Application::PATH_IMAGE + "BackStage.jpg").c_str());
 
 
-	//ƒ‚ƒfƒ‹“Ç‚İ‚İ
+	//ãƒ¢ãƒ‡ãƒ«èª­ã¿è¾¼ã¿
 
-	////ƒSƒuƒŠƒ“
+	////ã‚´ãƒ–ãƒªãƒ³
 	goblinModelId_ = MV1LoadModel((Application::PATH_MODEL + "Enemy/Goblin.mv1").c_str());
 	MV1SetPosition(goblinModelId_, DEFAULT_ENEMY_POS);
 	MV1SetScale(goblinModelId_, DEFAULT_ENEMY_SCL);
 
-	////ƒuƒ‹[ƒf[ƒ‚ƒ“
+	////ãƒ–ãƒ«ãƒ¼ãƒ‡ãƒ¼ãƒ¢ãƒ³
 	blueDemonModellId_ = MV1LoadModel((Application::PATH_MODEL + "Enemy/BlueDemon.mv1").c_str());
 	MV1SetPosition(blueDemonModellId_, DEFAULT_ENEMY_POS);
 	MV1SetScale(blueDemonModellId_, DEFAULT_ENEMY_SCL);
 
-	//ƒCƒFƒeƒB
+	//ã‚¤ã‚§ãƒ†ã‚£
 	yetiModelId_ = MV1LoadModel((Application::PATH_MODEL + "Enemy/Yeti.mv1").c_str());
 	MV1SetPosition(yetiModelId_, DEFAULT_ENEMY_POS);
 	MV1SetScale(yetiModelId_, DEFAULT_ENEMY_SCL);
 
+	bossModelId_ = MV1LoadModel((Application::PATH_MODEL + "Enemy/Boss.mv1").c_str());
+	MV1SetPosition(bossModelId_, DEFAULT_ENEMY_POS);
+	MV1SetScale(bossModelId_, DEFAULT_ENEMY_SCL);
+
 	selectImg_ = LoadGraph((Application::PATH_IMAGE + "Command/Select.png").c_str());
 
 
-	//‰ŠúWAVEİ’è
+	//åˆæœŸWAVEè¨­å®š
 	wave_ = WAVE::WAVE1;
 	enemyHpMax_ = 50;
 	enemyHp_ = enemyHpMax_;
@@ -70,23 +75,23 @@ void BattleScene::Init(void)
 void BattleScene::Update(void)
 {
 
-	//ƒ|[ƒYˆ—‚ğs‚¤
+	//ãƒãƒ¼ã‚ºå‡¦ç†ã‚’è¡Œã†
 
 	Pause();
 
-	//ƒ|[ƒY‚ªƒIƒ“‚Ìó‘Ô
+	//ãƒãƒ¼ã‚ºãŒã‚ªãƒ³ã®çŠ¶æ…‹
 
 	if (isPauseAlive_)
 	{
 		return;
 	}
-	//ƒV[ƒ“‘JˆÚ
+	//ã‚·ãƒ¼ãƒ³é·ç§»
 	InputManager& ins = InputManager::GetInstance();
 
 	if (endIndx_ == (int)END::WIN)
 	{
 
-		//Ÿ—˜”»’è‚ªæ‚ê‚½‚çAí“¬I—¹
+		//å‹åˆ©åˆ¤å®šãŒå–ã‚ŒãŸã‚‰ã€æˆ¦é—˜çµ‚äº†
 		state_ = STATE::BATTLE_END;
 		actionTime_ = 0;
 	}
@@ -101,7 +106,7 @@ void BattleScene::Update(void)
 
 		HandleCommandSelectInput();
 
-		//Œˆ’èˆ—
+		//æ±ºå®šå‡¦ç†
 
 		if (ins.IsTrgDown(KEY_INPUT_SPACE))
 
@@ -117,33 +122,33 @@ void BattleScene::Update(void)
 		break;
 
 	case BattleScene::STATE::SKILL_SELECT:
-		// Œ»İ‚Ì isSelectingSkill_ ‚ÌƒuƒƒbƒN
+		// ç¾åœ¨ã® isSelectingSkill_ ã®ãƒ–ãƒ­ãƒƒã‚¯
 		HandleSkillSelectInput();
 
 		break;
 
 	case BattleScene::STATE::PLAYER_ACTION:
 
-		// ƒvƒŒƒCƒ„[‚Ìs“®iƒAƒjƒ[ƒVƒ‡ƒ“Aƒ_ƒ[ƒWŒvZ‚È‚Çj
+		// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®è¡Œå‹•ï¼ˆã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã€ãƒ€ãƒ¡ãƒ¼ã‚¸è¨ˆç®—ãªã©ï¼‰
 
-		// ƒvƒŒƒCƒ„[‚Ìs“®ƒAƒjƒ[ƒVƒ‡ƒ“‚âƒ_ƒ[ƒW•\¦‚Ì‘Ò‹@
+		// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®è¡Œå‹•ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚„ãƒ€ãƒ¡ãƒ¼ã‚¸è¡¨ç¤ºã®å¾…æ©Ÿ
 
 		actionTime_++;
 
-		if (actionTime_ > ONE_SECOND) // 1•b(60ƒtƒŒ[ƒ€)‘Ò‹@
+		if (actionTime_ > ONE_SECOND) // 1ç§’(60ãƒ•ãƒ¬ãƒ¼ãƒ )å¾…æ©Ÿ
 		{
 			actionTime_ = 0;
 			if (isDamege_)
 
 			{
-				// “G‚ğ“|‚µ‚½ê‡‚ÍA‚±‚ÌŒã BATTLE_END ‚ÉˆÚsi‹¤’ÊƒƒWƒbƒN‚Åˆ—j
+				// æ•µã‚’å€’ã—ãŸå ´åˆã¯ã€ã“ã®å¾Œ BATTLE_END ã«ç§»è¡Œï¼ˆå…±é€šãƒ­ã‚¸ãƒƒã‚¯ã§å‡¦ç†ï¼‰
 				state_ = STATE::BATTLE_END;
 			}
 
 			else
 
 			{
-				// “G‚ª¶‚«‚Ä‚¢‚éê‡‚ÍA“G‚Ìƒ^[ƒ“‚Ö
+				// æ•µãŒç”Ÿãã¦ã„ã‚‹å ´åˆã¯ã€æ•µã®ã‚¿ãƒ¼ãƒ³ã¸
 				state_ = STATE::ENEMY_ACTION;
 
 			}
@@ -156,11 +161,11 @@ void BattleScene::Update(void)
 
 
 
-		// “G‚Ìs“®ˆ—iAIAƒAƒjƒ[ƒVƒ‡ƒ“Aƒ_ƒ[ƒWŒvZ‚È‚Çj
+		// æ•µã®è¡Œå‹•å‡¦ç†ï¼ˆAIã€ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã€ãƒ€ãƒ¡ãƒ¼ã‚¸è¨ˆç®—ãªã©ï¼‰
 
 
 
-		// “G‚ÌUŒ‚ŒvZi1‰ñ‚¾‚¯j
+		// æ•µã®æ”»æ’ƒè¨ˆç®—ï¼ˆ1å›ã ã‘ï¼‰
 
 		if (actionTime_ == 0)
 		{
@@ -188,7 +193,7 @@ void BattleScene::Update(void)
 
 	case BattleScene::STATE::TURN_END:
 
-		// ƒ^[ƒ“I—¹‚ÌƒNƒŠ[ƒ“ƒAƒbƒv‚âƒƒbƒZ[ƒW•\¦
+		// ã‚¿ãƒ¼ãƒ³çµ‚äº†æ™‚ã®ã‚¯ãƒªãƒ¼ãƒ³ã‚¢ãƒƒãƒ—ã‚„ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸è¡¨ç¤º
 
 		state_ = STATE::TURN_START;
 
@@ -197,12 +202,12 @@ void BattleScene::Update(void)
 	case BattleScene::STATE::BATTLE_END:
 
 
-		// í“¬I—¹Œã‚Ì‘Ò‹@ŠÔˆ—
+		// æˆ¦é—˜çµ‚äº†å¾Œã®å¾…æ©Ÿæ™‚é–“å‡¦ç†
 		if (isWinSePlayed_ == false)
 		{
 			AudioManager::GetInstance()->SetSeVolume(300);
 			AudioManager::GetInstance()->PlaySE(SoundID::SE_WIN);
-			isWinSePlayed_ = true; // Ä¶Ï‚İ
+			isWinSePlayed_ = true; // å†ç”Ÿæ¸ˆã¿
 
 		}
 
@@ -210,9 +215,9 @@ void BattleScene::Update(void)
 
 		if (actionTime_ > winWaitTime_)
 		{
-			// •ñV•\¦ƒtƒF[ƒY‚ÖˆÚs
+			// å ±é…¬è¡¨ç¤ºãƒ•ã‚§ãƒ¼ã‚ºã¸ç§»è¡Œ
 			state_ = STATE::REWARD_VIEW;
-			actionTime_ = 0; //ƒŠƒZƒbƒg
+			actionTime_ = 0; //ãƒªã‚»ãƒƒãƒˆ
 			isWinSePlayed_ = false;
 
 		}
@@ -242,10 +247,10 @@ void BattleScene::Draw(void)
 
 	DrawExtendGraph(0, 0, Application::SCREEN_SIZE_X, Application::SCREEN_SIZE_Y, backImg, true);
 
-	int offsetX = 0;//c—h‚ê
-	int offsetY = 0;//‰¡—h‚ê
+	int offsetX = 0;//ç¸¦æºã‚Œ
+	int offsetY = 0;//æ¨ªæºã‚Œ
 
-	// —h‚ê’†‚È‚çƒ‰ƒ“ƒ_ƒ€‚ÅƒIƒtƒZƒbƒg‚ğì‚é
+	// æºã‚Œä¸­ãªã‚‰ãƒ©ãƒ³ãƒ€ãƒ ã§ã‚ªãƒ•ã‚»ãƒƒãƒˆã‚’ä½œã‚‹
 
 	if (shakeDuration_ > 0)
 
@@ -256,13 +261,13 @@ void BattleScene::Draw(void)
 
 	}
 
-	// ”wŒi•`‰æ
+	// èƒŒæ™¯æç”»
 	DrawExtendGraph(0 + offsetX, 0 + offsetY,
 		Application::SCREEN_SIZE_X + offsetX,
 		Application::SCREEN_SIZE_Y + offsetY,
 		backImg, true);
 
-	//“G‚Ì•`‰æ
+	//æ•µã®æç”»
 	if (isDamege_ == false)
 
 	{
@@ -276,10 +281,10 @@ void BattleScene::Draw(void)
 	}
 
 
-	//ƒXƒLƒ‹•`‰æ
+	//ã‚¹ã‚­ãƒ«æç”»
 	FlameDraw();
 
-	//HPUI‚Ì•`‰æ
+	//HPUIã®æç”»
 	DrawHpBar(100, 400, 120, 20, playerHp_, playerHpMax_);
 	DrawFormatString(100, 380, 0xffffff, "HP: %d / %d", playerHp_, playerHpMax_);
 
@@ -290,8 +295,8 @@ void BattleScene::Draw(void)
 
 		{
 
-		"‚½‚½‚©‚¤",
-		"‚É‚°‚é"
+		"ãŸãŸã‹ã†",
+		"ã«ã’ã‚‹"
 		};
 
 		CreateBox(90, 450, 150, 150, GetColor(0, 0, 128));
@@ -306,15 +311,15 @@ void BattleScene::Draw(void)
 
 			{
 
-				//¶’[‡‚í‚¹‚é
+				//å·¦ç«¯åˆã‚ã›ã‚‹
 				int cursorX = 90;
-				//ã’[‚É‡‚í‚¹‚é
+				//ä¸Šç«¯ã«åˆã‚ã›ã‚‹
 				int cursorY = BASE_COMMAND_Y + i * COMMAND_LINE_HEIGHT;
 
 
 				DrawExtendGraph(cursorX,cursorY,cursorX + 
-					DRAW_CURSOR_W, // I“_XÀ•W
-					cursorY + DRAW_CURSOR_H, // I“_YÀ•W
+					DRAW_CURSOR_W, // çµ‚ç‚¹Xåº§æ¨™
+					cursorY + DRAW_CURSOR_H, // çµ‚ç‚¹Yåº§æ¨™
 					selectImg_,true);
 
 			}
@@ -339,7 +344,7 @@ void BattleScene::Draw(void)
 
 	if (isPauseAlive_)
 	{
-		//ƒ|[ƒY‰æ–Ê‚Ì•`‰æ
+		//ãƒãƒ¼ã‚ºç”»é¢ã®æç”»
 		PauseDraw();
 	}
 
@@ -350,11 +355,11 @@ void BattleScene::Draw(void)
 void BattleScene::Release(void)
 
 {
-	//‰æ‘œ‰ğ•ú
+	//ç”»åƒè§£æ”¾
 	DeleteGraph(backImg, true);
 	DeleteGraph(selectImg_, true);
 
-	//ƒ‚ƒfƒ‹‰ğ•ú
+	//ãƒ¢ãƒ‡ãƒ«è§£æ”¾
 	MV1DeleteModel(goblinModelId_);
 	MV1DeleteModel(yetiModelId_);
 	MV1DeleteModel(blueDemonModellId_);
@@ -372,12 +377,12 @@ void BattleScene::ChangeCommand(COMMAND command)
 
 	switch (command_)
 	{
-		//ƒRƒ}ƒ“ƒh‘I‘ğ
+		//ã‚³ãƒãƒ³ãƒ‰é¸æŠ
 
-	case BattleScene::COMMAND::BATTLE: //í‚¤
+	case BattleScene::COMMAND::BATTLE: //æˆ¦ã†
 
 		break;
-	case BattleScene::COMMAND::ESCAPE:  //“¦‚°‚é
+	case BattleScene::COMMAND::ESCAPE:  //é€ƒã’ã‚‹
 		//SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::SEARCH);
 		break;
 
@@ -398,20 +403,20 @@ void BattleScene::Pause(void)
 
 {
 
-	// NƒL[‚Å‚Ì‹­§I—¹iƒfƒoƒbƒO—pj
+	// Nã‚­ãƒ¼ã§ã®å¼·åˆ¶çµ‚äº†ï¼ˆãƒ‡ãƒãƒƒã‚°ç”¨ï¼‰
 	if (InputManager::GetInstance().IsTrgDown(KEY_INPUT_N))
 	{
 		AudioManager::GetInstance()->StopBGM();
 		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::SEARCH);
 
 		firstcommand_ = false;
-		return; // ƒV[ƒ“‘JˆÚŒã‚ÍˆÈ~‚Ìˆ—‚ğƒXƒLƒbƒv
+		return; // ã‚·ãƒ¼ãƒ³é·ç§»å¾Œã¯ä»¥é™ã®å‡¦ç†ã‚’ã‚¹ã‚­ãƒƒãƒ—
 
 	}
 
 
 
-	//ESCƒL[‚ª‰Ÿ‚³‚ê‚½‚çƒ|[ƒYó‘Ô‚ğØ‚è‘Ö‚¦
+	//ESCã‚­ãƒ¼ãŒæŠ¼ã•ã‚ŒãŸã‚‰ãƒãƒ¼ã‚ºçŠ¶æ…‹ã‚’åˆ‡ã‚Šæ›¿ãˆ
 	if (InputManager::GetInstance().IsTrgDown(KEY_INPUT_ESCAPE))
 	{
 		isPauseAlive_ = !isPauseAlive_;
@@ -439,37 +444,28 @@ void BattleScene::Pause(void)
 void BattleScene::PauseDraw(void)
 
 {
-
 	int screenWidth = Application::SCREEN_SIZE_X;
-
 	int screenHeight = Application::SCREEN_SIZE_Y;
 
 
-
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 128);//DX_BLEND_SRC_ALPHA
-
 	DrawBox(0, 0, screenWidth, screenHeight, 0x000000, TRUE);
-
-	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0); // ƒuƒŒƒ“ƒhƒ‚[ƒh‚ğŒ³‚É–ß‚·
-
+	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0); // ãƒ–ãƒ¬ãƒ³ãƒ‰ãƒ¢ãƒ¼ãƒ‰ã‚’å…ƒã«æˆ»ã™
 
 
-	// ƒ|[ƒY‰æ–Ê‚ÌƒeƒLƒXƒg•`‰æ
 
+	// ãƒãƒ¼ã‚ºç”»é¢ã®ãƒ†ã‚­ã‚¹ãƒˆæç”»
 	const char* pauseMessage = "PAUSE";
 	const char* resumeMessage = "Press ESC to Resume";
 
 	int white = GetColor(255, 255, 255);
 
-
-
-	// PAUSE ƒƒbƒZ[ƒW‚ğ‰æ–Ê’†‰›‚É‘å‚«‚­•\¦
-
+	// PAUSE ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã‚’ç”»é¢ä¸­å¤®ã«å¤§ããè¡¨ç¤º
 	DrawFormatString(screenWidth / 2 - 50, screenHeight / 2 - 50, white, "%s", pauseMessage);
 
 
 
-	// ÄŠJƒƒbƒZ[ƒW
+	// å†é–‹ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸
 
 	DrawFormatString(screenWidth / 2 - 100, screenHeight / +50, white, "%s", resumeMessage);
 
@@ -481,13 +477,13 @@ void BattleScene::BattleInit(void)
 
 {
 
-	cursorIndx_ = 0;//‘I‘ğƒRƒ}ƒ“ƒh‰Šúó‘Ô
-	turnIndx_ = 0;//ƒ^[ƒ“Å‰‚Ìó‘Ô
-	endIndx_ = 0;//í“¬I—¹ó‘Ô
-	rewordIndx = 0;//í“¬•ñVó‘Ô
+	cursorIndx_ = 0;//é¸æŠã‚³ãƒãƒ³ãƒ‰åˆæœŸçŠ¶æ…‹
+	turnIndx_ = 0;//ã‚¿ãƒ¼ãƒ³æœ€åˆã®çŠ¶æ…‹
+	endIndx_ = 0;//æˆ¦é—˜çµ‚äº†çŠ¶æ…‹
+	rewordIndx = 0;//æˆ¦é—˜å ±é…¬çŠ¶æ…‹
 	actionTime_ = 0;
 
-	//SEÄ¶ƒtƒ‰ƒO‚ğƒŠƒZƒbƒg
+	//SEå†ç”Ÿãƒ•ãƒ©ã‚°ã‚’ãƒªã‚»ãƒƒãƒˆ
 	isWinSePlayed_ = false;
 
 	command_ = COMMAND::BATTLE;
@@ -496,6 +492,7 @@ void BattleScene::BattleInit(void)
 	acquiredSkills_.push_back(SKILL::SLASH);
 	acquiredSkills_.push_back(SKILL::FLAME);
 	acquiredSkills_.push_back(SKILL::HEAL);
+
 }
 
 
@@ -516,7 +513,7 @@ void BattleScene::UseSkill(void)
 		ProcessSkill(skill);
 	}
 
-	// ÀsŒã‚ÉƒŠƒZƒbƒg
+	// å®Ÿè¡Œå¾Œã«ãƒªã‚»ãƒƒãƒˆ
 	selectedSkills_.clear();
 }
 
@@ -530,7 +527,7 @@ void BattleScene::ProcessSkill(SKILL skill)
 
 
 
-	//ŠeƒXƒLƒ‹‚Ìˆ—‚ğ‚±‚±‚Å“ü—Í
+	//å„ã‚¹ã‚­ãƒ«ã®å‡¦ç†ã‚’ã“ã“ã§å…¥åŠ›
 
 	switch (skill)
 
@@ -578,15 +575,15 @@ void BattleScene::ProcessSkill(SKILL skill)
 
 
 
-	// “GHP‚ª0ˆÈ‰º‚É‚È‚Á‚½‚©ƒ`ƒFƒbƒN
+	// æ•µHPãŒ0ä»¥ä¸‹ã«ãªã£ãŸã‹ãƒã‚§ãƒƒã‚¯
 
 	if (enemyHp_ <= 0)
 
 	{
 
-		enemyHp_ = 0; // HP‚ªƒ}ƒCƒiƒX‚É‚È‚ç‚È‚¢‚æ‚¤‚É
+		enemyHp_ = 0; // HPãŒãƒã‚¤ãƒŠã‚¹ã«ãªã‚‰ãªã„ã‚ˆã†ã«
 
-		isDamege_ = true; // “GŒ‚”jƒtƒ‰ƒO‚ğ—§‚Ä‚é
+		isDamege_ = true; // æ•µæ’ƒç ´ãƒ•ãƒ©ã‚°ã‚’ç«‹ã¦ã‚‹
 
 		state_ = STATE::BATTLE_END;
 
@@ -601,25 +598,14 @@ void BattleScene::ProcessSkill(SKILL skill)
 
 
 void BattleScene::Damage(void)
-
 {
-
-	// ƒ_ƒ[ƒW“K—p
-
+	// ãƒ€ãƒ¡ãƒ¼ã‚¸é©ç”¨
 	AudioManager::GetInstance()->PlaySE(SoundID::SKILL_SE_SLASH);
-
-
-
 	enemyHp_ -= damageAmount;
 
-
-
 	if (enemyHp_ <= 0)
-
 	{
-
 		isDamege_ = true;
-
 	}
 
 }
@@ -629,25 +615,15 @@ void BattleScene::Damage(void)
 void BattleScene::Hell(void)
 
 {
-
 	AudioManager::GetInstance()->PlaySE(SoundID::SKILL_SE_HELL);
-
+	
 	if (playerHp_ < playerHpMax_)
-
 	{
-
 		playerHp_ += 30;
-
-
-
 		if (playerHp_ >= playerHpMax_)
-
 		{
-
 			playerHp_ = playerHpMax_;
-
 		}
-
 	}
 
 }
@@ -656,8 +632,8 @@ void BattleScene::Hell(void)
 
 void BattleScene::Flame(void)
 {
-	// ƒ_ƒ[ƒW“K—p
-	AudioManager::GetInstance()->PlaySE(SoundID::SKILL_SE_SLASH);
+	// ãƒ€ãƒ¡ãƒ¼ã‚¸é©ç”¨
+	AudioManager::GetInstance()->PlaySE(SoundID::SKILL_SE_FIRE);
 	enemyHp_ -= damageAmount;
 
 	isFirePlay_ = true;
@@ -684,8 +660,8 @@ void BattleScene::EnemyAttack(void)
 	playerHp_ -= enemyDamage;
 
 
-	// ‰æ–Ê—h‚êŠJn
-	shakeDuration_ = 15; // 15ƒtƒŒ[ƒ€—h‚ê‚é
+	// ç”»é¢æºã‚Œé–‹å§‹
+	shakeDuration_ = 15; // 15ãƒ•ãƒ¬ãƒ¼ãƒ æºã‚Œã‚‹
 
 	if (playerHp_ <= 0)
 	{
@@ -707,11 +683,11 @@ void BattleScene::DrawCommand(COMMAND command)
 
 
 
-	if (command == COMMAND::BATTLE) name = "‚½‚½‚©‚¤";
+	if (command == COMMAND::BATTLE) name = "ãŸãŸã‹ã†";
 
-	//else if (command == COMMAND::TOOl) name = "ƒAƒCƒeƒ€";
+	//else if (command == COMMAND::TOOl) name = "ã‚¢ã‚¤ãƒ†ãƒ ";
 
-	else if (command == COMMAND::ESCAPE) name = "‚É‚°‚é";
+	else if (command == COMMAND::ESCAPE) name = "ã«ã’ã‚‹";
 
 
 
@@ -733,11 +709,11 @@ void BattleScene::DrawEnd(END end)
 
 	if (end == END::WIN) name = "WIN";
 
-	else if (end == END::IN_BATTLE) name = "í“¬’†";
+	else if (end == END::IN_BATTLE) name = "æˆ¦é—˜ä¸­";
 
 	else if (end == END::LOSE) name = "LOSE";
 
-	else if (end == END::ESCAPE) name = "‚É‚°‚é";
+	else if (end == END::ESCAPE) name = "ã«ã’ã‚‹";
 
 
 
@@ -758,28 +734,28 @@ void BattleScene::DrawSkill(void)
 	const char* skillNames[] =
 	{
 
-		"aŒ‚",
-		"‰Š",
-		"‰ñ•œ",
-		"ƒŠƒ~ƒbƒgƒuƒŒƒCƒN",
+		"æ–¬æ’ƒ",
+		"ç‚",
+		"å›å¾©",
+		"ãƒªãƒŸãƒƒãƒˆãƒ–ãƒ¬ã‚¤ã‚¯",
 
 	};
 
 	CreateBox(350, 350, 250, 220, GetColor(0, 0, 128));
-	DrawString(360, 360, "ƒXƒLƒ‹‚ğ‘I‚ñ‚Å‚­‚¾‚³‚¢", GetColor(255, 255, 0));
+	DrawString(360, 360, "ã‚¹ã‚­ãƒ«ã‚’é¸ã‚“ã§ãã ã•ã„", GetColor(255, 255, 0));
 
 
 	for (size_t i = 0; i < acquiredSkills_.size(); i++)
 	{
-		// K“¾Ï‚İƒXƒLƒ‹ƒŠƒXƒg‚©‚çSKILL::XXX‚Ì’l‚ğæ“¾
+		// ç¿’å¾—æ¸ˆã¿ã‚¹ã‚­ãƒ«ãƒªã‚¹ãƒˆã‹ã‚‰SKILL::XXXã®å€¤ã‚’å–å¾—
 		int skillEnumIndex = (int)acquiredSkills_[i];
 
 		int color = (i == skillIndx_) ? GetColor(255, 255, 0) : GetColor(255, 255, 255);
 
-		// i”Ô–Ú‚ÌK“¾ƒXƒLƒ‹–¼‚ğ•`‰æ
+		// iç•ªç›®ã®ç¿’å¾—ã‚¹ã‚­ãƒ«åã‚’æç”»
 		DrawString(400, 390 + i * 30, skillNames[skillEnumIndex], color);
 
-		if ((int)i == skillIndx_) // ƒJ[ƒ\ƒ‹•`‰æ‚à i ‚Åƒ`ƒFƒbƒN
+		if ((int)i == skillIndx_) // ã‚«ãƒ¼ã‚½ãƒ«æç”»ã‚‚ i ã§ãƒã‚§ãƒƒã‚¯
 		{
 			int cursorX = 350;
 			int cursorY = 390 + i * 30;
@@ -823,11 +799,11 @@ void BattleScene::HandleCommandSelectInput()
 
 {
 
-	// ƒV[ƒ“‘JˆÚ
+	// ã‚·ãƒ¼ãƒ³é·ç§»
 
 	InputManager& ins = InputManager::GetInstance();
 
-	// ƒJ[ƒ\ƒ‹ˆÚ“® (C³Œã‚Ì”ÍˆÍƒ`ƒFƒbƒN)
+	// ã‚«ãƒ¼ã‚½ãƒ«ç§»å‹• (ä¿®æ­£å¾Œã®ç¯„å›²ãƒã‚§ãƒƒã‚¯)
 
 	if (ins.IsTrgDown(KEY_INPUT_UP))
 
@@ -859,7 +835,7 @@ void BattleScene::HandleCommandSelectInput()
 
 		cursorIndx_++;
 
-		// C³: MAX©‘Ì‚Í—LŒø‚ÈƒCƒ“ƒfƒbƒNƒX‚Å‚Í‚È‚¢‚Ì‚ÅA“™†‚ğŠÜ‚ß‚é
+		// ä¿®æ­£: MAXè‡ªä½“ã¯æœ‰åŠ¹ãªã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã§ã¯ãªã„ã®ã§ã€ç­‰å·ã‚’å«ã‚ã‚‹
 
 		if (cursorIndx_ >= (int)COMMAND::MAX)
 
@@ -879,7 +855,7 @@ void BattleScene::ExecuteCommand(COMMAND command)
 
 {
 
-	// ŠeƒRƒ}ƒ“ƒhŒˆ’èˆ—‚ğ switch ‚Å“ˆê
+	// å„ã‚³ãƒãƒ³ãƒ‰æ±ºå®šå‡¦ç†ã‚’ switch ã§çµ±ä¸€
 
 	switch (command)
 
@@ -887,7 +863,7 @@ void BattleScene::ExecuteCommand(COMMAND command)
 
 	case COMMAND::BATTLE:
 
-		// ƒXƒLƒ‹‘I‘ğó‘Ô‚ÖˆÚs
+		// ã‚¹ã‚­ãƒ«é¸æŠçŠ¶æ…‹ã¸ç§»è¡Œ
 
 		state_ = STATE::SKILL_SELECT;
 
@@ -895,13 +871,13 @@ void BattleScene::ExecuteCommand(COMMAND command)
 
 		selectedSkills_.clear();
 
-		// ƒXƒLƒ‹‘I‘ğ‰æ–Ê‚Ö‚Ì‘JˆÚ‚É“ü—ÍƒXƒLƒbƒv‚Í•s—v‚É‚È‚é‚±‚Æ‚ª‘½‚¢
+		// ã‚¹ã‚­ãƒ«é¸æŠç”»é¢ã¸ã®é·ç§»æ™‚ã«å…¥åŠ›ã‚¹ã‚­ãƒƒãƒ—ã¯ä¸è¦ã«ãªã‚‹ã“ã¨ãŒå¤šã„
 
 		break;
 
 	case COMMAND::ESCAPE:
 
-		// “¦‘–¬Œ÷”»’è‚È‚Ç‚ğŒo‚ÄƒV[ƒ“‘JˆÚ
+		// é€ƒèµ°æˆåŠŸåˆ¤å®šãªã©ã‚’çµŒã¦ã‚·ãƒ¼ãƒ³é·ç§»
 
 		AudioManager::GetInstance()->StopBGM();
 
@@ -925,11 +901,11 @@ void BattleScene::HandleSkillSelectInput()
 
 {
 
-	// ƒV[ƒ“‘JˆÚ
+	// ã‚·ãƒ¼ãƒ³é·ç§»
 	InputManager& ins = InputManager::GetInstance();
 	const int skillCount = (int)acquiredSkills_.size();
 
-	// ƒJ[ƒ\ƒ‹ˆÚ“®
+	// ã‚«ãƒ¼ã‚½ãƒ«ç§»å‹•
 	if (ins.IsTrgDown(KEY_INPUT_UP))
 	{
 		AudioManager::GetInstance()->SetSeVolume(SE_SOUND_VOLUME);
@@ -954,7 +930,7 @@ void BattleScene::HandleSkillSelectInput()
 
 		}
 	}
-	// ƒXƒLƒ‹Œˆ’è
+	// ã‚¹ã‚­ãƒ«æ±ºå®š
 	if (ins.IsTrgDown(KEY_INPUT_SPACE))
 	{
 		AudioManager::GetInstance()->SetSeVolume(SE_SOUND_VOLUME);
@@ -962,21 +938,21 @@ void BattleScene::HandleSkillSelectInput()
 
 		SelectSkill(acquiredSkills_[skillIndx_]);
 
-		//s“®‰ñ”ˆ—
+		//è¡Œå‹•å›æ•°å‡¦ç†
 		if (selectedSkills_.size() >= 1)
 		{
 
 			UseSkill();
-			state_ = STATE::PLAYER_ACTION; // s“®ˆ—ƒtƒF[ƒY‚Ö
+			state_ = STATE::PLAYER_ACTION; // è¡Œå‹•å‡¦ç†ãƒ•ã‚§ãƒ¼ã‚ºã¸
 
 		}
 
 	}
-		// ƒLƒƒƒ“ƒZƒ‹ˆ—
+		// ã‚­ãƒ£ãƒ³ã‚»ãƒ«å‡¦ç†
 	if (ins.IsTrgDown(KEY_INPUT_X))
 	{
 		selectedSkills_.clear();
-		state_ = STATE::COMMAND_SELECT; // ƒRƒ}ƒ“ƒh‘I‘ğ‚Ö–ß‚é
+		state_ = STATE::COMMAND_SELECT; // ã‚³ãƒãƒ³ãƒ‰é¸æŠã¸æˆ»ã‚‹
 		
 	}
 
@@ -990,59 +966,42 @@ void BattleScene::DrawHpBar(int x, int y, int width, int height, int currentHp, 
 	float rate = (float)currentHp / maxHp;
 	int barW = (int)(width * rate);
 
-	// ”wŒi˜gi­‚µ‘å‚«‚ßj
-	int outerMargin = 3; // ŠO‘¤‚Ì—]”’
-	// ŠO‘¤”’
+	// èƒŒæ™¯æ ï¼ˆå°‘ã—å¤§ãã‚ï¼‰
+	int outerMargin = 3; // å¤–å´ã®ä½™ç™½
+	// å¤–å´ç™½
 	DrawBox(x - outerMargin, y - outerMargin, x + width + outerMargin, y + height + outerMargin, GetColor(255, 255, 255), TRUE);
-	// “à‘¤•
+	// å†…å´é»’
 	DrawBox(x - outerMargin + 1, y - outerMargin + 1, x + width + outerMargin - 1, y + height + outerMargin - 1, GetColor(0, 0, 0), TRUE);
 
 	for (int i = 0; i < barW; i++)
 	{
-		float t = (float)i / barW; // 0.0~1.0 ‰¡ˆÊ’uŠ„‡
+		float t = (float)i / barW; // 0.0~1.0 æ¨ªä½ç½®å‰²åˆ
 		int r, g, b;
 
-		// —Î¨‰©¨Ô
+		// ç·‘â†’é»„â†’èµ¤
 		if (rate > 0.5f)
 		{
-
-			// —Î¨‰©
+			// ç·‘â†’é»„
 
 			r = (int)(255 * (1.0f - rate) * 2 + 0 * t);
-
 			g = 255;
 
 		}
 
 		else
-
 		{
-
-			// ‰©¨Ô
-
+			// é»„â†’èµ¤
 			r = 255;
-
 			g = (int)(255 * rate * 2);
-
 		}
 
 		b = 0;
 
-
-
-		// 1px•‚¸‚Â•`‰æ
-
+		// 1pxå¹…ãšã¤æç”»
 		DrawBox(x + i, y, x + i + 1, y + height, GetColor(r, g, b), TRUE);
 
 	}
-
-
-
 }
-
-
-
-
 
 unsigned int BattleScene::GetHPColor(float rate)
 
@@ -1051,14 +1010,13 @@ unsigned int BattleScene::GetHPColor(float rate)
 	int r, g, b = 0;
 
 
-
 	if (rate > 0.5f)
 
 	{
 
-		// —Î (0,255,0) ¨ ‰© (255,255,0)
+		// ç·‘ (0,255,0) â†’ é»„ (255,255,0)
 
-		float t = (rate - 0.5f) / 0.5f;  // 0`1
+		float t = (rate - 0.5f) / 0.5f;  // 0ï½1
 
 		r = (int)(255 * t);
 
@@ -1070,9 +1028,9 @@ unsigned int BattleScene::GetHPColor(float rate)
 
 	{
 
-		// ‰© (255,255,0) ¨ Ô (255,0,0)
+		// é»„ (255,255,0) â†’ èµ¤ (255,0,0)
 
-		float t = rate / 0.5f;           // 0`1
+		float t = rate / 0.5f;           // 0ï½1
 
 		r = 255;
 
@@ -1114,78 +1072,71 @@ void BattleScene::StartWave(WAVE wave)
 
 		break;
 
-	case BattleScene::WAVE::LASTWAVE:
-
-		enemyHpMax_ = 120;
-
+	case BattleScene::WAVE::WAVE3:
+		enemyHpMax_ = 100;
 		enemyHp_ = enemyHpMax_;
 
 		break;
 
-	case BattleScene::WAVE::END:
+	case BattleScene::WAVE::WAVE4:
+		enemyHpMax_ = 100;
+		enemyHp_ = enemyHpMax_;
+		break;
 
+	case BattleScene::WAVE::LASTWAVE:
+
+		AudioManager::GetInstance()->StopBGM();
+		AudioManager::GetInstance()->PlayBGM(SoundID::BGM_BOSS);
+		enemyHpMax_ = 1000;
+		enemyHp_ = enemyHpMax_;
+
+		break;
+	case BattleScene::WAVE::END:
 		break;
 
 	default:
-
 		break;
 
 	}
 
 
-
-
-
 	if (wave != WAVE::END)
-
 	{
-
-		isDamege_ = false;  // “GŒ‚”jƒtƒ‰ƒO‰ğœ
-
+		isDamege_ = false;  // æ•µæ’ƒç ´ãƒ•ãƒ©ã‚°è§£é™¤
 		playerDead_ = false;
-
 		actionTime_ = 0;
-
-
-
 		state_ = STATE::TURN_START;
 
 	}
 
 }
 
-
-
 void BattleScene::WaveDraw(WAVE wave)
 {
 
-
 	switch (wave)
-
 	{
-
 	case BattleScene::WAVE::WAVE1:
-
-
-
 		MV1DrawModel(goblinModelId_);
-
 		break;
 
 	case BattleScene::WAVE::WAVE2:
-
 		MV1DrawModel(blueDemonModellId_);
-
 		break;
 
+	case BattleScene::WAVE::WAVE3:
+		MV1DrawModel(blueDemonModellId_);
+		break;
+
+	case BattleScene::WAVE::WAVE4:
+		MV1DrawModel(blueDemonModellId_);
+		break;
+	
 	case BattleScene::WAVE::LASTWAVE:
-
-		MV1DrawModel(yetiModelId_);
-
+		MV1DrawModel(bossModelId_);
 		break;
 
 	case BattleScene::WAVE::END:
-
 		break;
 
 	default:
@@ -1205,110 +1156,95 @@ void BattleScene::WaveDraw(WAVE wave)
 
 
 void BattleScene::HandleRewardSelectInput()
-
 {
-
 	InputManager& ins = InputManager::GetInstance();
+	int rewardCount;
 
-	const int rewardCount = (int)END_REWARD::MAX;
+	if (wave_ == WAVE::WAVE4)
+	{
+		// MAX ãŒ 3 ã§ã‚ã‚Œã°ã€0, 1, 2 ã® 3å›ãƒ«ãƒ¼ãƒ—ã•ã›ã‚‹ãŸã‚ã« 3 ã‚’è¨­å®š
+		rewardCount = (int)END_REWARD::MAX;
+	}
+	else
+	{
+		// WAVE1, 2, 3 ã®ã¨ã: HP(0) ã¨ SKILL(1) ã® 2å›ãƒ«ãƒ¼ãƒ—ã•ã›ã‚‹ãŸã‚ã« 2 ã‚’è¨­å®š
+		// BOSS_CHANGE ãŒ 2 ãªã®ã§ã€ãã‚Œã‚’ä½¿ã†ã¨ 3å›ãƒ«ãƒ¼ãƒ—ã—ã¦ã—ã¾ã†ã€‚
+		// ã‚‚ã— enum ãŒé€£ç•ªãªã‚‰ã€(int)END_REWARD::BOSS_CHANGE - 1 ã‚„ã€å˜ã« 2 ã‚’è¨­å®šã™ã¹ãã€‚
+		rewardCount = (int)END_REWARD::SKILL + 1; // SKILL(1) + 1 = 2
+	}
 
 
+	// --- ä¿®æ­£ã•ã‚ŒãŸ rewardCount ã‚’ä½¿ç”¨ã™ã‚‹ ---
 
-	// ƒJ[ƒ\ƒ‹ˆÚ“® (ã‰º)
-
+	// ã‚«ãƒ¼ã‚½ãƒ«ç§»å‹• (ä¿®æ­£å¾Œã® rewardCount ã‚’ä½¿ç”¨)
 	if (ins.IsTrgDown(KEY_INPUT_UP))
-
 	{
-
+		// ...
 		AudioManager::GetInstance()->SetSeVolume(SE_SOUND_VOLUME);
-
-		AudioManager::GetInstance()->PlaySE(SoundID::SE_COMMAND_SELECT);
-
-		rewordIndx--;
-
-		if (rewordIndx < 0)
-
-		{
-
-			rewordIndx = rewardCount - 1;
-
-		}
-
-	}
-
-	if (ins.IsTrgDown(KEY_INPUT_DOWN))
-
-	{
-
-		AudioManager::GetInstance()->SetSeVolume(SE_SOUND_VOLUME);
-
-		AudioManager::GetInstance()->PlaySE(SoundID::SE_COMMAND_SELECT);
-
-		rewordIndx++;
-
-		if (rewordIndx >= rewardCount)
-
-		{
-
-			rewordIndx = 0;
-
-		}
-
-	}
-
-
-
-	// Œˆ’èˆ—
-
-	if (ins.IsTrgDown(KEY_INPUT_SPACE))
-
-	{
-
-		AudioManager::GetInstance()->SetSeVolume(SE_SOUND_VOLUME);
-
 		AudioManager::GetInstance()->PlaySE(SoundID::SE_COMMAND_DECISION);
 
-
-
-		// ‘I‘ğ‚³‚ê‚½•ñV‚ğ“K—p
-
-		ApplyReward(static_cast<END_REWARD>(rewordIndx));
-
-
-
-		// •ñV“K—pŒãAŸ‚ÌWAVE‚Ü‚½‚ÍƒV[ƒ“‘JˆÚ‚Ö
-
-
-
-		//ƒŠƒZƒbƒg
-
-		actionTime_ = 0;
-
-		rewordIndx = 0; // ƒJ[ƒ\ƒ‹‚ğƒŠƒZƒbƒg
-
-
-
-		//Ÿ‚ÌWAVE‚Ö
-
-		// Œ»İ‚ÌWAVE‚ğXViŸ‚ÌWAVE‚Öj
-
-		if (wave_ != WAVE::END)
-
+		rewordIndx--;
+		if (rewordIndx < 0)
 		{
-			wave_ = static_cast<WAVE>((int)wave_ + 1); // Ÿ‚ÌWAVE‚ÌƒCƒ“ƒfƒbƒNƒX‚ÉƒLƒƒƒXƒg
-
-			// Ÿ‚ÌWAVE‚ªI—¹‚Å‚È‚¯‚ê‚ÎAV‚µ‚¢WAVE‚ğŠJn
-
-			if (wave_ != WAVE::END)
-			{
-				StartWave(wave_);
-			}
-			else
-			{
-				// ‘SWAVEI—¹iƒQ[ƒ€ƒNƒŠƒA‚âŸ‚ÌƒV[ƒ“‘JˆÚ‚È‚Çj
-
-			}
+			rewordIndx = rewardCount - 1; // ä¿®æ­£
 		}
+	}
+	if (ins.IsTrgDown(KEY_INPUT_DOWN))
+	{
+		AudioManager::GetInstance()->SetSeVolume(SE_SOUND_VOLUME);
+		AudioManager::GetInstance()->PlaySE(SoundID::SE_COMMAND_DECISION);
+
+		// ...
+		rewordIndx++;
+		if (rewordIndx >= rewardCount) // ä¿®æ­£
+		{
+			rewordIndx = 0;
+		}
+	}
+
+	// æ±ºå®šå‡¦ç†
+	if (ins.IsTrgDown(KEY_INPUT_SPACE))
+	{
+		AudioManager::GetInstance()->SetSeVolume(SE_SOUND_VOLUME);
+		AudioManager::GetInstance()->PlaySE(SoundID::SE_COMMAND_DECISION);
+
+		// é¸æŠã•ã‚ŒãŸå ±é…¬ã‚’é©ç”¨ (ã¾ãŸã¯ãƒœã‚¹æŒ‘æˆ¦ã‚’å®Ÿè¡Œ)
+		END_REWARD selectedReward = static_cast<END_REWARD>(rewordIndx);
+
+		if (selectedReward == END_REWARD::BOSS_CHANGE && wave_ == WAVE::WAVE4)
+		{
+			// WAVE4ã‚¯ãƒªã‚¢æ™‚ã«ã€Œãƒœã‚¹ã«æŒ‘ã‚€ã€ãŒé¸æŠã•ã‚ŒãŸ
+			wave_ = WAVE::LASTWAVE;
+			StartWave(wave_);
+		}
+		else
+		{
+			// HP/SKILLå ±é…¬ã®é©ç”¨ã€ã¾ãŸã¯LASTWAVEã‚¯ãƒªã‚¢å¾Œã®å‡¦ç†
+			ApplyReward(selectedReward); // HP/SKILLå ±é…¬ã‚’é©ç”¨
+
+			if (wave_ == WAVE::LASTWAVE)
+			{
+				// LASTWAVEã‚¯ãƒªã‚¢æ™‚ã®å‡¦ç†ï¼ˆã‚²ãƒ¼ãƒ ã‚¯ãƒªã‚¢ï¼‰
+				AudioManager::GetInstance()->StopBGM();
+				SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::TITLE);
+				firstcommand_ = false;
+				return;
+			}
+
+			// WAVE1ã€œWAVE4ã®ã‚¯ãƒªã‚¢æ™‚: æ¬¡ã®WAVEã‚’ãƒ©ãƒ³ãƒ€ãƒ ã«æ±ºå®šã™ã‚‹
+			const int MIN_WAVE = (int)WAVE::WAVE1;
+			const int MAX_WAVE = (int)WAVE::WAVE4;
+			const int WAVE_RANGE = MAX_WAVE - MIN_WAVE + 1;
+
+			int nextWaveIndex = MIN_WAVE + (rand() % WAVE_RANGE);
+			wave_ = static_cast<WAVE>(nextWaveIndex);
+
+			StartWave(wave_);
+		}
+
+		// ãƒªã‚»ãƒƒãƒˆå‡¦ç†
+		actionTime_ = 0;
+		rewordIndx = 0;
 	}
 }
 
@@ -1316,11 +1252,10 @@ void BattleScene::HandleRewardSelectInput()
 
 void BattleScene::ApplyReward(END_REWARD reward)
 {
-	// ‘I‘ğ‚³‚ê‚½•ñV‚É‰‚¶‚½ˆ—‚ğ‚±‚±‚É‹Lq‚µ‚Ü‚·B
+// é¸æŠã•ã‚ŒãŸå ±é…¬ã«å¿œã˜ãŸå‡¦ç†ã‚’ã“ã“ã«è¨˜è¿°ã—ã¾ã™ã€‚
 	switch (reward)
 	{
 	case END_REWARD::HP:
-
 		switch (wave_)
 		{
 		case BattleScene::WAVE::WAVE1:
@@ -1329,79 +1264,81 @@ void BattleScene::ApplyReward(END_REWARD reward)
 		case BattleScene::WAVE::WAVE2:
 			playerHpMax_ += 40;
 			break;
+		case BattleScene::WAVE::WAVE3:
+			playerHpMax_ += 30;
+			break;
+		case BattleScene::WAVE::WAVE4:
+			playerHpMax_ += 20;
+			break;
 		case BattleScene::WAVE::LASTWAVE:
 			break;
 		case BattleScene::WAVE::END:
 			break;
 		}
 		break;
+
 	case END_REWARD::SKILL:
-	{ 
-		// ƒXƒLƒ‹Šl“¾‚Ìˆ—
-		// ‚±‚±‚Éƒ‰ƒ“ƒ_ƒ€‚Åæ“¾‚³‚¹‚½‚¢ƒXƒLƒ‹‚ğƒŠƒXƒgƒAƒbƒv
-		const SKILL skillPool[] = {
-			SKILL::SLASH,        // Šù‘¶ƒXƒLƒ‹‚à•ñV‘ÎÛ‚É‚·‚éê‡
-			SKILL::FLAME,        // Šù‘¶ƒXƒLƒ‹‚à•ñV‘ÎÛ‚É‚·‚éê‡
-			SKILL::HEAL,         // Šù‘¶ƒXƒLƒ‹‚à•ñV‘ÎÛ‚É‚·‚éê‡
-
-			SKILL::LIMIT_BREAK,  // •ñVê—pƒXƒLƒ‹
-			// SKILL::GUARD,     // V‚µ‚¢ƒXƒLƒ‹‚ğ’Ç‰Á‚·‚éê‡
+	{
+		// ã‚¹ã‚­ãƒ«ç²å¾—ã®å‡¦ç†
+		SKILL skillPool[] = {
+			SKILL::SLASH,
+			SKILL::FLAME,
+			SKILL::HEAL,
+			SKILL::LIMIT_BREAK,
 		};
-		const int poolSize = sizeof(skillPool) / sizeof(skillPool[0]);
+		int poolSize = sizeof(skillPool) / sizeof(skillPool[0]);
 
-		// ƒXƒLƒ‹‚ğˆê‚Â‘I‘ğ
+		// ã‚¹ã‚­ãƒ«ã‚’ä¸€ã¤é¸æŠ
 		int randomIndex = rand() % poolSize;
 		SKILL acquiredSkill = skillPool[randomIndex];
 
-		//K“¾Ï‚İƒXƒLƒ‹ƒŠƒXƒg‚É’Ç‰Á
+		// ç¿’å¾—æ¸ˆã¿ã‚¹ã‚­ãƒ«ãƒªã‚¹ãƒˆã«è¿½åŠ 
 		acquiredSkills_.push_back(acquiredSkill);
-
-		// state_ = STATE::SKILL_CHOOSE; ‚ÍA©“®K“¾‚É‚æ‚è•s—v‚È‚½‚ßíœ‚µ‚Ü‚·B
-		// state_‚Ì•ÏX‚Ís‚í‚¸AHandleRewardSelectInput‚Ìˆ—‚É–ß‚è‚Ü‚·B
 	}
+	break;
+
+	case END_REWARD::BOSS_CHANGE:
+		// ã“ã®é–¢æ•°ã§ã¯ä½•ã‚‚ã—ãªã„ (HandleRewardSelectInputã§å‡¦ç†)
+		break;
+
 	
-		break;
-	default:
-		break;
 	}
 }
 
 void BattleScene::DrawRewardSelect()
 {
 	const char* rewardNames[] =
-
 	{
-	"Å‘åHP‚ğ‘‰Á‚·‚é",
-	"ƒXƒLƒ‹‚ğˆê‚ÂŠl“¾‚·‚é",
+	"æœ€å¤§HPã‚’å¢—åŠ ã™ã‚‹",
+	"ã‚¹ã‚­ãƒ«ã‚’ä¸€ã¤ç²å¾—ã™ã‚‹",
+	"ãƒœã‚¹ã«æŒ‘ã‚€" 
 	};
 
-	// •ñV‘I‘ğƒ{ƒbƒNƒX‚Ì•`‰æiƒXƒLƒ‹‘I‘ğ‚Æ“¯‚¶‚æ‚¤‚ÈˆÊ’uEƒTƒCƒY‚Å‰¼’èj
-	CreateBox(350, 350, 300, 200, GetColor(0, 0, 128));
-	DrawString(360, 360, "•ñV‚ğ‘I‚ñ‚Å‚­‚¾‚³‚¢", GetColor(255, 255, 0));
+	// å ±é…¬é¸æŠãƒœãƒƒã‚¯ã‚¹ã®æç”»ï¼ˆã‚¹ã‚­ãƒ«é¸æŠã¨åŒã˜ã‚ˆã†ãªä½ç½®ãƒ»ã‚µã‚¤ã‚ºã§ä»®å®šï¼‰
+	CreateBox(350, 350, 300, 250, GetColor(0, 0, 128)); // é«˜ã•èª¿æ•´
+	DrawString(360, 360, "å ±é…¬ã‚’é¸ã‚“ã§ãã ã•ã„", GetColor(255, 255, 0));
 
 	const int REWARD_TEXT_X = 430;
 	const int REWARD_BASE_Y = 390;
 	const int REWARD_LINE_HEIGHT = 50;
 
-	for (int i = 0; i < (int)END_REWARD::MAX; i++)
+	// WAVE4ã‚¯ãƒªã‚¢æ™‚ã«ã®ã¿ã€3ã¤ç›®ã®é¸æŠè‚¢ã¾ã§è¡¨ç¤ºã™ã‚‹
+	int drawCount = (wave_ == WAVE::WAVE4) ? (int)END_REWARD::MAX : (int)END_REWARD::BOSS_CHANGE;
 
+	for (int i = 0; i < drawCount; i++) // drawCount ã‚’ä½¿ç”¨
 	{
-
 		int color = (i == rewordIndx) ? GetColor(255, 255, 0) : GetColor(255, 255, 255);
 		int yPos = REWARD_BASE_Y + i * REWARD_LINE_HEIGHT;
-		// ƒJ[ƒ\ƒ‹‚Ì•`‰æ
 
+		// ã‚«ãƒ¼ã‚½ãƒ«ã®æç”»
 		if (i == rewordIndx)
-
 		{
-			// ƒJ[ƒ\ƒ‹‚ÍƒRƒ}ƒ“ƒh‘I‘ğ‚Æ“¯‚¶selectImg_‚ğg—p
+			// ã‚«ãƒ¼ã‚½ãƒ«ã¯ã‚³ãƒãƒ³ãƒ‰é¸æŠã¨åŒã˜selectImg_ã‚’ä½¿ç”¨
 			int cursorX = 360;
-			DrawExtendGraph(cursorX,yPos,cursorX + DRAW_CURSOR_W,yPos + DRAW_CURSOR_H,selectImg_,true);
-
+			DrawExtendGraph(cursorX, yPos, cursorX + DRAW_CURSOR_W, yPos + DRAW_CURSOR_H, selectImg_, true);
 		}
 
 		DrawString(REWARD_TEXT_X, yPos, rewardNames[i], color);
-
 	}
 
 }
@@ -1410,7 +1347,7 @@ void BattleScene::FlameDraw()
 {
 	if (isFirePlay_)
 	{
-		//ƒAƒjƒ[ƒVƒ‡ƒ“‚ği‚ß‚é
+		//ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚’é€²ã‚ã‚‹
 		skillAnimCnt_++;
 		if (skillAnimCnt_ < 16)
 		{

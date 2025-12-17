@@ -58,6 +58,8 @@ public:
 	{
 		WAVE1,
 		WAVE2,
+		WAVE3,
+		WAVE4,
 		LASTWAVE,
 		END
 	};
@@ -76,6 +78,7 @@ public:
 	{
 		HP,//HP
 		SKILL,//アイテム
+		BOSS_CHANGE,
 		MAX
 	};
 
@@ -183,12 +186,19 @@ private:
 	//背景
 	int backImg;
 
+	SKILL skillPool;
+
+	SKILL acquiredSkill;
+
 	//ゴブリンモデルハンドル
 	int goblinModelId_;
 	//ブルーデーモンモデルハンドル
 	int blueDemonModellId_;
 	//イエティモデルハンドル
 	int yetiModelId_;
+	//ボスモデルハンドル
+	int bossModelId_;
+
 	//セレクト画像ハンドル
 	int selectImg_;
 
@@ -223,6 +233,9 @@ private:
 
 	int skillAnimCnt_ =  0;
 	int skillSpeed_ = 4;
+
+	int poolSize = 0 ;
+	int randomIndex = 0;
 
 	//プレイヤー死亡判定
 	bool playerDead_ = false;

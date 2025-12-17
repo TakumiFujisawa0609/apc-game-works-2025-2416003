@@ -39,7 +39,10 @@ namespace SoundTable_Game
 		{ SoundID::SE_WIN, Application::PATH_SOUND_SE + "Battle_Win.wav" },
 		{ SoundID::SKILL_SE_SLASH, Application::PATH_SOUND_SE + "Slash_Se.wav" },
 		{ SoundID::SE_DAMEGE, Application::PATH_SOUND_SE + "Damage.wav" },
-
+		{ SoundID::SKILL_SE_HELL,	Application::PATH_SOUND_SE + "Hell_Se.wav" },
+		{ SoundID::SKILL_SE_FIRE,	Application::PATH_SOUND_SE + "Flame_Se.wav" },
+		{ SoundID::BGM_BOSS,	Application::PATH_SOUND_BGM + "Boss.wav" },
+		{ SoundID::SE_LOSE,	Application::PATH_SOUND_SE + "Flame_Se.wav" },
 		
 	};
 }
@@ -49,8 +52,7 @@ namespace SoundTable_Skill
 {
 	static const std::unordered_map<SoundID, std::string> Table =
 	{
-	
-		
+
 		
 	};
 }

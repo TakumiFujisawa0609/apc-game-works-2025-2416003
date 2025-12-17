@@ -10,6 +10,10 @@
 TitleScene::TitleScene(void)
 {
 	imgTitle_ = -1;
+	gameImg_ = -1;
+	exitImg_ = -1;
+	gameOffImg_ = -1;
+	exitOffImg_ = -1;
 }
 
 TitleScene::~TitleScene(void)
@@ -19,6 +23,20 @@ TitleScene::~TitleScene(void)
 void TitleScene::Init(void)
 {
 	imgTitle_ = LoadGraph((Application::PATH_IMAGE + "Title.png").c_str());
+	gameImg_ = LoadGraph((Application::PATH_IMAGE + "GameStart.png").c_str());
+	exitImg_ = LoadGraph((Application::PATH_IMAGE + "Exit.png").c_str());
+	gameOffImg_ =  LoadGraph((Application::PATH_IMAGE + "GameStart_Off.png").c_str());
+	exitOffImg_ = LoadGraph((Application::PATH_IMAGE + "Exit_Off.png").c_str());
+
+	selectImg_ = LoadGraph((Application::PATH_IMAGE + "Command/Select.png").c_str());
+
+	gameImgPos_X = 300;
+	gameImgpos_Y = 350;
+
+	exitImgPos_X = 300;
+	exitImgPos_Y = 450;
+
+	selectImgPos_X = 200;
 	
 	AudioManager::GetInstance()->LoadSceneSound(LoadScene::TITLE);
 	AudioManager::GetInstance()->PlayBGM(SoundID::BGM);
@@ -92,44 +110,52 @@ void TitleScene::Draw(void)
 		Application::SCREEN_SIZE_X / 2,
 		Application::SCREEN_SIZE_Y / 2 - 100,
 		1.0f, 0.0, imgTitle_, true);
-	DrawString(0, 0, "TitleScene", 0xffffff);
-	DrawString(0, 80, "スペース：決定：→キーで：選択", 0xffffff);
+
+	//DrawString(0, 0, "TitleScene", 0xffffff);
+	//DrawString(0, 80, "スペース：決定：→キーで：選択", 0xffffff);
 	
 
-	// 2. 「GAME START」の描画
+	/*DrawGraph(gameImgPos_X, gameImgpos_Y, gameImg_, true);
+	DrawGraph(exitImgPos_X, exitImgPos_Y, exitImg_, true);*/
+
+
+	// 「GAME START」の描画を画像で切り替える
 	if (cursorIndx_ == (int)STATE::GAME)
 	{
-
-		// 選択中の場合、色を変えてカーソルを付ける
-		DrawString(300, GAME_POS_Y, CURSOR_CHAR, GetColor(255, 255, 0)); // 黄色のカーソル
-		DrawString(330, GAME_POS_Y, "GAME START", GetColor(255, 255, 0)); // 黄色
+		// 選択中
+		DrawGraph(gameImgPos_X, gameImgpos_Y, gameImg_, true);
+		
+		DrawGraph(selectImgPos_X, gameImgpos_Y, selectImg_, true);
 	}
 	else
 	{
-		// 非選択中の場合
-		DrawString(330, GAME_POS_Y, "GAME START", GetColor(200, 200, 200)); // グレー
+		// 非選択中
+		DrawGraph(gameImgPos_X, gameImgpos_Y, gameOffImg_, true);
 	}
 
-	
-	// 3. 「EXIT」の描画
+	// 「EXIT」の描画を画像で切り替える
 	if (cursorIndx_ == (int)STATE::EXIT)
 	{
-		// 選択中の場合、色を変えてカーソルを付ける
-		DrawString(300, EXIT_POS_Y, CURSOR_CHAR, GetColor(255, 255, 0)); // 黄色のカーソル
-		DrawString(330, EXIT_POS_Y, "EXIT", GetColor(255, 255, 0)); // 黄色
+		// 選択中
+		DrawGraph(exitImgPos_X, exitImgPos_Y, exitImg_, true);
+
+		DrawGraph(selectImgPos_X, exitImgPos_Y, selectImg_, true);
 	}
 	else
 	{
-		// 非選択中の場合
-		DrawString(330, EXIT_POS_Y, "EXIT", GetColor(200, 200, 200)); // グレー
+		// 非選択中
+		DrawGraph(exitImgPos_X, exitImgPos_Y, exitOffImg_, true);
 	}
-	
 	
 }
 
 void TitleScene::Release(void)
 {
 	DeleteGraph(imgTitle_);
+	DeleteGraph(gameImg_);
+	DeleteGraph(exitImg_);
+	DeleteGraph(exitOffImg_);
+	DeleteGraph(gameOffImg_);
 	DeleteSoundMem(titleHundle_);
 }
 
