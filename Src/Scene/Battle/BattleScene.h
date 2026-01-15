@@ -133,8 +133,8 @@ public:
 
 private:
 
-	static constexpr int DRAW_CURSOR_W = 40; // èkè¨å„ÇÃâ°ïù
-	static constexpr int DRAW_CURSOR_H = 30; // èkè¨å„ÇÃècïù
+	static constexpr int DRAW_CURSOR_W = 30; // èkè¨å„ÇÃâ°ïù
+	static constexpr int DRAW_CURSOR_H = 20; // èkè¨å„ÇÃècïù
 	static constexpr int BASE_COMMAND_Y = 470;
 	static constexpr int COMMAND_LINE_HEIGHT = 30;
 	static constexpr int COMMAND_TEXT_X = 140;

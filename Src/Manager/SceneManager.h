@@ -17,6 +17,7 @@ public:
 		SEARCH,
 		BATTLE,
 		CLEAR
+
 	};
 	
 	// インスタンスの生成

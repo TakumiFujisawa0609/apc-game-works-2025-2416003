@@ -125,7 +125,7 @@ void TitleScene::Draw(void)
 		// ‘I‘ð’†
 		DrawGraph(gameImgPos_X, gameImgpos_Y, gameImg_, true);
 		
-		DrawGraph(selectImgPos_X, gameImgpos_Y, selectImg_, true);
+		DrawGraph(selectImgPos_X , gameImgpos_Y +20, selectImg_, true);
 	}
 	else
 	{
@@ -139,7 +139,7 @@ void TitleScene::Draw(void)
 		// ‘I‘ð’†
 		DrawGraph(exitImgPos_X, exitImgPos_Y, exitImg_, true);
 
-		DrawGraph(selectImgPos_X, exitImgPos_Y, selectImg_, true);
+		DrawGraph(selectImgPos_X , exitImgPos_Y +20, selectImg_, true);
 	}
 	else
 	{

@@ -27,6 +27,9 @@ private:
 
 	int stageId_;
 
+	int gameClearImg_;
+	int pushImg_;
+
 	Grid* grid_;
 	Camera* camera_;
 };

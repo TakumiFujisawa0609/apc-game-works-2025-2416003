@@ -407,12 +407,13 @@ void BattleScene::Pause(void)
 	if (InputManager::GetInstance().IsTrgDown(KEY_INPUT_N))
 	{
 		AudioManager::GetInstance()->StopBGM();
-		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::SEARCH);
+		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::CLEAR);
 
 		firstcommand_ = false;
 		return; // シーン遷移後は以降の処理をスキップ
 
 	}
+
 
 
 
@@ -1174,7 +1175,7 @@ void BattleScene::HandleRewardSelectInput()
 	}
 
 
-	// --- 修正された rewardCount を使用する ---
+	
 
 	// カーソル移動 (修正後の rewardCount を使用)
 	if (ins.IsTrgDown(KEY_INPUT_UP))
