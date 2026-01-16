@@ -11,6 +11,8 @@ enum class SoundID
 	BGM_BATTLE,		//バトルBGM
 	BGM_SEARCH,		//サーチシーンBGM
 	BGM_BOSS,
+	BGM_GAMEOVER,
+	SE_GAMEOVER,	
 	SE_BUTTON,		//ボタンSE
 	SE_RUN,			//走り状態SE
 	SE_ATTACK,		

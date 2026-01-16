@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Scene\Over\GameOver.cpp" />
     <ClCompile Include="Src\Object\Enemy\Manger\EnemyManager.cpp" />
     <ClCompile Include="Src\Object\MapPlayer\MapPlayer.cpp" />
     <ClCompile Include="Src\Object\MapPlayer\MapPlayerBase.cpp" />
@@ -52,6 +53,7 @@
     <ClCompile Include="Src\Utility\MatrixUtility.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Scene\Over\GameOver.h" />
     <ClInclude Include="Src\Object\Enemy\Manger\EnemyManager.h" />
     <ClInclude Include="Src\Object\MapPlayer\MapPlayer.h" />
     <ClInclude Include="Src\Object\MapPlayer\MapPlayerBase.h" />

@@ -16,7 +16,8 @@ public:
 		TITLE,
 		SEARCH,
 		BATTLE,
-		CLEAR
+		CLEAR,
+		OVER
 
 	};
 	

@@ -88,13 +88,23 @@ void BattleScene::Update(void)
 	//シーン遷移
 	InputManager& ins = InputManager::GetInstance();
 
+
+
+
+
 	if (endIndx_ == (int)END::WIN)
 	{
-
+		
 		//勝利判定が取れたら、戦闘終了
 		state_ = STATE::BATTLE_END;
 		actionTime_ = 0;
 	}
+
+
+
+
+
+
 
 	switch (state_)
 	{
@@ -115,6 +125,7 @@ void BattleScene::Update(void)
 			AudioManager::GetInstance()->SetSeVolume(SE_SOUND_VOLUME);
 			AudioManager::GetInstance()->PlaySE(SoundID::SE_COMMAND_DECISION);
 
+			//ファーストコマンド選択
 			ExecuteCommand(static_cast<COMMAND>(cursorIndx_));
 
 		}
@@ -129,32 +140,34 @@ void BattleScene::Update(void)
 
 	case BattleScene::STATE::PLAYER_ACTION:
 
-		// プレイヤーの行動（アニメーション、ダメージ計算など）
-
-		// プレイヤーの行動アニメーションやダメージ表示の待機
-
 		actionTime_++;
 
 		if (actionTime_ > ONE_SECOND) // 1秒(60フレーム)待機
 		{
 			actionTime_ = 0;
-			if (isDamege_)
-
+			if (isDamege_) // 敵のHPが0になった（敵を倒した）場合
 			{
-				// 敵を倒した場合は、この後 BATTLE_END に移行（共通ロジックで処理）
-				state_ = STATE::BATTLE_END;
+
+				if (wave_ == WAVE::LASTWAVE)
+				{
+					// ボスを倒したなら、BGMを止めてクリアシーンへ
+					AudioManager::GetInstance()->StopBGM();
+					SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::CLEAR);
+					return; // シーンが変わるので処理を抜ける
+				}
+				else
+				{
+					// 雑魚敵を倒した場合は、通常の戦闘終了（報酬選択）へ
+					state_ = STATE::BATTLE_END;
+				}
+				
 			}
-
 			else
-
 			{
 				// 敵が生きている場合は、敵のターンへ
 				state_ = STATE::ENEMY_ACTION;
-
 			}
-
 		}
-
 		break;
 
 	case BattleScene::STATE::ENEMY_ACTION:
@@ -202,12 +215,14 @@ void BattleScene::Update(void)
 	case BattleScene::STATE::BATTLE_END:
 
 
+
 		// 戦闘終了後の待機時間処理
 		if (isWinSePlayed_ == false)
 		{
 			AudioManager::GetInstance()->SetSeVolume(300);
 			AudioManager::GetInstance()->PlaySE(SoundID::SE_WIN);
 			isWinSePlayed_ = true; // 再生済み
+			BattleCount_ += 1;
 
 		}
 
@@ -232,9 +247,31 @@ void BattleScene::Update(void)
 
 		}
 		break;
+	case BattleScene::STATE::OVER:
+			
+		if (isLoseSePlayed_ == false)
+		{
+			AudioManager::GetInstance()->StopBGM();
+			AudioManager::GetInstance()->SetSeVolume(SE_SOUND_VOLUME);
+			AudioManager::GetInstance()->PlaySE(SoundID::SE_GAMEOVER);
+			isLoseSePlayed_ = true;
+		}
+
+		// 敗北時の入力待ち
+		if (InputManager::GetInstance().IsTrgDown(KEY_INPUT_SPACE))
+		{
+			
+			SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::OVER);
+			return;
+		}
+
+		
+		
+
+		break;
 
 	}
-
+	
 
 }
 
@@ -289,6 +326,8 @@ void BattleScene::Draw(void)
 	DrawFormatString(100, 380, 0xffffff, "HP: %d / %d", playerHp_, playerHpMax_);
 
 
+
+
 	if (firstcommand_ == true)
 	{
 		const char* commands[] =
@@ -333,6 +372,18 @@ void BattleScene::Draw(void)
 		{
 			DrawSkill();
 		}
+
+	}
+
+	if (state_ == STATE::OVER)
+	{
+
+
+		// 画面を暗くするなどの演出
+		SetDrawBlendMode(DX_BLENDMODE_ALPHA, 150);
+		DrawBox(0, 0, Application::SCREEN_SIZE_X, Application::SCREEN_SIZE_Y, GetColor(0, 0, 0), TRUE);
+		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+
 
 	}
 
@@ -414,7 +465,16 @@ void BattleScene::Pause(void)
 
 	}
 
+	// Nキーでの強制終了（デバッグ用）
+	if (InputManager::GetInstance().IsTrgDown(KEY_INPUT_X))
+	{
+		AudioManager::GetInstance()->StopBGM();
+		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::OVER);
 
+		firstcommand_ = false;
+		return; // シーン遷移後は以降の処理をスキップ
+
+	}
 
 
 	//ESCキーが押されたらポーズ状態を切り替え
@@ -536,7 +596,7 @@ void BattleScene::ProcessSkill(SKILL skill)
 
 	case BattleScene::SKILL::SLASH:
 
-		damageAmount = 10;
+		damageAmount = 20;
 
 		Damage();
 
@@ -657,7 +717,7 @@ void BattleScene::EnemyAttack(void)
 
 {
 
-	int enemyDamage = 10;
+
 	playerHp_ -= enemyDamage;
 
 
@@ -668,8 +728,8 @@ void BattleScene::EnemyAttack(void)
 	{
 		playerHp_ = 0;
 		playerDead_ = true;
-		endIndx_ = (int)END::LOSE;
-		state_ = STATE::BATTLE_END;
+		state_ = STATE::OVER;
+	
 	}
 
 }
@@ -1060,7 +1120,7 @@ void BattleScene::StartWave(WAVE wave)
 	case BattleScene::WAVE::WAVE1:
 
 		enemyHpMax_ = 50;
-
+		enemyDamage = 20;
 		enemyHp_ = enemyHpMax_;
 
 		break;
@@ -1068,6 +1128,7 @@ void BattleScene::StartWave(WAVE wave)
 	case BattleScene::WAVE::WAVE2:
 
 		enemyHpMax_ = 80;
+		enemyDamage = 30;
 
 		enemyHp_ = enemyHpMax_;
 
@@ -1075,12 +1136,14 @@ void BattleScene::StartWave(WAVE wave)
 
 	case BattleScene::WAVE::WAVE3:
 		enemyHpMax_ = 100;
+		enemyDamage = 40;
 		enemyHp_ = enemyHpMax_;
 
 		break;
 
 	case BattleScene::WAVE::WAVE4:
 		enemyHpMax_ = 100;
+		enemyDamage = 40;
 		enemyHp_ = enemyHpMax_;
 		break;
 
@@ -1089,6 +1152,7 @@ void BattleScene::StartWave(WAVE wave)
 		AudioManager::GetInstance()->StopBGM();
 		AudioManager::GetInstance()->PlayBGM(SoundID::BGM_BOSS);
 		enemyHpMax_ = 1000;
+		enemyDamage = 50;
 		enemyHp_ = enemyHpMax_;
 
 		break;
@@ -1161,43 +1225,37 @@ void BattleScene::HandleRewardSelectInput()
 	InputManager& ins = InputManager::GetInstance();
 	int rewardCount;
 
-	if (wave_ == WAVE::WAVE4)
+
+	// 描画側の DrawRewardSelect と条件を統一します
+
+	if (BattleCount_ > 1)
 	{
-		// MAX が 3 であれば、0, 1, 2 の 3回ループさせるために 3 を設定
+		// 3つ（HP, SKILL, BOSS_CHANGE）すべて選択可能
 		rewardCount = (int)END_REWARD::MAX;
 	}
 	else
 	{
-		// WAVE1, 2, 3 のとき: HP(0) と SKILL(1) の 2回ループさせるために 2 を設定
-		// BOSS_CHANGE が 2 なので、それを使うと 3回ループしてしまう。
-		// もし enum が連番なら、(int)END_REWARD::BOSS_CHANGE - 1 や、単に 2 を設定すべき。
-		rewardCount = (int)END_REWARD::SKILL + 1; // SKILL(1) + 1 = 2
+		// 2つ（HP, SKILL）のみ選択可能
+		rewardCount = (int)END_REWARD::BOSS_CHANGE;
 	}
 
 
-	
-
-	// カーソル移動 (修正後の rewardCount を使用)
+	// カーソル移動 (UP)
 	if (ins.IsTrgDown(KEY_INPUT_UP))
 	{
-		// ...
-		AudioManager::GetInstance()->SetSeVolume(SE_SOUND_VOLUME);
-		AudioManager::GetInstance()->PlaySE(SoundID::SE_COMMAND_DECISION);
-
+		AudioManager::GetInstance()->PlaySE(SoundID::SE_COMMAND_SELECT); // SEを再生
 		rewordIndx--;
 		if (rewordIndx < 0)
 		{
-			rewordIndx = rewardCount - 1; // 修正
+			rewordIndx = rewardCount - 1;
 		}
 	}
+	// カーソル移動 (DOWN)
 	if (ins.IsTrgDown(KEY_INPUT_DOWN))
 	{
-		AudioManager::GetInstance()->SetSeVolume(SE_SOUND_VOLUME);
-		AudioManager::GetInstance()->PlaySE(SoundID::SE_COMMAND_DECISION);
-
-		// ...
+		AudioManager::GetInstance()->PlaySE(SoundID::SE_COMMAND_SELECT); // SEを再生
 		rewordIndx++;
-		if (rewordIndx >= rewardCount) // 修正
+		if (rewordIndx >= rewardCount)
 		{
 			rewordIndx = 0;
 		}
@@ -1206,46 +1264,29 @@ void BattleScene::HandleRewardSelectInput()
 	// 決定処理
 	if (ins.IsTrgDown(KEY_INPUT_SPACE))
 	{
-		AudioManager::GetInstance()->SetSeVolume(SE_SOUND_VOLUME);
 		AudioManager::GetInstance()->PlaySE(SoundID::SE_COMMAND_DECISION);
-
-		// 選択された報酬を適用 (またはボス挑戦を実行)
 		END_REWARD selectedReward = static_cast<END_REWARD>(rewordIndx);
 
-		if (selectedReward == END_REWARD::BOSS_CHANGE && wave_ == WAVE::WAVE4)
+		// ボスに挑むが選択された場合
+		if (selectedReward == END_REWARD::BOSS_CHANGE)
 		{
-			// WAVE4クリア時に「ボスに挑む」が選択された
 			wave_ = WAVE::LASTWAVE;
 			StartWave(wave_);
 		}
 		else
 		{
-			// HP/SKILL報酬の適用、またはLASTWAVEクリア後の処理
-			ApplyReward(selectedReward); // HP/SKILL報酬を適用
+			// それ以外（HP/SKILL）は報酬を適用して次の雑魚WAVEへ
+			ApplyReward(selectedReward);
 
-			if (wave_ == WAVE::LASTWAVE)
-			{
-				// LASTWAVEクリア時の処理（ゲームクリア）
-				AudioManager::GetInstance()->StopBGM();
-				SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::TITLE);
-				firstcommand_ = false;
-				return;
-			}
-
-			// WAVE1〜WAVE4のクリア時: 次のWAVEをランダムに決定する
 			const int MIN_WAVE = (int)WAVE::WAVE1;
 			const int MAX_WAVE = (int)WAVE::WAVE4;
-			const int WAVE_RANGE = MAX_WAVE - MIN_WAVE + 1;
-
-			int nextWaveIndex = MIN_WAVE + (rand() % WAVE_RANGE);
+			int nextWaveIndex = MIN_WAVE + (rand() % (MAX_WAVE - MIN_WAVE + 1));
 			wave_ = static_cast<WAVE>(nextWaveIndex);
-
 			StartWave(wave_);
 		}
 
-		// リセット処理
-		actionTime_ = 0;
 		rewordIndx = 0;
+		actionTime_ = 0;
 	}
 }
 
@@ -1324,7 +1365,7 @@ void BattleScene::DrawRewardSelect()
 	const int REWARD_LINE_HEIGHT = 50;
 
 	// WAVE4クリア時にのみ、3つ目の選択肢まで表示する
-	int drawCount = (wave_ == WAVE::WAVE4) ? (int)END_REWARD::MAX : (int)END_REWARD::BOSS_CHANGE;
+	int drawCount = (BattleCount_ > 1) ? (int)END_REWARD::MAX : (int)END_REWARD::BOSS_CHANGE;
 
 	for (int i = 0; i < drawCount; i++) // drawCount を使用
 	{
@@ -1371,4 +1412,5 @@ void BattleScene::FlameDraw()
 	}
 	
 }
+
 

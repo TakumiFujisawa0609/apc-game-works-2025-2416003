@@ -108,6 +108,8 @@ public:
 		BATTLE_END,
 		// リザルト表示中
 		REWARD_VIEW,
+		//ゲームオ―バー
+		OVER,
 
 	};
 
@@ -211,7 +213,7 @@ private:
 	int turnIndx_; //ターン状態カウント
 	int skillIndx_ = 0; //選択しているスキル
 
-	int enemyCount_ = 0;
+	int BattleCount_ = 0;
 
 	// ダメージ時の画面揺れ用
 	int shakeDuration_ = 0;      // 揺れ継続フレーム数
@@ -222,6 +224,8 @@ private:
 	//プレイヤーのHP
 	int playerHp_ = 200;
 	int playerHpMax_ = 200;
+
+	int enemyDamage = 20;
 
 	int currentHp;
 	//最大HP
@@ -253,7 +257,7 @@ private:
 
 	bool isFirePlay_ = false;
 
-
+	bool isLoseSePlayed_ = false;
 
 
 
@@ -300,6 +304,8 @@ private:
 
 	//炎の描画
 	void FlameDraw();
+
+
 
 	
 };

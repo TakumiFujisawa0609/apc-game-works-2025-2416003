@@ -20,6 +20,7 @@ namespace SoundTable_Title
 	{
 		{ SoundID::BGM_TITLE, Application::PATH_SOUND_BGM + "GameBgm.wav" },
 		{ SoundID::BGM, Application::PATH_SOUND_BGM + "TitleBgm.wav" },
+		{ SoundID::BGM_GAMEOVER, Application::PATH_SOUND_BGM + "Over_BGM.wav" },
 		{ SoundID::SE_TITLE_DECISION, Application::PATH_SOUND_SE + "Title_Decision.wav" },
 		{ SoundID::SE_TITLE_DECISION, Application::PATH_SOUND_SE + "Title_Decision.wav" },
 		{ SoundID::SE_TITLE_COMMAND, Application::PATH_SOUND_SE + "Command_Select.wav" },
@@ -33,6 +34,7 @@ namespace SoundTable_Game
 	static const std::unordered_map<SoundID, std::string> Table = 
 	{
 		{ SoundID::BGM_BATTLE, Application::PATH_SOUND_BGM + "GameBgm.wav" },
+		{ SoundID::SE_GAMEOVER, Application::PATH_SOUND_SE + "GameOver.wav" },
 		{ SoundID::SE_COMMAND_SELECT,	Application::PATH_SOUND_SE + "Select.wav" },
 		{ SoundID::SE_COMMAND_DECISION, Application::PATH_SOUND_SE + "Command_Decision.wav" },
 		{ SoundID::SE_ENCOUNT, Application::PATH_SOUND_SE + "EnCount.wav" },

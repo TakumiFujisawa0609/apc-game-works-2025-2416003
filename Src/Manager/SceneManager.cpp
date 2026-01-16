@@ -6,6 +6,7 @@
 #include "../Scene/Battle/BattleScene.h"
 #include "../Scene//Search/SearchScene.h"
 #include "../Scene/Clear/GameClear.h"
+#include "../Scene/Over/GameOver.h"
 #include "../Manager/Camera.h"
 #include "SceneManager.h"
 
@@ -214,6 +215,10 @@ void SceneManager::DoChangeScene(SCENE_ID sceneId)
 	case SCENE_ID::CLEAR:
 		scene_ = new GameClear();
 		break;
+	case SCENE_ID::OVER:
+		scene_ = new GameOver();
+		break;
+
 	}
 
 	// ŠeƒV[ƒ“‚Ì‰Šú‰»
